@@ -1,4 +1,4 @@
-using Jsm33t.Api.Extensions;
+﻿using Jsm33t.Api.Extensions;
 using Jsm33t.Api.Middlewares;
 using Jsm33t.Shared.ConfigModels;
 using System.Text.Json.Serialization;
@@ -44,12 +44,16 @@ builder.Services
         };
     });
 
-builder.Services.AddCors(o => o.AddPolicy("OpenPolicy", builder =>
+builder.Services.AddCors(options =>
 {
-    builder.AllowAnyOrigin()
-           .AllowAnyMethod()
-           .AllowAnyHeader();
-}));
+    options.AddPolicy("DevCors", policy =>
+    {
+        policy.WithOrigins("http://localhost:3000","https://api.jsm33t.com")
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials();
+    });
+});
 
 builder.Services.AddInfrastructureServices();
 
@@ -60,7 +64,7 @@ if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 }
-app.UseCors("OpenPolicy");
+app.UseCors("DevCors");
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseAuthentication();

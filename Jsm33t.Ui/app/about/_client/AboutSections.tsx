@@ -17,6 +17,11 @@ const services = [
 		title: 'Attributes',
 		description: 'Discover what sets us apart and learn more about our unique qualities.',
 		link: '/about/attributes'
+	},
+	{
+		title: 'Changelog',
+		description: 'Historical updates',
+		link: '/about/changelog'
 	}
 ];
 

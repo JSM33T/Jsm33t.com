@@ -37,7 +37,6 @@ namespace Jsm33t.Application
 
         public async Task<IEnumerable<VersionGroupedChangeLogDto>> GetGroupedByVersionAsync()
         {
-            await Task.Delay(2000);
             return await _repository.GetGroupedByVersionAsync();
         }
 
