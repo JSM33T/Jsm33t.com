@@ -1,6 +1,7 @@
 ## Cache and custom dirs
 
 Jsm33t.Api/wwwroot/mediacache/
+Jsm33t.Ui/public/style.css
 
 ## A streamlined .gitignore for modern .NET projects
 ## including temporary files, build results, and
