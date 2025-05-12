@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://jsm33t.com
+
+# Sitemaps
+Sitemap: https://jsm33t.com/sitemap.xml

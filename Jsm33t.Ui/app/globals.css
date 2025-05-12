@@ -1,0 +1,46 @@
+
+/* NProgress bar customization */
+#nprogress {
+	pointer-events: none;
+}
+
+#nprogress .bar {
+	background: var(--ar-primary);
+	position: fixed;
+	z-index: 9999;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 3px;
+}
+/* Hide scrollbars for all elements */
+* {
+	scrollbar-width: none;        /* Firefox */
+	-ms-overflow-style: none;     /* IE 10+ */
+  }
+  
+  *::-webkit-scrollbar {
+	display: none;
+  }
+
+  .fade-in-zoom {
+	opacity: 1 !important;
+	transform: scale(1) !important;
+}
+
+.masonry-grid {
+	column-count: 2;
+	column-gap: 1rem;
+  }
+  
+  @media (min-width: 768px) {
+	.masonry-grid {
+	  column-count: 3;
+	}
+  }
+  
+  .masonry-grid a {
+	break-inside: avoid;
+	display: block;
+  }
+  

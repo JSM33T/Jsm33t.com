@@ -1,0 +1,18 @@
+{
+	"extends": [
+		"next/core-web-vitals",
+		"next/typescript"
+	],
+	"rules": {
+		"indent": [
+			"error",
+			"tab",
+			{
+				"SwitchCase": 1
+			}
+		],
+		"no-tabs": "off",
+		"@typescript-eslint/no-explicit-any": "off",
+		"@next/next/no-page-custom-font": "off"
+	}
+}
