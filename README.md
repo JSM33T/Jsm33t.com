@@ -1,5 +1,5 @@
 
-# FrenCirlce
+# Jsm33t.com
 
 A image sharing web space for the frens by the frens.
 
@@ -84,3 +84,14 @@ This solution is structured using Clean Architecture principles to separate conc
 - DTOs and interfaces live in `Contracts` to keep Application and Infra decoupled.
 - Domain is kept pure and self-contained.
 - Infra and Repositories are swappable; only contracts matter to Application.
+
+
+## Notice
+
+This project was originally based on a commercial theme purchased from a third-party provider.
+
+All original theme styles, assets, and proprietary files have been removed.
+
+No copyrighted or licensed material from the theme is included in this repository.
+
+The current codebase is authored and maintained independently and is released under the MIT License.
