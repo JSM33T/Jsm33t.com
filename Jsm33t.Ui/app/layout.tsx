@@ -70,12 +70,12 @@ export default function RootLayout({
 				<SidePanel />
 				 <Providers>
 					<UserProvider>
-					<main className="page-wrapper">
-						<Navbar />
+						<main className="page-wrapper">
+							<Navbar />
 					
-						{/* <ChatOffcanvas/> */}
-						{children}
-					</main>
+							{/* <ChatOffcanvas/> */}
+							{children}
+						</main>
 					</UserProvider>
 				</Providers>
 			</body>

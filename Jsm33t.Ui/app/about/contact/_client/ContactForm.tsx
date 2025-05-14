@@ -1,5 +1,6 @@
 'use client';
-import { post } from '@/lib/https';
+
+import { apiClient } from '@/lib/apiClient';
 import { useState, ChangeEvent, FormEvent } from 'react';
 
 
@@ -29,7 +30,7 @@ export default function ContactForm() {
 	const handleSubmit = async (e: FormEvent) => {
 		e.preventDefault();
 		console.log('Form Data:', formData);
-		const response = await post('/contact', formData);
+		const response = await apiClient.post('/contact', formData);
 		console.log('API Response:', response);
 	};
 

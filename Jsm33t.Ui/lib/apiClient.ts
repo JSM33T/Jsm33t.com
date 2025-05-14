@@ -30,7 +30,7 @@ async function request<T>(
 		const json: ApiResponse<T> = await res.json();
 		return json;
 	} catch (error) {
-		return { status: 500, data: null as any, message: "Something went wrong" };
+		return { status: 500, data: null as any, message: `Something went wrong : ${error}` };
 	}
 }
 
