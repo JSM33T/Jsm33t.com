@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
     <Nullable>enable</Nullable>
+	  <HostingModel>OutOfProcess</HostingModel>
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>ae52d4a2-eded-4b33-bcfa-e5dadb7980f8</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
@@ -19,10 +20,6 @@
     <ProjectReference Include="..\Jsm33t.Infra\Jsm33t.Infra.csproj" />
     <ProjectReference Include="..\Jsm33t.Repositories\Jsm33t.Repositories.csproj" />
     <ProjectReference Include="..\Jsm33t.Shared\Jsm33t.Shared.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="wwwroot\" />
   </ItemGroup>
 
 </Project>

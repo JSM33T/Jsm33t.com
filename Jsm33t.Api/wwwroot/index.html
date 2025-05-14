@@ -1,0 +1,72 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Server Status</title>
+    <style>
+        body {
+            background-color: #1e1e1e;
+            color: #00ff90;
+            font-family: monospace;
+            padding: 20px;
+        }
+
+        #terminal {
+            white-space: pre-wrap;
+            border-left: 5px solid #00ff90;
+            padding-left: 10px;
+        }
+
+        .blink {
+            animation: blink 1s step-start infinite;
+        }
+
+        @keyframes blink {
+            50% {
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="terminal">> Fetching server status<span class="blink">...</span></div>
+
+    <script>
+        fetch("/api/status")
+            .then(res => res.json())
+            .then(data => {
+                const time = new Date(data.time).toUTCString();
+                const lines = [
+                    "┌────────────────────────────────────────────┐",
+                    "│         Jsm33t.Api Server Status           │",
+                    "├────────────────────────────────────────────┤",
+                    `│ Status       : ${data.status}`,
+                    `│ Time         : ${time}`,
+                    `│ Version      : ${data.version}`,
+                    `│ Environment  : ${data.environment}`,
+                    `│ Framework    : ${data.framework}`,
+                    `│ C# Version   : ${data.csharpVersion}`,
+                    "└────────────────────────────────────────────┘"
+                ];
+
+                const terminal = document.getElementById("terminal");
+                terminal.innerText = "";
+                let i = 0;
+
+                function printLine() {
+                    if (i < lines.length) {
+                        terminal.innerText += lines[i++] + "\n";
+                        setTimeout(printLine, 100); // Adjust delay here
+                    }
+                }
+
+                printLine();
+            })
+            .catch(() => {
+                document.getElementById("terminal").innerText = "> Failed to fetch server status.";
+            });
+    </script>
+
+
+</body>
+</html>

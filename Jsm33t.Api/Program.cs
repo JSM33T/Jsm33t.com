@@ -48,7 +48,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("DevCors", policy =>
     {
-        policy.WithOrigins("http://localhost:3000","https://api.jsm33t.com")
+        policy.WithOrigins("http://localhost:3000","https://jsm33t.com")
             .AllowAnyHeader()
             .AllowAnyMethod()
             .AllowCredentials();
@@ -78,5 +78,6 @@ app.UseAuthorization();
 app.UseMiddleware<RequestTimerMiddleware>();
 app.UseMiddleware<FcRequestMiddleware>();
 app.MapControllers();
+app.MapFallbackToFile("index.html");
 
 await app.RunAsync();

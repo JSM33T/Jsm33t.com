@@ -8,7 +8,6 @@ import BootstrapClient from '@/components/helpers/BootstrapClient';
 import RouteProgress from '@/components/helpers/RouteProgress';
 import SidePanel from '@/sections/SidePanel';
 import Providers from './providers';
-import { UserProvider } from '@/context/UserContext';
 // import ChatOffcanvas from '@/sections/ChatOffcanvas';
 
 export const metadata = {
@@ -69,14 +68,11 @@ export default function RootLayout({
 				<BootstrapClient />
 				<SidePanel />
 				 <Providers>
-					<UserProvider>
 						<main className="page-wrapper">
 							<Navbar />
-					
 							{/* <ChatOffcanvas/> */}
 							{children}
 						</main>
-					</UserProvider>
 				</Providers>
 			</body>
 		</html>
