@@ -68,11 +68,11 @@ export default function RootLayout({
 				<BootstrapClient />
 				<SidePanel />
 				 <Providers>
-						<main className="page-wrapper">
-							<Navbar />
-							{/* <ChatOffcanvas/> */}
-							{children}
-						</main>
+					<main className="page-wrapper">
+						<Navbar />
+						{/* <ChatOffcanvas/> */}
+						{children}
+					</main>
 				</Providers>
 			</body>
 		</html>
