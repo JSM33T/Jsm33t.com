@@ -4,7 +4,6 @@ import { useUser } from '@/context/UserContext';
 import { apiClient, setAuthToken } from '@/lib/apiClient';
 import { jwtDecode } from 'jwt-decode';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { useState, ChangeEvent, FormEvent } from 'react';
 import { modalRef } from '@/components/sections/ModalBox';
 
@@ -24,7 +23,6 @@ interface JwtPayload {
 export default function LoginForm() {
 
 	const [formData, setFormData] = useState({ email: '', password: '' });
-	const router = useRouter();
 	const { setUser } = useUser();
 	const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
 		const { name, value } = e.target;
@@ -34,7 +32,7 @@ export default function LoginForm() {
 	const handleSubmit = async (e: FormEvent) => {
 		e.preventDefault();
 
-		const response = await apiClient.post<LoginResponse>(`/auth/login`, formData);
+		const response = await apiClient.post<LoginResponse>('/auth/login', formData);
 
 		if (response.status === 200 && response.data?.accessToken) {
 			const token = response.data.accessToken;
@@ -86,7 +84,7 @@ export default function LoginForm() {
 				<div className="w-100 mt-auto" style={{ maxWidth: 526 }}>
 					<h1>Sign in to Around</h1>
 					<p className="pb-3 mb-3 mb-lg-4">
-						Don't have an account yet?&nbsp;&nbsp;
+						Don&apos;t have an account yet?&nbsp;&nbsp;
 						<Link href="/account/signup">Signup!</Link>
 					</p>
 					<form className="needs-validation" noValidate onSubmit={handleSubmit}>

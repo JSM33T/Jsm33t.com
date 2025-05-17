@@ -21,7 +21,7 @@ export default function ProfilePage() {
 			<div className="row pb-1 pb-sm-3 pb-lg-4">
 				
 
-					<ProfileSection />
+				<ProfileSection />
 
 			</div>
 		</section>

@@ -9,7 +9,6 @@ import SidePanel from '@/sections/SidePanel';
 import Providers from './providers';
 import NavbarWrapper from '@/components/sections/NavBarWrapper';
 import ClientTokenProvider from '@/components/helpers/ClientTokenProvider';
-import { UserProvider } from '@/context/UserContext';
 import ModalRenderer from '@/components/helpers/ModalRenderer';
 import PreloaderRemover from '@/components/helpers/PreloaderRemover';
 
@@ -73,7 +72,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 						<span>Loading...</span>
 					</div>
 				</div>
-<PreloaderRemover />
+				<PreloaderRemover />
 				<Providers>
 
 					<ClientTokenProvider />

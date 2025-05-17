@@ -32,26 +32,26 @@ export default function SignupForm() {
 	// 	}
 	// };
 	const handleSubmit = async (e: FormEvent) => {
-	e.preventDefault();
+		e.preventDefault();
 
-	const res = await apiClient.post('/auth/signup', formData);
+		const res = await apiClient.post('/auth/signup', formData);
 
-	if (res.status === 200) {
-		modalRef?.current?.open({
-			title: 'Account Created',
-			description: res.message,
-			bodyList: res.hints
-		});
+		if (res.status === 200) {
+			modalRef?.current?.open({
+				title: 'Account Created',
+				description: res.message,
+				bodyList: res.hints
+			});
 
-		setTimeout(() => router.replace('/login'), 2000);
-	} else {
-		modalRef?.current?.open({
-			title: 'Signup Failed',
-			description: res.message || 'Something went wrong while creating your account.',
-			bodyList: res.hints
-		});
-	}
-};
+			setTimeout(() => router.replace('/login'), 2000);
+		} else {
+			modalRef?.current?.open({
+				title: 'Signup Failed',
+				description: res.message || 'Something went wrong while creating your account.',
+				bodyList: res.hints
+			});
+		}
+	};
 
 	return (
 		<div className="d-lg-flex position-relative h-100">
