@@ -51,7 +51,7 @@ public class AuthController(IAuthService authService,IDispatcher dispatcher,ITel
             Response.Cookies.Append("RefreshToken", refreshToken, new CookieOptions
             {
                 HttpOnly = false,
-                Secure = false,
+                Secure = true,
                 SameSite = SameSiteMode.None,
                 Expires = response.ExpiresAt
             });
@@ -62,7 +62,7 @@ public class AuthController(IAuthService authService,IDispatcher dispatcher,ITel
                 Response.Cookies.Append("DeviceId", deviceId.ToString(), new CookieOptions
                 {
                     HttpOnly = false,
-                    Secure = false,
+                    Secure = true,
                     SameSite = SameSiteMode.None,
                     Expires = DateTimeOffset.UtcNow.AddYears(1)
                 });
@@ -130,7 +130,7 @@ public class AuthController(IAuthService authService,IDispatcher dispatcher,ITel
             {
                 HttpOnly = true,
                 Secure = true,
-                SameSite = SameSiteMode.Strict,
+                SameSite = SameSiteMode.None,
                 Expires = response.ExpiresAt
             });
 

@@ -3,12 +3,15 @@ import '../public/style.css';
 import './globals.css';
 import '../icons/around-icons.min.css';
 
-import Navbar from '@/sections/navbar';
 import BootstrapClient from '@/components/helpers/BootstrapClient';
 import RouteProgress from '@/components/helpers/RouteProgress';
 import SidePanel from '@/sections/SidePanel';
 import Providers from './providers';
-// import ChatOffcanvas from '@/sections/ChatOffcanvas';
+import NavbarWrapper from '@/components/sections/NavBarWrapper';
+import ClientTokenProvider from '@/components/helpers/ClientTokenProvider';
+import { UserProvider } from '@/context/UserContext';
+import ModalRenderer from '@/components/helpers/ModalRenderer';
+import PreloaderRemover from '@/components/helpers/PreloaderRemover';
 
 export const metadata = {
 	title: {
@@ -49,31 +52,37 @@ export const metadata = {
 	},
 };
 
-export default function RootLayout({
-	children,
-}: {
-	children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+
 	return (
-		<html lang="en" data-bs-theme="light">
+		<html lang="en" data-bs-theme="dark">
 			<head>
 				<link rel="preconnect" href="https://fonts.googleapis.com" />
 				<link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-				<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet" id="theme_custom_font"></link>
+				<link
+					href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap"
+					rel="stylesheet"
+					id="theme_custom_font"
+				/>
 				<style id="theme_custom_theme"></style>
-
 			</head>
 			<body>
+				<div className="page-loading active">
+					<div className="page-loading-inner">
+						<div className="page-spinner"></div>
+						<span>Loading...</span>
+					</div>
+				</div>
+<PreloaderRemover />
+				<Providers>
+
+					<ClientTokenProvider />
+					<main><NavbarWrapper />{children}</main>
+					<ModalRenderer />
+				</Providers>
 				<RouteProgress />
 				<BootstrapClient />
 				<SidePanel />
-				 <Providers>
-					<main className="page-wrapper">
-						<Navbar />
-						{/* <ChatOffcanvas/> */}
-						{children}
-					</main>
-				</Providers>
 			</body>
 		</html>
 	);

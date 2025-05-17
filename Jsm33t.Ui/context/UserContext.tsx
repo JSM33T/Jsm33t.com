@@ -10,10 +10,10 @@ type User = {
 };
 
 const defaultUser: User = {
-    firstName: "Guest",
+    firstName: "Welcome",
 	username: "",
 	email: "",
-	lastName: "Account",
+	lastName: "Guest",
 	avatar: "/assets/images/default_user.jpg",
 };
 

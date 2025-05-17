@@ -44,7 +44,7 @@ namespace Jsm33t.Application
             if (!PasswordHelper.VerifyPassword(dto.Password, login.PasswordHash!, login.Salt!))
                 throw new UnauthorizedAccessException("Invalid credentials");
 
-            var tokens = _tokenService.GenerateTokens(login.UserId);
+            var tokens = await _tokenService.GenerateTokens(login.UserId);
 
             var session = new LoginSession
             {
@@ -90,7 +90,7 @@ namespace Jsm33t.Application
         {
             var (userId, userLoginId, sessionId) = await _repo.ValidateRefreshTokenAsync(refreshToken, deviceId);
 
-            var tokens = _tokenService.GenerateTokens(userId);
+            var tokens = await _tokenService.GenerateTokens(userId);
 
             await _repo.StoreNewRefreshTokenAsync(sessionId, tokens.RefreshToken, tokens.ExpiresAt);
 

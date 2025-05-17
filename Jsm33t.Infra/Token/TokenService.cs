@@ -1,18 +1,23 @@
-﻿using Jsm33t.Shared.ConfigModels;
+﻿using Jsm33t.Contracts.Dtos.Responses;
+using Jsm33t.Contracts.Interfaces.Repositories;
+using Jsm33t.Contracts.Models;
+using Jsm33t.Shared.ConfigModels;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
 namespace Jsm33t.Infra.Token;
 
-public class TokenService(FcConfig fcConfig) : ITokenService
+public class TokenService(FcConfig fcConfig, IProfileRepository profileRepository) : ITokenService
 {
     private readonly JwtConfig _config = fcConfig.JwtConfig!;
+    private readonly IProfileRepository _profileRepository = profileRepository;
 
-    public (string AccessToken, string RefreshToken, DateTime ExpiresAt, DateTime IssuedAt) GenerateTokens(int userId)
+    public async Task<(string AccessToken, string RefreshToken, DateTime ExpiresAt, DateTime IssuedAt)> GenerateTokens(int userId)
     {
         var issuedAt = DateTime.UtcNow;
-        var expiresAt = issuedAt.AddMinutes(1);
+        var expiresAt = issuedAt.AddDays(1);
+        UserProfileDetailsDto user = await _profileRepository.GetUserProfileById(userId);
 
         var keyBytes = Convert.FromBase64String(_config.Key);
         var securityKey = new SymmetricSecurityKey(keyBytes);
@@ -22,7 +27,12 @@ public class TokenService(FcConfig fcConfig) : ITokenService
         {
             new(JwtRegisteredClaimNames.Sub, userId.ToString()),
             new(JwtRegisteredClaimNames.Iat, new DateTimeOffset(issuedAt).ToUnixTimeSeconds().ToString(), ClaimValueTypes.Integer64),
-            new(ClaimTypes.NameIdentifier, userId.ToString())
+            new(ClaimTypes.NameIdentifier, userId.ToString()),
+                new(ClaimTypes.Email, user.Email),
+                new(ClaimTypes.GivenName, user.FirstName),
+                new(ClaimTypes.Surname, user.LastName),
+                new(ClaimTypes.Name, user.UserName),
+                new(ClaimTypes.Role, user.Role)
         };
 
         var token = new JwtSecurityToken(

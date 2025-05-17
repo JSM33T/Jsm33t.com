@@ -14,12 +14,13 @@
 		"bootstrap": "^5.3.5",
 		"clsx": "^2.1.1",
 		"framer-motion": "^12.9.4",
+		"jwt-decode": "^4.0.0",
 		"next": "15.3.1",
+		"next-auth": "^4.24.5",
 		"next-sitemap": "^4.2.3",
 		"react": "^19.0.0",
 		"react-dom": "^19.0.0",
-		"swiper": "^11.2.6",
-		"next-auth": "^4.24.5"
+		"swiper": "^11.2.6"
 	},
 	"devDependencies": {
 		"@types/bootstrap": "^5.2.10",

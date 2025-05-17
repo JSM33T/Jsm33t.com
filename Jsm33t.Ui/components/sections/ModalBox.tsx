@@ -1,6 +1,5 @@
 'use client';
 
-import { Modal } from 'bootstrap';
 import { forwardRef, useImperativeHandle, useRef } from 'react';
 
 type ModalBoxProps = {
@@ -17,44 +16,52 @@ export type ModalBoxRef = {
 	open: (params: OpenParams) => void;
 };
 
+export const modalRef = { current: null } as { current: ModalBoxRef | null }; // globally accessible
+
 const ModalBox = forwardRef<ModalBoxRef, ModalBoxProps>(({ type = '' }, ref) => {
-	const modalRef = useRef<HTMLDivElement>(null);
+	const modalRefLocal = useRef<HTMLDivElement>(null);
 	const titleRef = useRef<HTMLHeadingElement>(null);
 	const descRef = useRef<HTMLParagraphElement>(null);
 	const listRef = useRef<HTMLUListElement>(null);
 
-	useImperativeHandle(ref, () => ({
-		open: ({ title, description, bodyList = [] }) => {
-			if (!modalRef.current) return;
+	useImperativeHandle(ref, () => {
+		modalRef.current = {
+			open: async ({ title, description, bodyList = [] }) => {
+				if (!modalRefLocal.current) return;
 
-			if (titleRef.current) titleRef.current.textContent = title;
-			if (descRef.current) descRef.current.textContent = description;
-			if (listRef.current) {
-				listRef.current.innerHTML = '';
-				bodyList.forEach(item => {
-					const li = document.createElement('li');
-					li.textContent = item;
-					listRef.current!.appendChild(li);
-				});
-			}
+				if (titleRef.current) titleRef.current.textContent = title;
+				if (descRef.current) descRef.current.textContent = description;
+				if (listRef.current) {
+					listRef.current.innerHTML = '';
+					bodyList.forEach(item => {
+						const li = document.createElement('li');
+						li.textContent = item;
+						listRef.current!.appendChild(li);
+					});
+				}
 
-			const modal = Modal.getInstance(modalRef.current) || new Modal(modalRef.current);
-			modal.show();
-		}
-	}));
+				// 🔐 Dynamic import to avoid document access during SSR
+				const { Modal } = await import('bootstrap');
+				const modal = Modal.getInstance(modalRefLocal.current) || new Modal(modalRefLocal.current);
+				modal.show();
+			},
+		};
+		return modalRef.current;
+	});
 
 	const modalClass = {
 		sm: 'modal-sm',
+		md: 'modal-md',
 		lg: 'modal-lg',
 		xl: 'modal-xl',
 		fullscreen: 'modal-fullscreen',
 		scrollable: 'modal-dialog-scrollable',
 		centered: 'modal-dialog-centered',
-		'': ''
+		'': '',
 	}[type] || '';
 
 	return (
-		<div className="modal fade" tabIndex={-1} role="dialog" ref={modalRef}>
+		<div className="modal fade" tabIndex={-1} role="dialog" ref={modalRefLocal}>
 			<div className={`modal-dialog ${modalClass}`} role="document">
 				<div className="modal-content">
 					<div className="modal-header">
@@ -74,5 +81,6 @@ const ModalBox = forwardRef<ModalBoxRef, ModalBoxProps>(({ type = '' }, ref) => 
 		</div>
 	);
 });
+
 ModalBox.displayName = 'ModalBox';
 export default ModalBox;

@@ -1,5 +1,6 @@
 "use client";
 // import GoogleLoginButton from "@/app/_client/GoogleAuth";
+
 import ThemeSwitcher from "@/components/helpers/ThemeSwitcher";
 import Jsm33tLogo from "@/components/svg/Jsm33tLogo";
 import { useUser } from "@/context/UserContext";
@@ -8,35 +9,44 @@ import Link from "next/link";
 import { useEffect } from "react";
 
 
-const UserMenuItems = ({ badgeClass = "ms-auto" }: { badgeClass?: string }) => (
-	<>
-		<h6 className="dropdown-header fs-xs fw-medium text-body-secondary text-uppercase pb-1">Account</h6>
-		<a className="dropdown-item disabled" href="account-overview.html">
-			<i className="ai-user-check fs-lg opacity-70 me-2"></i>Login/SignUp
-		</a>
-		<a className="dropdown-item disabled" href="account-settings.html">
-			<i className="ai-settings fs-lg opacity-70 me-2"></i>Preferences
-		</a>
-		{/* <a className="dropdown-item" href="account-billing.html">
-			<i className="ai-wallet fs-base opacity-70 me-2 mt-n1"></i>Billing
-		</a>
-		<div className="dropdown-divider"></div>
-		<h6 className="dropdown-header fs-xs fw-medium text-body-secondary text-uppercase pb-1">Dashboard</h6>
-		<a className="dropdown-item" href="account-orders.html">
-			<i className="ai-cart fs-lg opacity-70 me-2"></i>Orders
-		</a>
-		<a className="dropdown-item" href="account-earnings.html">
-			<i className="ai-activity fs-lg opacity-70 me-2"></i>Earnings
-		</a>
-		<a className="dropdown-item" href="account-favorites.html">
-			<i className="ai-heart fs-lg opacity-70 me-2"></i>Favorites
-		</a>
-		<div className="dropdown-divider"></div>
-		<a className="dropdown-item" href="account-signin.html">
-			<i className="ai-logout fs-lg opacity-70 me-2"></i>Sign out
-		</a> */}
-	</>
-);
+const UserMenuItems = ({ badgeClass = "ms-auto" }: { badgeClass?: string }) => {
+	const { user } = useUser();
+	const isLoggedIn = !!user?.email;
+
+	return (
+		<>
+			<h6 className="dropdown-header fs-xs fw-medium text-body-secondary text-uppercase pb-1">Account</h6>
+
+			{isLoggedIn ? (
+				<>
+					<Link className="dropdown-item" href="/profile">
+						<i className="ai-settings fs-lg opacity-70 me-2"></i>Profile
+					</Link>
+					<div className="dropdown-divider"></div>
+					<a className="dropdown-item" href="#" onClick={(e) => {
+						e.preventDefault();
+						showBootstrapModal({
+							title: 'Confirm Logout',
+							body: 'Are you sure you want to log out?',
+							confirmText: 'Logout',
+							onConfirm: () => {
+								localStorage.removeItem('authToken');
+								window.location.href = '/';
+							}
+						});
+					}}>
+						<i className="ai-logout fs-lg opacity-70 me-2"></i>Sign out
+					</a>
+				</>
+			) : (
+				<Link className="dropdown-item" href="/account">
+					<i className="ai-user-check fs-lg opacity-70 me-2"></i>Login / SignUp
+				</Link>
+			)}
+
+		</>
+	);
+};
 
 
 
@@ -71,6 +81,7 @@ const Navbar = () => {
 	}, []);
 	return (
 		<>
+
 			<header className="navbar navbar-expand-lg fixed-top navbar-stuck">
 				<div className="container">
 					<Link className="navbar-brand pe-sm-3" href="/">
@@ -152,5 +163,58 @@ const Navbar = () => {
 		</>
 	);
 };
+
+async function showBootstrapModal({
+	title,
+	body,
+	confirmText = 'OK',
+	cancelText = 'Cancel',
+	onConfirm,
+}: {
+	title: string;
+	body: string;
+	confirmText?: string;
+	cancelText?: string;
+	onConfirm?: () => void;
+}) {
+	const { Modal } = await import('bootstrap');
+
+	const modalContainer = document.createElement('div');
+	modalContainer.innerHTML = `
+		<div class="modal fade" tabindex="-1">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title">${title}</h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						<p>${body}</p>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary mx-2" data-bs-dismiss="modal">${cancelText}</button>
+						<button type="button" class="btn btn-danger confirm-btn">${confirmText}</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	`;
+
+	document.body.appendChild(modalContainer);
+	const modalEl = modalContainer.querySelector('.modal') as HTMLElement;
+	const modal = new Modal(modalEl);
+
+	modalContainer.querySelector('.confirm-btn')?.addEventListener('click', () => {
+		onConfirm?.();
+		modal.hide();
+	});
+
+	modalEl.addEventListener('hidden.bs.modal', () => {
+		modalContainer.remove(); // clean up DOM
+	});
+
+	modal.show();
+}
+
 
 export default Navbar;

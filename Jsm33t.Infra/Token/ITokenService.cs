@@ -12,6 +12,6 @@
         /// <returns>
         /// A tuple containing the access token, refresh token, token expiry time, and issuance time.
         /// </returns>
-        (string AccessToken, string RefreshToken, DateTime ExpiresAt, DateTime IssuedAt) GenerateTokens(int userId);
+        public Task<(string AccessToken, string RefreshToken, DateTime ExpiresAt, DateTime IssuedAt)> GenerateTokens(int userId);
     }
 }

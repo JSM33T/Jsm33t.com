@@ -1,39 +1,39 @@
-'use client';
-
 import Link from "next/link";
 
 const services = [
 	{
-		title: 'Contact', 
-		description: 'Reach out to us for any inquiries or support. We are here to help you.',
-		link: '/about/contact'
+		title: 'Overview', 
+		description: 'Login to an existing account.',
+		link: '/profile/overview'
 	},
 	{
-		title: 'FAQs',
-		description: 'Explore answers to common questions and get the information you need quickly.',
-		link: '/about/faq'
+		title: 'Edit',
+		description: 'Edit Profile Details',
+		link: '/account/edit'
 	},
 	{
-		title: 'Attributes',
-		description: 'Discover what sets us apart and learn more about our unique qualities.',
-		link: '/about/attributes'
+		title: 'Password',
+		description: 'Recover your account in case of lost password.',
+		link: '/account/password'
 	},
-	{
-		title: 'Changelog',
-		description: 'Historical updates',
-		link: '/about/changelog'
+    	{
+		title: 'Devices',
+		description: 'Recover your account in case of lost password.',
+		link: '/account/devices'
 	}
 ];
 
 
-export default function AboutSections() {
+export default function ProfilePage() {
 	return (
 		<section className="container pt-5 pb-xxl-3 mt-5">
-
 			<div className="row">
-			
+				<div className="col-lg-4 pb-3 mb-3">
+					<h2 className="h1">Profile</h2>
+					<p className="pe-5 mb-0">Your profile overview, update, security, devices </p>
+				</div>
 
-				<div className="col-lg-8 offset-lg-2">
+				<div className="col-lg-8">
 					<div className="row row-cols-1 row-cols-sm-2 g-4">
 						{services.map((service, idx) => (
 							<div className="col" key={idx}>

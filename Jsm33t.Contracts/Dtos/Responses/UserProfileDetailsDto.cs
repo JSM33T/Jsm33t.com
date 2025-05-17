@@ -14,6 +14,7 @@ namespace Jsm33t.Contracts.Dtos.Responses
         public DateTime? CreatedAt { get; set; }
         public string Gender { get; set; } = string.Empty;
         public string Avatar { get; set; } = string.Empty;
+        public string Role { get; set; } = "member";
 
     }
     public class EditUserProfileDto
