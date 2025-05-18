@@ -11,7 +11,8 @@ BEGIN
         UL.UserId,
         U.FirstName,
         U.LastName,
-        U.UserName
+        U.UserName,
+        U.IsEmailVerified  AS IsVerified
     FROM UserLogins UL
     INNER JOIN LoginProviders LP ON UL.ProviderId = LP.Id
     INNER JOIN Users U ON U.Id = UL.UserId

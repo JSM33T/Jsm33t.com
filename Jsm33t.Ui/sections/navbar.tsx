@@ -39,7 +39,7 @@ const UserMenuItems = ({ badgeClass = "ms-auto" }: { badgeClass?: string }) => {
 					</a>
 				</>
 			) : (
-				<Link className="dropdown-item" href="/account">
+				<Link className="dropdown-item disabled" href="/account">
 					<i className="ai-user-check fs-lg opacity-70 me-2"></i>Login / SignUp
 				</Link>
 			)}
@@ -47,8 +47,6 @@ const UserMenuItems = ({ badgeClass = "ms-auto" }: { badgeClass?: string }) => {
 		</>
 	);
 };
-
-
 
 const Navbar = () => {
 
@@ -143,6 +141,9 @@ const Navbar = () => {
 							</li>
 							<li className="nav-item">
 								<Link className="nav-link" href="/about">About</Link>
+							</li>
+							<li className="nav-item">
+								<Link className="nav-link" href="/music">Music</Link>
 							</li>
 							<li className="nav-item dropdown d-sm-none border-top mt-2 pt-2">
 								<a className="nav-link" href="#" data-bs-toggle="dropdown" aria-expanded="false">

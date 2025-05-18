@@ -5,13 +5,7 @@ using Jsm33t.Contracts.Interfaces.Services;
 namespace Jsm33t.Application
 {
     public class ProfileService(IProfileRepository profileRepository) : IProfileService
-    { 
-        //public async Task<UserProfileDetailsDto> GetUserProfileById(int Id)
-        //{
-        //    var ss = await profileRepository.GetUserProfileById(Id);          
-        //    return ss;
-        //}
-
+    {
         public async Task<UserProfileDetailsDto> GetUserProfileById(int id)
         {
             var profile = await profileRepository.GetUserProfileById(id);

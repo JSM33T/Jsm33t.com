@@ -41,6 +41,9 @@ namespace Jsm33t.Application
             if (login == null)
                 throw new UnauthorizedAccessException("Invalid credentials");
 
+            if (login.IsVerified == false)
+                throw new UnauthorizedAccessException("Email is not verified");
+
             if (!PasswordHelper.VerifyPassword(dto.Password, login.PasswordHash!, login.Salt!))
                 throw new UnauthorizedAccessException("Invalid credentials");
 

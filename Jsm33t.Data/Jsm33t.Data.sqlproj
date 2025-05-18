@@ -81,6 +81,7 @@
     <Build Include="dbo\Tables\JobHistory.sql" />
     <Build Include="dbo\Stored Procedures\GetProfileDetailsById.sql" />
     <Build Include="dbo\Stored Procedures\EditProfileDetailsById.sql" />
+    <Build Include="dbo\Stored Procedures\usp_ValidateRefreshToken.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Snapshots\Jsm33t.Scripts_20250329_00-52-58.dacpac" />

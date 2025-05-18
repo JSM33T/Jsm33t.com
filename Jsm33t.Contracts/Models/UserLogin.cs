@@ -12,5 +12,6 @@
         public bool IsPasswordLogin { get; set; }
         public DateTime LinkedAt { get; set; }
         public Guid RowId { get; set; }
+        public bool IsVerified { get; set; }
     }
 }

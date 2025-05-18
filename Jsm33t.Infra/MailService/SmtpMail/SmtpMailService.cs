@@ -1,14 +1,13 @@
-﻿using Microsoft.Extensions.Options;
+﻿using Jsm33t.Shared.ConfigModels;
+using Microsoft.Extensions.Options;
 using System.Net;
 using System.Net.Mail;
 
 namespace Jsm33t.Infra.MailService.SmtpMail
 {
-    public class SmtpMailService : IMailService
+    public class SmtpMailService(FcConfig config) : IMailService
     {
-        private readonly SmtpConfig _config;
-
-        public SmtpMailService(IOptions<SmtpConfig> smtpOptions) => _config = smtpOptions.Value;
+        private readonly SmtpConfig _config = config.SmtpSettings;
 
         public async Task SendEmailAsync(string to, string subject, string body, bool isHtml = true)
         {
@@ -42,13 +41,23 @@ namespace Jsm33t.Infra.MailService.SmtpMail
             }
         }
 
+        //private SmtpClient BuildSmtpClient()
+        //{
+        //    return new SmtpClient(_config.Host, _config.Port)
+        //    {
+        //        Credentials = new NetworkCredential(_config.Username, _config.Password),
+        //        EnableSsl = _config.EnableSsl
+        //    };
+        //}
         private SmtpClient BuildSmtpClient()
         {
             return new SmtpClient(_config.Host, _config.Port)
             {
                 Credentials = new NetworkCredential(_config.Username, _config.Password),
-                EnableSsl = _config.EnableSsl
+                EnableSsl = _config.EnableSsl,
+                Timeout = 20000 // in milliseconds (20 seconds)
             };
         }
+
     }
 }

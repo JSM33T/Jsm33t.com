@@ -11,8 +11,8 @@ namespace Jsm33t.Contracts.Dtos.Responses
         public int UserId { get; set; }
         public int SessionId { get; set; }
         public string AccessToken { get; set; } = null!;
-        //public string RefreshToken { get; set; } = null!;
         public DateTime ExpiresAt { get; set; }
+        public bool IsVerified { get; set; } = false;
     }
 
 }

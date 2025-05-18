@@ -3,13 +3,13 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Jsm33t.Api.Controllers
 {
-    [Route("media/{*cloudinaryPath}")]
+    [Route("/api/media")]
     [ApiController]
     public class MediaCacheController(IWebHostEnvironment env, IHttpClientFactory factory) : ControllerBase
     {
         private readonly HttpClient _http = factory.CreateClient();
 
-        [HttpGet]
+        [HttpGet("{*cloudinaryPath}")]
         public async Task<IActionResult> GetCachedMedia(string cloudinaryPath)
         {
             if (string.IsNullOrWhiteSpace(cloudinaryPath) || cloudinaryPath.Contains(".."))

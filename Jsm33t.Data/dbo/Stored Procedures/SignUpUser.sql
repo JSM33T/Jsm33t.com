@@ -12,11 +12,18 @@ BEGIN
     DECLARE @UserId INT, @ProviderId INT;
     DECLARE @EmailToken UNIQUEIDENTIFIER = NEWID();
 
-    -- Check if username or email already exists
-    IF EXISTS (SELECT 1 FROM Users WHERE UserName = @UserName OR Email = @Email)
+    -- Check for existing username
+    IF EXISTS (SELECT 1 FROM Users WHERE UserName = @UserName)
     BEGIN
-        RAISERROR('Username or Email already exists.', 16, 1);
-        RETURN;
+	    RAISERROR('EMAIL_CONFLICT', 16, 1);
+	    RETURN;
+    END
+
+    -- Check for existing email
+    IF EXISTS (SELECT 1 FROM Users WHERE Email = @Email)
+    BEGIN
+	    RAISERROR('USERNAME_CONFLICT', 16, 1);
+	    RETURN;
     END
 
     -- Insert into Users with email token

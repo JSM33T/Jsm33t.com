@@ -8,6 +8,7 @@
         public JwtConfig? JwtConfig { get; set; }
         public TelegramConfig? TeleConfig { get; set; }
         public CloudinaryConfig? CloudinaryConfig { get; set; }
+        public SmtpConfig? SmtpSettings { get; set; }
     }
 
     public class Toggles
@@ -39,5 +40,15 @@
         public string? CloudName { get; set; }
         public string? ApiKey { get; set; }
         public string? ApiSecret { get; set; }
+    }
+
+    public class SmtpConfig
+    {
+        public string Host { get; set; } = string.Empty;
+        public int Port { get; set; }
+        public string Username { get; set; } = string.Empty;
+        public string Password { get; set; } = string.Empty;
+        public string From { get; set; } = string.Empty;
+        public bool EnableSsl { get; set; } = true;
     }
 }

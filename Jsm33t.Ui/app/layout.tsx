@@ -11,6 +11,10 @@ import NavbarWrapper from '@/components/sections/NavBarWrapper';
 import ClientTokenProvider from '@/components/helpers/ClientTokenProvider';
 import ModalRenderer from '@/components/helpers/ModalRenderer';
 import PreloaderRemover from '@/components/helpers/PreloaderRemover';
+import { PlayerProvider } from '@/context/PlayerContext';
+import ChatOffcanvas from '@/sections/ChatOffcanvas';
+import ThemeLoader from '@/components/helpers/ThemeLoader';
+
 
 export const metadata = {
 	title: {
@@ -73,15 +77,19 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 					</div>
 				</div>
 				<PreloaderRemover />
+				<ChatOffcanvas />
 				<Providers>
-
-					<ClientTokenProvider />
-					<main><NavbarWrapper />{children}</main>
-					<ModalRenderer />
+					<ThemeLoader />
+					<PlayerProvider>
+						<SidePanel />
+						<ClientTokenProvider />
+						<main><NavbarWrapper />{children}</main>
+						<ModalRenderer />
+					</PlayerProvider>
 				</Providers>
 				<RouteProgress />
 				<BootstrapClient />
-				<SidePanel />
+
 			</body>
 		</html>
 	);

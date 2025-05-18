@@ -1,8 +1,11 @@
-﻿using Jsm33t.Contracts.Dtos;
+﻿using System.Text.Json;
+using Jsm33t.Contracts.Dtos;
 using Jsm33t.Contracts.Dtos.Requests;
 using Jsm33t.Contracts.Dtos.Responses;
 using Jsm33t.Contracts.Interfaces.Services;
+using Jsm33t.Contracts.Models;
 using Jsm33t.Infra.Background;
+using Jsm33t.Infra.MailService;
 using Jsm33t.Infra.Telegram;
 using Jsm33t.Shared.ConfigModels;
 using Microsoft.AspNetCore.Authorization;
@@ -12,22 +15,64 @@ namespace Jsm33t.Api.Controllers;
 
 [ApiController]
 [Route("api/auth")]
-public class AuthController(IAuthService authService,IDispatcher dispatcher,ITelegramService telegramService,FcConfig config) : FcBaseController
+public class AuthController(IAuthService authService, IMailService mailService, IDispatcher dispatcher, ITelegramService telegramService, FcConfig config) : FcBaseController
 {
-    private readonly IAuthService _authService = authService;
 
     [HttpPost("signup")]
     public async Task<ActionResult<ApiResponse<bool>>> Signup(SignupUserDto dto)
     {
-        var userId = await _authService.SignupAsync(dto);
-
-        await dispatcher.EnqueueAsync(async token =>
+        try
         {
-            var msg = $"🚨 User Signup \n\n {dto.FirstName} {dto.LastName} \n\n email: {dto.Email}";
-            await telegramService.SendToOneAsync(config.TeleConfig.LogChatId.ToString(), msg);
-        }, jobName: "SignUp NOtification", triggeredBy: "signupApi");
+            var userId = await authService.SignupAsync(dto);
 
-        return RESP_Success(userId, "User created successfully");
+
+            var verificationLink = $"https://jsm33t.com";
+            var subject = "Verify your email address";
+            var body = $@"
+	            <p>Hello {dto.FirstName},</p>
+	            <p>Thank you for registering. Please verify your email by clicking the link below:</p>
+	            <p><a href='{verificationLink}'>Verify Email</a></p>
+	            <p>If you did not request this, please ignore this email.</p>
+            ";
+
+
+            await dispatcher.EnqueueAsync(async token =>
+            {
+                var msg = $"User Signup \n\n {dto.FirstName} {dto.LastName} \n\n email: {dto.Email}";
+                await telegramService.SendToOneAsync(config.TeleConfig.LogChatId.ToString()!, msg);
+
+            }, jobName: "SignUp Notification", triggeredBy: "signupApi");
+
+
+            await mailService.SendEmailAsync(dto.Email, subject, body, isHtml: true);
+
+            await dispatcher.EnqueueAsync(async token =>
+            {
+                
+              //  await mailService.SendEmailAsync(dto.Email, subject, body, isHtml: true);
+
+            }, jobName: "Verificaiton Email", triggeredBy: "signupApi");
+
+            return RESP_Success(userId, "User created successfully");
+        }
+        catch (Exception ex)
+        {
+            if (ex.Message.Contains("USERNAME_CONFLICT"))
+                return RESP_ConflictResponse<bool>("Username already exists.");
+            if (ex.Message.Contains("EMAIL_CONFLICT"))
+                return RESP_ConflictResponse<bool>("Email already exists.");
+
+            await dispatcher.EnqueueAsync(async token =>
+            {
+                var msg = $"User Signup Failed\n\n{JsonSerializer.Serialize(dto, new JsonSerializerOptions { WriteIndented = true })}";
+
+                await telegramService.SendToOneAsync(config?.TeleConfig?.LogChatId.ToString()!, msg);
+
+            }, jobName: "SignUp Error Notification", triggeredBy: "signupApi");
+
+            return RESP_ServerErrorResponse<bool>("Something went wrong");
+        }
+
     }
 
     [HttpPost("login")]
@@ -35,19 +80,16 @@ public class AuthController(IAuthService authService,IDispatcher dispatcher,ITel
     {
         try
         {
-
             if (!Guid.TryParse(Request.Cookies["DeviceId"], out Guid deviceId) &&
                 !Guid.TryParse(dto.DeviceId, out deviceId))
             {
                 deviceId = Guid.NewGuid();
             }
 
-            // Pass updated device ID into dto for logging/tracking
             dto.DeviceId = deviceId.ToString();
 
-            var (response, refreshToken) = await _authService.LoginAsync(dto);
+            var (response, refreshToken) = await authService.LoginAsync(dto);
 
-            // Set RefreshToken cookie
             Response.Cookies.Append("RefreshToken", refreshToken, new CookieOptions
             {
                 HttpOnly = false,
@@ -79,14 +121,14 @@ public class AuthController(IAuthService authService,IDispatcher dispatcher,ITel
     [HttpGet("sessions/{userId}")]
     public async Task<ActionResult<ApiResponse<IEnumerable<SessionDto>>>> GetSessions(int userId)
     {
-        var sessions = await _authService.GetUserSessionsAsync(userId);
+        var sessions = await authService.GetUserSessionsAsync(userId);
         return RESP_Success(sessions);
     }
 
     [HttpPost("logout/{sessionId}")]
     public async Task<ActionResult<ApiResponse<bool>>> Logout(int sessionId)
     {
-        var result = await _authService.LogoutSessionAsync(sessionId);
+        var result = await authService.LogoutSessionAsync(sessionId);
         return result
             ? RESP_Success(true, "Logged out successfully")
             : RESP_BadRequestResponse<bool>("Logout failed");
@@ -97,7 +139,7 @@ public class AuthController(IAuthService authService,IDispatcher dispatcher,ITel
     {
         try
         {
-            await _authService.VerifyEmailAsync(token);
+            await authService.VerifyEmailAsync(token);
             return RESP_Success("Email verified successfully");
         }
         catch
@@ -110,7 +152,7 @@ public class AuthController(IAuthService authService,IDispatcher dispatcher,ITel
     [HttpGet("claims")]
     public async Task<ActionResult<ApiResponse<int>>> GetMyId()
     {
-        return RESP_Success<int>(1,"Authorization Setup Complete");
+        return RESP_Success<int>(1, "Authorization Setup Complete");
     }
 
     [HttpPost("refresh")]
@@ -124,7 +166,7 @@ public class AuthController(IAuthService authService,IDispatcher dispatcher,ITel
 
         try
         {
-            var (response, newRefreshToken) = await _authService.RefreshTokenAsync(refreshToken, deviceId);
+            var (response, newRefreshToken) = await authService.RefreshTokenAsync(refreshToken, deviceId);
 
             Response.Cookies.Append("RefreshToken", newRefreshToken, new CookieOptions
             {

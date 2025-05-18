@@ -8,7 +8,6 @@ using System.Data;
 
 namespace Jsm33t.Repositories
 {
-    // AuthRepository.cs
     public class AuthRepository(IDapperFactory factory) : IAuthRepository
     {
         private readonly IDbConnection _db = factory.CreateConnection();
@@ -21,18 +20,6 @@ namespace Jsm33t.Repositories
             return result;
         }
 
-        //public async Task<int> InsertUserAsync(SignupUserDto dto, string passwordHash, string salt)
-        //{
-        //    var parameters = new DynamicParameters();
-        //    parameters.Add("@FirstName", dto.FirstName);
-        //    parameters.Add("@LastName", dto.LastName);
-        //    parameters.Add("@UserName", dto.UserName);
-        //    parameters.Add("@Email", dto.Email);
-        //    parameters.Add("@PasswordHash", passwordHash);
-        //    parameters.Add("@Salt", salt);
-
-        //    return await _db.ExecuteScalarAsync<int>("SignupUser", parameters, commandType: CommandType.StoredProcedure);
-        //}\
         public async Task<SignupResultDto> InsertUserAsync(SignupUserDto dto, string passwordHash, string salt)
         {
             var parameters = new DynamicParameters();
@@ -52,7 +39,6 @@ namespace Jsm33t.Repositories
 
         public async Task<int> InsertUserLoginAsync(int userId, string email, string passwordHash, string salt)
         {
-            // Not used currently; login is part of SignupUser SP
             throw new NotImplementedException();
         }
 
@@ -71,28 +57,41 @@ namespace Jsm33t.Repositories
             return await _db.ExecuteScalarAsync<int>("usp_CreateLoginSession", parameters, commandType: CommandType.StoredProcedure);
         }
 
-        public async Task<(int UserId, int UserLoginId,int SessionId)> ValidateRefreshTokenAsync(string refreshToken, string deviceId)
-        {
-            const string sql = @"
-            SELECT UL.UserId, UL.Id AS UserLoginId, LS.Id AS SessionId
-            FROM LoginSessions LS
-            INNER JOIN UserLogins UL ON LS.UserLoginId = UL.Id
-            WHERE LS.RefreshToken = @RefreshToken
-              AND LS.DeviceId = @DeviceId
-              AND LS.IsActive = 1
-              AND LS.ExpiresAt > GETUTCDATE();";
+        //public async Task<(int UserId, int UserLoginId,int SessionId)> ValidateRefreshTokenAsync(string refreshToken, string deviceId)
+        //{
+        //    const string sql = @"
+        //    SELECT UL.UserId, UL.Id AS UserLoginId, LS.Id AS SessionId
+        //    FROM LoginSessions LS
+        //    INNER JOIN UserLogins UL ON LS.UserLoginId = UL.Id
+        //    WHERE LS.RefreshToken = @RefreshToken
+        //      AND LS.DeviceId = @DeviceId
+        //      AND LS.IsActive = 1
+        //      AND LS.ExpiresAt > GETUTCDATE();";
 
-            var result = await _db.QueryFirstOrDefaultAsync<(int UserId, int UserLoginId,int SessionId)>(sql, new
-            {
-                RefreshToken = refreshToken,
-                DeviceId = deviceId
-            });
+        //    var result = await _db.QueryFirstOrDefaultAsync<(int UserId, int UserLoginId,int SessionId)>(sql, new
+        //    {
+        //        RefreshToken = refreshToken,
+        //        DeviceId = deviceId
+        //    });
+
+        //    if (result.UserId == 0)
+        //        throw new UnauthorizedAccessException("Invalid refresh token or device ID.");
+
+        //    return result;
+        //}
+        public async Task<(int UserId, int UserLoginId, int SessionId)> ValidateRefreshTokenAsync(string refreshToken, string deviceId)
+        {
+            var result = await _db.QueryFirstOrDefaultAsync<(int UserId, int UserLoginId, int SessionId)>(
+                "usp_ValidateRefreshToken",
+                new { RefreshToken = refreshToken, DeviceId = deviceId },
+                commandType: CommandType.StoredProcedure);
 
             if (result.UserId == 0)
                 throw new UnauthorizedAccessException("Invalid refresh token or device ID.");
 
             return result;
         }
+
 
         public async Task<IEnumerable<SessionDto>> GetSessionsByUserIdAsync(int userId)
         {
