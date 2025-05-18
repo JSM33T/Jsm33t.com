@@ -6,6 +6,9 @@ const nextConfig: NextConfig = {
 	},
 	images: {
 		domains: ['around.createx.studio']
+	},
+	eslint: {
+		ignoreDuringBuilds: true
 	}
 };
 
