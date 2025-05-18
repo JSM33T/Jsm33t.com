@@ -102,7 +102,7 @@ export default function NewAlbum() {
 						960: { slidesPerView: 3 },
 					}}
 				>
-					{musicTracks.map((track, i) => (
+					{musicTracks.map((track) => (
 						<SwiperSlide key={track.slug}>
 							<div className="card card-hover zoom-effect border-0 rounded-5 overflow-hidden">
 								<span
