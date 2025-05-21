@@ -46,7 +46,7 @@ namespace Jsm33t.Infra.MailService.SmtpMail
             {
                 Credentials = new NetworkCredential(_config.Username, _config.Password),
                 EnableSsl = _config.EnableSsl,
-                Timeout = 20000 // in milliseconds (20 seconds)
+                Timeout = 10000
             };
         }
 

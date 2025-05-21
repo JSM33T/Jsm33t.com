@@ -1,15 +1,14 @@
-﻿using System.Text.Json;
-using Jsm33t.Contracts.Dtos;
+﻿using Jsm33t.Contracts.Dtos;
 using Jsm33t.Contracts.Dtos.Requests;
 using Jsm33t.Contracts.Dtos.Responses;
 using Jsm33t.Contracts.Interfaces.Services;
-using Jsm33t.Contracts.Models;
 using Jsm33t.Infra.Background;
 using Jsm33t.Infra.MailService;
 using Jsm33t.Infra.Telegram;
 using Jsm33t.Shared.ConfigModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Text.Json;
 
 namespace Jsm33t.Api.Controllers;
 
@@ -179,6 +178,14 @@ public class AuthController(IAuthService authService, IMailService mailService, 
         {
             return RESP_UnauthorizedResponse<LoginResponseDto>(ex.Message);
         }
+    }
+
+    [HttpGet("email")]
+    public async Task<ActionResult<ApiResponse<int>>> Test()
+    {
+
+        await mailService.SendEmailAsync("jskainthofficial@gmail.com", "google test", "<p> Test </p>", isHtml: true);
+        return RESP_Success(1, "Token refreshed");
     }
 
 }

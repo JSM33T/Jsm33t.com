@@ -172,7 +172,7 @@ export default function LoginForm() {
 							target="_blank"
 							rel="noopener"
 						>
-							@jsm33t 
+							@jsm33t
 						</a>
 					</p>
 				</div>
