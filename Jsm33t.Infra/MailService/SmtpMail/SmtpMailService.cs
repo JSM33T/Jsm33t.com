@@ -1,5 +1,4 @@
 ﻿using Jsm33t.Shared.ConfigModels;
-using Microsoft.Extensions.Options;
 using System.Net;
 using System.Net.Mail;
 
@@ -41,14 +40,6 @@ namespace Jsm33t.Infra.MailService.SmtpMail
             }
         }
 
-        //private SmtpClient BuildSmtpClient()
-        //{
-        //    return new SmtpClient(_config.Host, _config.Port)
-        //    {
-        //        Credentials = new NetworkCredential(_config.Username, _config.Password),
-        //        EnableSsl = _config.EnableSsl
-        //    };
-        //}
         private SmtpClient BuildSmtpClient()
         {
             return new SmtpClient(_config.Host, _config.Port)

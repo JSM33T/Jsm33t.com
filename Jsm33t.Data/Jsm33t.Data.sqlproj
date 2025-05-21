@@ -84,6 +84,6 @@
     <Build Include="dbo\Stored Procedures\usp_ValidateRefreshToken.sql" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Snapshots\Jsm33t.Scripts_20250329_00-52-58.dacpac" />
+    <None Include="Snapshots\Jsm33t.Data_20250519_00-58-50.dacpac" />
   </ItemGroup>
 </Project>

@@ -43,13 +43,10 @@ public class AuthController(IAuthService authService, IMailService mailService, 
 
             }, jobName: "SignUp Notification", triggeredBy: "signupApi");
 
-
-            await mailService.SendEmailAsync(dto.Email, subject, body, isHtml: true);
-
             await dispatcher.EnqueueAsync(async token =>
             {
-                
-              //  await mailService.SendEmailAsync(dto.Email, subject, body, isHtml: true);
+
+                await mailService.SendEmailAsync(dto.Email, subject, body, isHtml: true);
 
             }, jobName: "Verificaiton Email", triggeredBy: "signupApi");
 
