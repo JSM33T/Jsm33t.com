@@ -26,7 +26,7 @@ namespace Jsm33t.Api.Middlewares
 
                 //await backgroundQueue.EnqueueAsync(async token =>
                 //{
-                //    var msg = $"🚨 *Unhandled Exception Occurred*\n\n`{ex.Message}`\n\n`{ex.StackTrace}`";
+                //    var msg = $" *Unhandled Exception Occurred*\n\n`{ex.Message}`\n\n`{ex.StackTrace}`";
                 //    await telegramService.SendToOneAsync(config.TeleConfig.LogChatId.ToString(), msg);
                 //}, jobName: "UnhandledException", triggeredBy: "InterceptorMiddleware");
 

@@ -24,15 +24,13 @@ namespace Jsm33t.Application
             _mailService = mailService;
         }
 
-        public async Task<bool> SignupAsync(SignupUserDto dto)
+        public async Task<SignupResultDto?> SignupAsync(SignupUserDto dto)
         {
             var salt = PasswordHelper.GenerateSalt();
             var hash = PasswordHelper.HashPassword(dto.Password, salt);
             SignupResultDto res = await _repo.InsertUserAsync(dto, hash, salt);
 
-            //await _mailService.SendEmailAsync(res.Email, "subject", "body", true);
-
-            return true;
+            return  res;
         }
 
         public async Task<(LoginResponseDto Response, string RefreshToken)> LoginAsync(LoginRequestDto dto)

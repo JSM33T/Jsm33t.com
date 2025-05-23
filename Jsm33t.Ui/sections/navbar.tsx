@@ -39,7 +39,7 @@ const UserMenuItems = ({ badgeClass = "ms-auto" }: { badgeClass?: string }) => {
 					</a>
 				</>
 			) : (
-				<Link className="dropdown-item disabled" href="/account">
+				<Link className="dropdown-item" href="/account">
 					<i className="ai-user-check fs-lg opacity-70 me-2"></i>Login / SignUp
 				</Link>
 			)}

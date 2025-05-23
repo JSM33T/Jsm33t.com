@@ -60,7 +60,6 @@
     <Folder Include="dbo\Tables\" />
     <Folder Include="dbo\Stored Procedures\" />
     <Folder Include="Scripts\" />
-    <Folder Include="Snapshots" />
     <Folder Include="Scripts\Seeds" />
   </ItemGroup>
   <ItemGroup>

@@ -2,8 +2,8 @@
 <!-- https://go.microsoft.com/fwlink/?LinkID=208121. -->
 <Project>
   <PropertyGroup>
-    <_PublishTargetUrl>C:\Users\jskai\Documents\Projects\Jsm33tsWebspace\Jsm33t.Api\bin\Release\net9.0\publish\</_PublishTargetUrl>
-    <History>True|2025-05-18T18:38:16.2459744Z||;True|2025-05-15T00:45:38.8161293+05:30||;True|2025-05-15T00:24:13.1261036+05:30||;True|2025-05-14T22:23:33.9134570+05:30||;True|2025-05-13T00:20:41.8824255+05:30||;True|2025-05-13T00:16:58.5010027+05:30||;True|2025-05-13T00:11:21.9887924+05:30||;True|2025-05-13T00:04:22.4926153+05:30||;</History>
+    <_PublishTargetUrl>C:\Dev\Projects\Jsm33tsWebspace\Jsm33t.Api\bin\Release\net9.0\publish\</_PublishTargetUrl>
+    <History>True|2025-05-23T18:57:16.3619052Z||;True|2025-05-19T00:08:16.2459744+05:30||;True|2025-05-15T00:45:38.8161293+05:30||;True|2025-05-15T00:24:13.1261036+05:30||;True|2025-05-14T22:23:33.9134570+05:30||;True|2025-05-13T00:20:41.8824255+05:30||;True|2025-05-13T00:16:58.5010027+05:30||;True|2025-05-13T00:11:21.9887924+05:30||;True|2025-05-13T00:04:22.4926153+05:30||;</History>
     <LastFailureDetails />
   </PropertyGroup>
 </Project>

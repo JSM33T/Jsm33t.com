@@ -146,7 +146,7 @@ export default function LoginForm() {
 						<div className="row row-cols-1 row-cols-sm-2 gy-3">
 							<div className="col">
 								<a
-									className="btn btn-icon btn-outline-secondary btn-google btn-lg w-100"
+									className="disabled btn btn-icon btn-outline-secondary btn-google btn-lg w-100"
 									href="#"
 								>
 									<i className="ai-google fs-xl me-2"></i>
@@ -155,7 +155,7 @@ export default function LoginForm() {
 							</div>
 							<div className="col">
 								<a
-									className="btn btn-icon btn-outline-secondary btn-facebook btn-lg w-100"
+									className="disabled btn btn-icon btn-outline-secondary btn-facebook btn-lg w-100"
 									href="#"
 								>
 									<i className="ai-facebook fs-xl me-2"></i>

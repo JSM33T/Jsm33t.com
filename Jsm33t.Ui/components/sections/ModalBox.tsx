@@ -73,8 +73,8 @@ const ModalBox = forwardRef<ModalBoxRef, ModalBoxProps>(({ type = '' }, ref) => 
 						<ul className="ps-3" ref={listRef}></ul>
 					</div>
 					<div className="modal-footer flex-column flex-sm-row">
-						<button type="button" className="btn btn-secondary w-100 w-sm-auto mb-3 mb-sm-0" data-bs-dismiss="modal">Close</button>
-						<button type="button" className="btn btn-primary w-100 w-sm-auto ms-sm-3">Save changes</button>
+						<button type="button" className="btn btn-primary w-100 w-sm-auto mb-3 mb-sm-0" data-bs-dismiss="modal">Ok</button>
+						{/* <button type="button" className="btn btn-primary w-100 w-sm-auto ms-sm-3">Save changes</button> */}
 					</div>
 				</div>
 			</div>

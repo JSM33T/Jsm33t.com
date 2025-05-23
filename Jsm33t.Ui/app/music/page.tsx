@@ -11,7 +11,6 @@ export const metadata: Metadata = {
 	description: 'All about remixes, bootlegs, originals and beyond',
 };
 
-
 export default function MusicPage() {
 	return (
 		<>

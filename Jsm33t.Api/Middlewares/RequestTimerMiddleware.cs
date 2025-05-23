@@ -45,7 +45,7 @@ namespace Jsm33t.Api.Middlewares
                     {
                         json["responseTimeMs"] = sw.ElapsedMilliseconds;
 
-                        string modified = JsonSerializer.Serialize(json, new JsonSerializerOptions
+                        var modified = JsonSerializer.Serialize(json, new JsonSerializerOptions
                         {
                             PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
                             DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull

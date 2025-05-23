@@ -71,7 +71,7 @@ const SidePanel = () => {
 				className="offcanvas offcanvas-end"
 				id="customizer"
 				data-bs-scroll="true"
-				data-bs-backdrop="false"
+				data-bs-backdrop="true"
 				tabIndex={-1}
 			>
 				<div className="offcanvas-header border-bottom">

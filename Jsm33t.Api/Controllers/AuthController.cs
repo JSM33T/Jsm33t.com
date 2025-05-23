@@ -1,4 +1,5 @@
-﻿using Jsm33t.Contracts.Dtos;
+﻿using System.Globalization;
+using Jsm33t.Contracts.Dtos;
 using Jsm33t.Contracts.Dtos.Requests;
 using Jsm33t.Contracts.Dtos.Responses;
 using Jsm33t.Contracts.Interfaces.Services;
@@ -9,66 +10,70 @@ using Jsm33t.Shared.ConfigModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
+using Jsm33t.Contracts.Dtos.Internal;
 
 namespace Jsm33t.Api.Controllers;
 
 [ApiController]
 [Route("api/auth")]
-public class AuthController(IAuthService authService, IMailService mailService, IDispatcher dispatcher, ITelegramService telegramService, FcConfig config) : FcBaseController
+public class AuthController(
+    IAuthService authService,
+    IMailService mailService,
+    IDispatcher dispatcher,
+    ITelegramService telegramService,
+    FcConfig config) : FcBaseController
 {
-
     [HttpPost("signup")]
-    public async Task<ActionResult<ApiResponse<bool>>> Signup(SignupUserDto dto)
+    public async Task<ActionResult<ApiResponse<SignupResultDto>>> Signup(SignupUserDto dto)
     {
         try
         {
-            var userId = await authService.SignupAsync(dto);
+            var userDetails = await authService.SignupAsync(dto);
 
+            string verificationLink = $"https://jsm33t.com/landings/verification?token={userDetails.EmailVerificationToken}";
 
-            var verificationLink = $"https://jsm33t.com";
-            var subject = "Verify your email address";
-            var body = $@"
-	            <p>Hello {dto.FirstName},</p>
-	            <p>Thank you for registering. Please verify your email by clicking the link below:</p>
-	            <p><a href='{verificationLink}'>Verify Email</a></p>
-	            <p>If you did not request this, please ignore this email.</p>
-            ";
+            const string subject = "Verify your email address";
+            var body = $"""
 
+                        	            <p>Hello {dto.FirstName},</p>
+                        	            <p>Thank you for registering. Please verify your email by clicking the link below:</p>
+                        	            <p><a href='{verificationLink}'>Verify Email</a></p>
+                        	            <p>If you did not request this, please ignore this email.</p>
+                                    
+                        """;
 
             await dispatcher.EnqueueAsync(async token =>
             {
                 var msg = $"User Signup \n\n {dto.FirstName} {dto.LastName} \n\n email: {dto.Email}";
-                await telegramService.SendToOneAsync(config.TeleConfig.LogChatId.ToString()!, msg);
-
+                await telegramService.SendToOneAsync(
+                    config.TeleConfig?.LogChatId.ToString(CultureInfo.InvariantCulture)!, msg);
             }, jobName: "SignUp Notification", triggeredBy: "signupApi");
 
-            await dispatcher.EnqueueAsync(async token =>
-            {
+            await dispatcher.EnqueueAsync(
+                async token => { await mailService.SendEmailAsync(dto.Email, subject, body, isHtml: true); },
+                jobName: "Verification Email", triggeredBy: "signupApi");
 
-                await mailService.SendEmailAsync(dto.Email, subject, body, isHtml: true);
-
-            }, jobName: "Verificaiton Email", triggeredBy: "signupApi");
-
-            return RESP_Success(userId, "User created successfully");
+            return RESP_Success(userDetails, "User created successfully");
         }
         catch (Exception ex)
         {
             if (ex.Message.Contains("USERNAME_CONFLICT"))
-                return RESP_ConflictResponse<bool>("Username already exists.");
+                return RESP_ConflictResponse<SignupResultDto>("Username already exists.");
             if (ex.Message.Contains("EMAIL_CONFLICT"))
-                return RESP_ConflictResponse<bool>("Email already exists.");
+                return RESP_ConflictResponse<SignupResultDto>("Email already exists.");
 
             await dispatcher.EnqueueAsync(async token =>
             {
-                var msg = $"User Signup Failed\n\n{JsonSerializer.Serialize(dto, new JsonSerializerOptions { WriteIndented = true })}";
+                //TODO - REQUEST SERIALIZER INSTANCE
+                var msg =
+                    $"User Signup Failed\n\n{JsonSerializer.Serialize(dto, new JsonSerializerOptions { WriteIndented = true })}";
 
-                await telegramService.SendToOneAsync(config?.TeleConfig?.LogChatId.ToString()!, msg);
-
+                await telegramService.SendToOneAsync(
+                    config?.TeleConfig?.LogChatId.ToString(CultureInfo.InvariantCulture)!, msg);
             }, jobName: "SignUp Error Notification", triggeredBy: "signupApi");
 
-            return RESP_ServerErrorResponse<bool>("Something went wrong");
+            return RESP_ServerErrorResponse<SignupResultDto>("Something went wrong");
         }
-
     }
 
     [HttpPost("login")]
@@ -76,7 +81,7 @@ public class AuthController(IAuthService authService, IMailService mailService, 
     {
         try
         {
-            if (!Guid.TryParse(Request.Cookies["DeviceId"], out Guid deviceId) &&
+            if (!Guid.TryParse(Request.Cookies["DeviceId"], out var deviceId) &&
                 !Guid.TryParse(dto.DeviceId, out deviceId))
             {
                 deviceId = Guid.NewGuid();
@@ -146,9 +151,9 @@ public class AuthController(IAuthService authService, IMailService mailService, 
 
     [Authorize]
     [HttpGet("claims")]
-    public async Task<ActionResult<ApiResponse<int>>> GetMyId()
+    public Task<ActionResult<ApiResponse<int>>> GetMyId()
     {
-        return RESP_Success<int>(1, "Authorization Setup Complete");
+        return Task.FromResult(RESP_Success<int>(1, "Authorization Setup Complete"));
     }
 
     [HttpPost("refresh")]
@@ -183,9 +188,7 @@ public class AuthController(IAuthService authService, IMailService mailService, 
     [HttpGet("email")]
     public async Task<ActionResult<ApiResponse<int>>> Test()
     {
-
         await mailService.SendEmailAsync("jskainthofficial@gmail.com", "google test", "<p> Test </p>", isHtml: true);
         return RESP_Success(1, "Token refreshed");
     }
-
 }
