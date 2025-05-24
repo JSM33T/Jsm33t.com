@@ -1,20 +1,17 @@
-﻿using Jsm33t.Contracts.Dtos;
-using Jsm33t.Infra.Background;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 
 namespace Jsm33t.Api.Controllers
 {
     [Route("/api")]
     [ApiController]
-    public class TestController(IDispatcher dispatcher) : FcBaseController
+    public class TestController(ILogger<TestController> logger) : FcBaseController
     {
-        public readonly IDispatcher _dispatcher = dispatcher;
+   
 
         [HttpGet("status")]
         public IActionResult GetJsonStatus()
         {
+            logger.LogInformation("started something");
             return Ok(new
             {
                 status = "running",

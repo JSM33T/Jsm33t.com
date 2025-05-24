@@ -5,9 +5,17 @@ using System.Text.Json.Serialization;
 using System.Text.Json;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
+Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.Error()
+    .Enrich.FromLogContext()
+    .WriteTo.Console()
+    .WriteTo.File("Logs/errors-.log", rollingInterval: RollingInterval.Day, retainedFileCountLimit: 10)
+    .CreateLogger();
+builder.Host.UseSerilog();
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
     {
@@ -65,7 +73,7 @@ builder.Services.AddInfrastructureServices();
 //});
 
 var app = builder.Build();
-
+app.UseDeveloperExceptionPage();
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();

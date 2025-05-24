@@ -43,15 +43,12 @@ namespace Jsm33t.Application
                     $"{baseUrl}/api/media/"
                 );
             }
-
             return profile;
         }
-
 
         public async Task<int> UpdateUserProfile(EditUserProfileDto userProfileDetails, string AvatarUrl)
         {
             return await profileRepository.UpdateUserProfile(userProfileDetails, AvatarUrl);
         }
-
     }
 }
