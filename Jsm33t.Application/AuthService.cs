@@ -9,104 +9,97 @@ using Jsm33t.Infra.MailService;
 using Jsm33t.Infra.Token;
 using Jsm33t.Shared.Helpers;
 
-namespace Jsm33t.Application
+namespace Jsm33t.Application;
+
+public class AuthService(IAuthRepository repo, ITokenService tokenService,IMailService mailService) : IAuthService
 {
-    public class AuthService : IAuthService
+    public async Task<SignupResultDto> SignupAsync(SignupUserDto dto)
     {
-        private readonly IAuthRepository _repo;
-        private readonly ITokenService _tokenService;
-        private readonly IMailService _mailService;
+        var salt = PasswordHelper.GenerateSalt();
+        var hash = PasswordHelper.HashPassword(dto.Password, salt);
+        return await repo.InsertUserAsync(dto, hash, salt);
+    }
 
-        public AuthService(IAuthRepository repo, ITokenService tokenService,IMailService mailService)
+    public async Task<(LoginResponseDto, string)> LoginAsync(LoginRequestDto dto)
+    {
+        var login = await repo.GetLoginDataByEmailAsync(dto.Email) ??
+            throw new UnauthorizedAccessException("Invalid credentials");
+
+        if (!login.IsVerified)
+            throw new UnauthorizedAccessException("Email not verified");
+
+        if (!PasswordHelper.VerifyPassword(dto.Password, login.PasswordHash!, login.Salt!))
+            throw new UnauthorizedAccessException("Invalid credentials");
+
+        var tokens = await tokenService.GenerateTokens(login.UserId);
+
+        var session = new LoginSession
         {
-            _repo = repo;
-            _tokenService = tokenService;
-            _mailService = mailService;
-        }
+            UserLoginId = login.Id,
+            AccessToken = tokens.AccessToken,
+            RefreshToken = tokens.RefreshToken,
+            IssuedAt = tokens.IssuedAt,
+            ExpiresAt = tokens.ExpiresAt,
+            DeviceId = Guid.Parse(dto.DeviceId),
+            IpAddress = dto.IpAddress,
+            UserAgent = dto.UserAgent
+        };
 
-        public async Task<SignupResultDto?> SignupAsync(SignupUserDto dto)
+        var sessionId = await repo.CreateSessionAsync(session);
+
+        return (new LoginResponseDto
         {
-            var salt = PasswordHelper.GenerateSalt();
-            var hash = PasswordHelper.HashPassword(dto.Password, salt);
-            SignupResultDto res = await _repo.InsertUserAsync(dto, hash, salt);
+            UserId = login.UserId,
+            SessionId = sessionId,
+            AccessToken = tokens.AccessToken,
+            ExpiresAt = tokens.ExpiresAt
+        }, tokens.RefreshToken);
+    }
 
-            return  res;
-        }
+    public async Task<bool> LogoutSessionAsync(int sessionId) =>
+        await repo.LogoutSessionAsync(sessionId);
 
-        public async Task<(LoginResponseDto Response, string RefreshToken)> LoginAsync(LoginRequestDto dto)
+    public async Task<(LoginResponseDto, string)> RefreshTokenAsync(string refreshToken, string deviceId)
+    {
+        var (userId, userLoginId, sessionId) = await repo.ValidateRefreshTokenAsync(refreshToken, deviceId);
+        var tokens = await tokenService.GenerateTokens(userId);
+        await repo.StoreNewRefreshTokenAsync(sessionId, tokens.RefreshToken, tokens.ExpiresAt);
+
+        return (new LoginResponseDto
         {
-            var login = await _repo.GetLoginDataByEmailAsync(dto.Email);
-            if (login == null)
-                throw new UnauthorizedAccessException("Invalid credentials");
+            UserId = userId,
+            SessionId = sessionId,
+            AccessToken = tokens.AccessToken,
+            ExpiresAt = tokens.ExpiresAt
+        }, tokens.RefreshToken);
+    }
 
-            if (login.IsVerified == false)
-                throw new UnauthorizedAccessException("Email is not verified");
+    public Task<IEnumerable<SessionDto>> GetUserSessionsAsync(int userId) =>
+        repo.GetSessionsByUserIdAsync(userId);
 
-            if (!PasswordHelper.VerifyPassword(dto.Password, login.PasswordHash!, login.Salt!))
-                throw new UnauthorizedAccessException("Invalid credentials");
+    public Task VerifyEmailAsync(Guid token) =>
+        repo.VerifyEmailTokenAsync(token);
 
-            var tokens = await _tokenService.GenerateTokens(login.UserId);
+    public async Task RequestPasswordRecoveryAsync(string email)
+    {
+        var token = await repo.CreatePasswordRecoveryTokenAsync(email);
+        var subject = "Password Recovery";
+        var link = $"https://jsm33t.com/account/reset?token={token}";
+        var body = $"<p>Click <a href='{link}'>here</a> to reset your password.</p>";
+        await mailService.SendEmailAsync(email, subject, body, isHtml: true);
+    }
 
-            var session = new LoginSession
-            {
-                UserLoginId = login.Id,
-                AccessToken = tokens.AccessToken,
-                RefreshToken = tokens.RefreshToken,
-                IssuedAt = tokens.IssuedAt,
-                ExpiresAt = tokens.ExpiresAt,
-                DeviceId = Guid.Parse(dto.DeviceId),
-                IpAddress = dto.IpAddress,
-                UserAgent = dto.UserAgent
-            };
+    public async Task CompletePasswordRecoveryAsync(string? token, string? otp, string newPassword)
+    {
+        var isValid = await repo.ValidateRecoveryTokenAsync(token, otp);
+        if (!isValid) throw new UnauthorizedAccessException("Invalid or expired recovery credentials");
 
-            var sessionId = await _repo.CreateSessionAsync(session);
+        var salt = PasswordHelper.GenerateSalt();
+        var hash = PasswordHelper.HashPassword(newPassword, salt);
 
-            var response = new LoginResponseDto
-            {
-                UserId = login.UserId,
-                SessionId = sessionId,
-                AccessToken = tokens.AccessToken,
-                ExpiresAt = tokens.ExpiresAt
-            };
-
-            return (response, tokens.RefreshToken);
-        }
-
-        public async Task<IEnumerable<SessionDto>> GetUserSessionsAsync(int userId)
-        {
-            return await _repo.GetSessionsByUserIdAsync(userId);
-        }
-
-        public async Task<bool> LogoutSessionAsync(int sessionId)
-        {
-            // Optional: implement stored proc to set IsActive = 0, LoggedOutAt = GETDATE()
-            return true;
-        }
-        public async Task VerifyEmailAsync(Guid token)
-        {
-            await _repo.VerifyEmailTokenAsync(token);
-        }
-
-        public async Task<(LoginResponseDto Response, string NewRefreshToken)> RefreshTokenAsync(string refreshToken, string deviceId)
-        {
-            var (userId, userLoginId, sessionId) = await _repo.ValidateRefreshTokenAsync(refreshToken, deviceId);
-
-            var tokens = await _tokenService.GenerateTokens(userId);
-
-            await _repo.StoreNewRefreshTokenAsync(sessionId, tokens.RefreshToken, tokens.ExpiresAt);
-
-            var response = new LoginResponseDto
-            {
-                UserId = userId,
-                SessionId = sessionId,
-                AccessToken = tokens.AccessToken,
-                ExpiresAt = tokens.ExpiresAt
-            };
-
-            return (response, tokens.RefreshToken);
-        }
-
-
+        var updated = await repo.UpdatePasswordByRecoveryTokenAsync(token, otp, hash, salt);
+        if (!updated) throw new Exception("Password update failed");
     }
 
 }
+

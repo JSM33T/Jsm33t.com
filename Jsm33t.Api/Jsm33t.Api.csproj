@@ -25,4 +25,8 @@
 		<ProjectReference Include="..\Jsm33t.Shared\Jsm33t.Shared.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Folder Include="Logs\" />
+	</ItemGroup>
+
 </Project>

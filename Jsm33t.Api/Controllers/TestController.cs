@@ -6,8 +6,6 @@ namespace Jsm33t.Api.Controllers
     [ApiController]
     public class TestController(ILogger<TestController> logger) : FcBaseController
     {
-   
-
         [HttpGet("status")]
         public IActionResult GetJsonStatus()
         {
@@ -22,7 +20,5 @@ namespace Jsm33t.Api.Controllers
                 csharpVersion = $"{(int)Environment.Version.Major}.{(int)Environment.Version.Minor}"
             });
         }
-
-
     }
 }

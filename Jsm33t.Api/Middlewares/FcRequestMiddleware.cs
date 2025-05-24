@@ -21,6 +21,7 @@ namespace Jsm33t.Api.Middlewares
             }
             catch (Exception ex)
             {
+                //tackle Email not found
                 context.Response.StatusCode = StatusCodes.Status500InternalServerError;
                 logger.LogError(ex, message: ex.Message);
 

@@ -1,5 +1,5 @@
-﻿using System.Globalization;
-using Jsm33t.Contracts.Dtos;
+﻿using Jsm33t.Contracts.Dtos;
+using Jsm33t.Contracts.Dtos.Internal;
 using Jsm33t.Contracts.Dtos.Requests;
 using Jsm33t.Contracts.Dtos.Responses;
 using Jsm33t.Contracts.Interfaces.Services;
@@ -9,12 +9,12 @@ using Jsm33t.Infra.Telegram;
 using Jsm33t.Shared.ConfigModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Text.Json;
-using Jsm33t.Contracts.Dtos.Internal;
+using System.Globalization;
 
 namespace Jsm33t.Api.Controllers;
 
 [ApiController]
+[AllowAnonymous]
 [Route("api/auth")]
 public class AuthController(
     IAuthService authService,
@@ -28,32 +28,20 @@ public class AuthController(
     {
         try
         {
-            var userDetails = await authService.SignupAsync(dto);
+            var result = await authService.SignupAsync(dto);
 
-            string verificationLink = $"https://jsm33t.com/landings/verification?token={userDetails.EmailVerificationToken}";
+            string link = $"https://jsm33t.com/landings/verification?token={result.EmailVerificationToken}";
+            string subject = "Verify your email address";
+            string body = $"<p>Hello {dto.FirstName},</p><p>Please verify: <a href='{link}'>Verify</a></p>";
 
-            const string subject = "Verify your email address";
-            var body = $"""
+            await dispatcher.EnqueueAsync(_ => telegramService.SendToOneAsync(config.TeleConfig?.LogChatId.ToString(CultureInfo.InvariantCulture)!,
+                $"User Signup\n\n{dto.FirstName} {dto.LastName}\n\nEmail: {dto.Email}"),
+                jobName: nameof(Signup), triggeredBy: nameof(AuthController));
 
-                        	            <p>Hello {dto.FirstName},</p>
-                        	            <p>Thank you for registering. Please verify your email by clicking the link below:</p>
-                        	            <p><a href='{verificationLink}'>Verify Email</a></p>
-                        	            <p>If you did not request this, please ignore this email.</p>
-                                    
-                        """;
+            await dispatcher.EnqueueAsync(_ => mailService.SendEmailAsync(dto.Email, subject, body, true),
+                jobName: "VerificationEmail", triggeredBy: nameof(AuthController));
 
-            await dispatcher.EnqueueAsync(async token =>
-            {
-                var msg = $"User Signup \n\n {dto.FirstName} {dto.LastName} \n\n email: {dto.Email}";
-                await telegramService.SendToOneAsync(
-                    config.TeleConfig?.LogChatId.ToString(CultureInfo.InvariantCulture)!, msg);
-            }, jobName: "SignUp Notification", triggeredBy: "signupApi");
-
-            await dispatcher.EnqueueAsync(
-                async token => { await mailService.SendEmailAsync(dto.Email, subject, body, isHtml: true); },
-                jobName: "Verification Email", triggeredBy: "signupApi");
-
-            return RESP_Success(userDetails, "User created successfully");
+            return RESP_Success(result, "User created successfully");
         }
         catch (Exception ex)
         {
@@ -62,133 +50,75 @@ public class AuthController(
             if (ex.Message.Contains("EMAIL_CONFLICT"))
                 return RESP_ConflictResponse<SignupResultDto>("Email already exists.");
 
-            await dispatcher.EnqueueAsync(async token =>
-            {
-                //TODO - REQUEST SERIALIZER INSTANCE
-                var msg =
-                    $"User Signup Failed\n\n{JsonSerializer.Serialize(dto, new JsonSerializerOptions { WriteIndented = true })}";
+            //await dispatcher.EnqueueAsync(_ => telegramService.SendToOneAsync(config.TeleConfig?.LogChatId.ToString(CultureInfo.InvariantCulture)!,
+            //    $"Signup Failed\n\n{JsonSerializer.Serialize(dto)}"));
 
-                await telegramService.SendToOneAsync(
-                    config?.TeleConfig?.LogChatId.ToString(CultureInfo.InvariantCulture)!, msg);
-            }, jobName: "SignUp Error Notification", triggeredBy: "signupApi");
-
-            return RESP_ServerErrorResponse<SignupResultDto>("Something went wrong");
+            throw;
         }
     }
 
     [HttpPost("login")]
     public async Task<ActionResult<ApiResponse<LoginResponseDto>>> Login(LoginRequestDto dto)
     {
-        try
+        var deviceIdCookie = Request.Cookies["DeviceId"];
+        if (!Guid.TryParse(deviceIdCookie, out var deviceId))
         {
-            if (!Guid.TryParse(Request.Cookies["DeviceId"], out var deviceId) &&
-                !Guid.TryParse(dto.DeviceId, out deviceId))
-            {
-                deviceId = Guid.NewGuid();
-            }
-
-            dto.DeviceId = deviceId.ToString();
-
-            var (response, refreshToken) = await authService.LoginAsync(dto);
-
-            Response.Cookies.Append("RefreshToken", refreshToken, new CookieOptions
-            {
-                HttpOnly = false,
-                Secure = true,
-                SameSite = SameSiteMode.None,
-                Expires = response.ExpiresAt
-            });
-
-            // Set DeviceId cookie only if it's not already there
-            if (Request.Cookies["DeviceId"] == null)
-            {
-                Response.Cookies.Append("DeviceId", deviceId.ToString(), new CookieOptions
-                {
-                    HttpOnly = false,
-                    Secure = true,
-                    SameSite = SameSiteMode.None,
-                    Expires = DateTimeOffset.UtcNow.AddYears(1)
-                });
-            }
-
-            return RESP_Success(response, "Login successful");
+            deviceId = Guid.NewGuid();
+            Response.Cookies.Append("DeviceId", deviceId.ToString(), new CookieOptions { HttpOnly = false, Secure = true, SameSite = SameSiteMode.None, Expires = DateTimeOffset.UtcNow.AddYears(1) });
         }
-        catch (UnauthorizedAccessException ex)
-        {
-            return RESP_UnauthorizedResponse<LoginResponseDto>(ex.Message);
-        }
-    }
+        dto.DeviceId = deviceId.ToString();
 
-    [HttpGet("sessions/{userId}")]
-    public async Task<ActionResult<ApiResponse<IEnumerable<SessionDto>>>> GetSessions(int userId)
-    {
-        var sessions = await authService.GetUserSessionsAsync(userId);
-        return RESP_Success(sessions);
+        var (res, refreshToken) = await authService.LoginAsync(dto);
+
+        Response.Cookies.Append("RefreshToken", refreshToken, new CookieOptions { HttpOnly = true, Secure = true, SameSite = SameSiteMode.None, Expires = res.ExpiresAt });
+
+        return RESP_Success(res, "Login successful");
     }
 
     [HttpPost("logout/{sessionId}")]
     public async Task<ActionResult<ApiResponse<bool>>> Logout(int sessionId)
     {
-        var result = await authService.LogoutSessionAsync(sessionId);
-        return result
-            ? RESP_Success(true, "Logged out successfully")
-            : RESP_BadRequestResponse<bool>("Logout failed");
-    }
-
-    [HttpGet("verify-email")]
-    public async Task<ActionResult<ApiResponse<string>>> VerifyEmail([FromQuery] Guid token)
-    {
-        try
-        {
-            await authService.VerifyEmailAsync(token);
-            return RESP_Success("Email verified successfully");
-        }
-        catch
-        {
-            return RESP_BadRequestResponse<string>("Invalid or expired token");
-        }
-    }
-
-    [Authorize]
-    [HttpGet("claims")]
-    public Task<ActionResult<ApiResponse<int>>> GetMyId()
-    {
-        return Task.FromResult(RESP_Success<int>(1, "Authorization Setup Complete"));
+        var success = await authService.LogoutSessionAsync(sessionId);
+        return success ? RESP_Success(true, "Logged out") : RESP_BadRequestResponse<bool>("Logout failed");
     }
 
     [HttpPost("refresh")]
-    public async Task<ActionResult<ApiResponse<LoginResponseDto>>> RefreshAccessToken()
+    public async Task<ActionResult<ApiResponse<LoginResponseDto>>> RefreshToken()
     {
         var refreshToken = Request.Cookies["RefreshToken"];
         var deviceId = Request.Cookies["DeviceId"];
 
         if (string.IsNullOrWhiteSpace(refreshToken) || string.IsNullOrWhiteSpace(deviceId))
-            return RESP_UnauthorizedResponse<LoginResponseDto>("Missing token or device ID");
+            return RESP_UnauthorizedResponse<LoginResponseDto>("Missing refresh token or device ID");
 
-        try
-        {
-            var (response, newRefreshToken) = await authService.RefreshTokenAsync(refreshToken, deviceId);
-
-            Response.Cookies.Append("RefreshToken", newRefreshToken, new CookieOptions
-            {
-                HttpOnly = true,
-                Secure = true,
-                SameSite = SameSiteMode.None,
-                Expires = response.ExpiresAt
-            });
-
-            return RESP_Success(response, "Token refreshed");
-        }
-        catch (UnauthorizedAccessException ex)
-        {
-            return RESP_UnauthorizedResponse<LoginResponseDto>(ex.Message);
-        }
+        var (res, newToken) = await authService.RefreshTokenAsync(refreshToken, deviceId);
+        Response.Cookies.Append("RefreshToken", newToken, new CookieOptions { HttpOnly = true, Secure = true, SameSite = SameSiteMode.None, Expires = res.ExpiresAt });
+        return RESP_Success(res, "Token refreshed");
     }
 
-    [HttpGet("email")]
-    public async Task<ActionResult<ApiResponse<int>>> Test()
+    [HttpGet("sessions/{userId}")]
+    public async Task<ActionResult<ApiResponse<IEnumerable<SessionDto>>>> GetSessions(int userId) =>
+        RESP_Success(await authService.GetUserSessionsAsync(userId));
+
+    [HttpGet("verify-email")]
+    public async Task<ActionResult<ApiResponse<string>>> VerifyEmail([FromQuery] Guid token)
     {
-        await mailService.SendEmailAsync("jskainthofficial@gmail.com", "google test", "<p> Test </p>", isHtml: true);
-        return RESP_Success(1, "Token refreshed");
+        await authService.VerifyEmailAsync(token);
+        return RESP_Success("Email verified successfully");
     }
+
+    [HttpPost("recover-request")]
+    public async Task<ActionResult<ApiResponse<string>>> RequestRecovery([FromBody] RecoveryRequestDtos dto)
+    {
+        await authService.RequestPasswordRecoveryAsync(dto.Email);
+        return RESP_Success("Recovery email sent");
+    }
+
+    [HttpPost("recover-complete")]
+    public async Task<ActionResult<ApiResponse<string>>> CompleteRecovery([FromBody] ResetPasswordDto dto)
+    {
+        await authService.CompletePasswordRecoveryAsync(dto.Token, dto.Otp, dto.NewPassword);
+        return RESP_Success("Password has been reset successfully");
+    }
+
 }

@@ -22,7 +22,7 @@ namespace Jsm33t.Api.Controllers
         protected ActionResult<ApiResponse<T>> RESP_Success<T>(T data, string message = "Success") =>
             FcResponse(new ApiResponse<T?>(200, message, data));
 
-        // ✅ Generic error overloads
+        // Generic error overloads
         protected ActionResult<ApiResponse<T>> RESP_BadRequestResponse<T>(string message) =>
             FcResponse(new ApiResponse<T?>(400, message, default));
 

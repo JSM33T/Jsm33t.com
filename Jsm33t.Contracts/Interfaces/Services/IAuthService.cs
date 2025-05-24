@@ -7,13 +7,13 @@ namespace Jsm33t.Contracts.Interfaces.Services
 {
     public interface IAuthService
     {
-        //Task<LoginResponseDto> LoginAsync(LoginRequestDto dto);
-        Task<(LoginResponseDto Response, string RefreshToken)> LoginAsync(LoginRequestDto dto);
         Task<SignupResultDto> SignupAsync(SignupUserDto dto);
-        Task<IEnumerable<SessionDto>> GetUserSessionsAsync(int userId);
+        Task<(LoginResponseDto, string)> LoginAsync(LoginRequestDto dto);
         Task<bool> LogoutSessionAsync(int sessionId);
+        Task<(LoginResponseDto, string)> RefreshTokenAsync(string refreshToken, string deviceId);
+        Task<IEnumerable<SessionDto>> GetUserSessionsAsync(int userId);
         Task VerifyEmailAsync(Guid token);
-        Task<(LoginResponseDto Response, string NewRefreshToken)> RefreshTokenAsync(string refreshToken, string deviceId);
-
+        Task RequestPasswordRecoveryAsync(string email);
+        Task CompletePasswordRecoveryAsync(string? token, string? otp, string newPassword);
     }
 }

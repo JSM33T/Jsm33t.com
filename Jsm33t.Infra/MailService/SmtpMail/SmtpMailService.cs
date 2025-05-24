@@ -16,7 +16,7 @@ namespace Jsm33t.Infra.MailService.SmtpMail
             };
 
             using var client = BuildSmtpClient();
-            await client.SendMailAsync(message);
+            //await client.SendMailAsync(message);
         }
 
         public async Task SendEmailWithAttachmentAsync(string to, string subject, string body, byte[] attachment, string fileName, bool isHtml = true)
@@ -29,7 +29,7 @@ namespace Jsm33t.Infra.MailService.SmtpMail
             message.Attachments.Add(new Attachment(new MemoryStream(attachment), fileName));
 
             using var client = BuildSmtpClient();
-            await client.SendMailAsync(message);
+            //await client.SendMailAsync(message);
         }
 
         public async Task SendBulkEmailAsync(IEnumerable<string> recipients, string subject, string body, bool isHtml = true)
