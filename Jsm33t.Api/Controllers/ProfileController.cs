@@ -4,7 +4,6 @@ using Jsm33t.Contracts.Interfaces.Services;
 using Jsm33t.Infra.ImageHost;
 using Jsm33t.Shared.Helpers;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Jsm33t.Api.Controllers

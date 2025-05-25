@@ -21,7 +21,7 @@ BEGIN
         (
             pr.Otp = @Otp AND
             pr.OtpExpiresAt > GETUTCDATE() AND
-            ul.UserName = @Username AND
+            [dbo].[UserLogins].[UserName] = @Username AND
             @Otp IS NOT NULL AND @Username IS NOT NULL
         )
     );

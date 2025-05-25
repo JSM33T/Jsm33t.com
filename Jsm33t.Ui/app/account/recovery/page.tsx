@@ -6,7 +6,7 @@ export const metadata: Metadata = {
 	description: 'Recovery your account in case you lost your password or username.'
 };
 
-export default function LoginPagee() {
+export default function RecoveryPage() {
 	return (
 		<>
 			<RecoveryForm />

@@ -21,9 +21,11 @@ export type MusicTrack = {
 type PlayerContextType = {
 	currentTrack: MusicTrack | null;
 	isPlaying: boolean;
+	showPlayer: boolean;
 	play: (track: MusicTrack) => void;
 	pause: () => void;
 	stop: () => void;
+	setShowPlayer: (val: boolean) => void;
 };
 
 // Helpers
@@ -43,9 +45,10 @@ export const usePlayer = () => {
 };
 
 // Provider
-export function PlayerProvider({ children }: { children: ReactNode }) {
+function PlayerProvider({ children }: { children: ReactNode }) {
 	const [currentTrack, setCurrentTrack] = useState<MusicTrack | null>(null);
 	const [isPlaying, setIsPlaying] = useState(false);
+	const [showPlayer, setShowPlayer] = useState(false);
 	const audioRef = useRef<HTMLAudioElement | null>(null);
 
 	useEffect(() => {
@@ -54,27 +57,9 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
 		}
 	}, []);
 
-	// const play = (track: MusicTrack) => {
-	// 	if (!audioRef.current) return;
-
-	// 	if (currentTrack?.slug !== track.slug) {
-	// 		audioRef.current.src = track.url;
-	// 		setCurrentTrack(track);
-	// 	}
-
-	// 	audioRef.current
-	// 		.play()
-	// 		.then(() => setIsPlaying(true))
-	// 		.catch((err) => {
-	// 			console.error('Playback error:', err);
-	// 			setIsPlaying(false);
-	// 		});
-	// };
-
 	const play = (track: MusicTrack) => {
 		if (!audioRef.current) return;
 
-		// Resume AudioContext on interaction
 		try {
 			const context = new (window.AudioContext || (window as any).webkitAudioContext)();
 			if (context.state === 'suspended') context.resume();
@@ -89,13 +74,15 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
 
 		audioRef.current
 			.play()
-			.then(() => setIsPlaying(true))
+			.then(() => {
+				setIsPlaying(true);
+				setShowPlayer(true);
+			})
 			.catch((err) => {
 				console.error('Playback error:', err);
 				setIsPlaying(false);
 			});
 	};
-
 
 	const pause = () => {
 		audioRef.current?.pause();
@@ -111,15 +98,17 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
 	};
 
 	return (
-		<PlayerContext.Provider value={{ currentTrack, isPlaying, play, pause, stop }}>
+		<PlayerContext.Provider
+			value={{ currentTrack, isPlaying, play, pause, stop, showPlayer, setShowPlayer }}
+		>
 			{children}
 			<audio ref={audioRef} hidden id="global-audio" />
 		</PlayerContext.Provider>
 	);
 }
 
-// UI
-export function PlayerUI({ track }: { track: MusicTrack }) {
+// UI Component
+function PlayerUI({ track }: { track: MusicTrack }) {
 	const { isPlaying, play, pause, stop } = usePlayer();
 	const audioRef = useRef<HTMLAudioElement | null>(null);
 	const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -131,6 +120,8 @@ export function PlayerUI({ track }: { track: MusicTrack }) {
 	const sourceCreated = useRef(false);
 
 	useEffect(() => {
+		console.log('Initializing audio element');
+		//TODO: open canvas if its not opened
 		audioRef.current = document.getElementById('global-audio') as HTMLAudioElement;
 		if (!audioRef.current) return;
 
@@ -258,3 +249,6 @@ export function PlayerUI({ track }: { track: MusicTrack }) {
 		</div>
 	);
 }
+
+// Exports
+export { PlayerProvider, PlayerUI };

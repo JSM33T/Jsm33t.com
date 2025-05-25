@@ -34,7 +34,6 @@ namespace Jsm33t.Api.Controllers
             return PhysicalFile(localPath, GetMimeType(localPath));
         }
 
-
         private string GetMimeType(string path)
         {
             var ext = Path.GetExtension(path).ToLower();

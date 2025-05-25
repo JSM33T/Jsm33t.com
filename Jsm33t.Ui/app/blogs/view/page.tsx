@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Breadcrumbs from '@/components/sections/Breadcrumbs';
-import BlogListWithSidebar from './_client/BlogListWithSidebar';
+import BlogPostView from './_client/BlogViewClient';
+
 
 
 export const metadata: Metadata = {
@@ -10,15 +11,15 @@ export const metadata: Metadata = {
 
 const breadcrumbs = [
 	{ label: 'Home', href: '/' },
-	{ label: 'Blog' }
+	{ label: 'View' }
 ];
 
-export default function BlogPage() {
+export default function BlogViewPage() {
 	return (
 		<>
 			<div className="container my-5 pt-5">
 				<Breadcrumbs items={breadcrumbs} />
-				<BlogListWithSidebar />
+				<BlogPostView />
 				<button className="d-lg-none btn btn-sm fs-sm btn-primary w-100 rounded-0 fixed-bottom" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarBlog">
 					<i className="ai-layout-column me-2"></i>
 					Sidebar

@@ -81,5 +81,9 @@
     <Build Include="dbo\Stored Procedures\GetProfileDetailsById.sql" />
     <Build Include="dbo\Stored Procedures\EditProfileDetailsById.sql" />
     <Build Include="dbo\Stored Procedures\usp_ValidateRefreshToken.sql" />
+    <Build Include="dbo\Stored Procedures\usp_ResetPassword.sql" />
+    <Build Include="dbo\Stored Procedures\usp_ValidateRecoveryToken.sql" />
+    <Build Include="dbo\Stored Procedures\usp_CreateRecoveryToken.sql" />
+    <Build Include="dbo\Tables\PasswordRecoveries.sql" />
   </ItemGroup>
 </Project>

@@ -140,10 +140,13 @@ const Navbar = () => {
 								<Link className="nav-link" href="/">Home</Link>
 							</li>
 							<li className="nav-item">
-								<Link className="nav-link" href="/about">About</Link>
+								<Link className="nav-link" href="/blogs">Blogs</Link>
 							</li>
 							<li className="nav-item">
 								<Link className="nav-link" href="/music">Music</Link>
+							</li>
+							<li className="nav-item">
+								<Link className="nav-link" href="/about">About</Link>
 							</li>
 							<li className="nav-item dropdown d-sm-none border-top mt-2 pt-2">
 								<a className="nav-link" href="#" data-bs-toggle="dropdown" aria-expanded="false">

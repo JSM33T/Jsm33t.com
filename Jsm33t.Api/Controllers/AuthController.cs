@@ -20,6 +20,7 @@ public class AuthController(
     IAuthService authService,
     IMailService mailService,
     IDispatcher dispatcher,
+    FcConfig fcConfig,
     ITelegramService telegramService,
     FcConfig config) : FcBaseController
 {
@@ -30,7 +31,7 @@ public class AuthController(
         {
             var result = await authService.SignupAsync(dto);
 
-            string link = $"https://jsm33t.com/landings/verification?token={result.EmailVerificationToken}";
+            string link = $"{fcConfig.BaseUrls.BaseUiUrl}/landings/verification?token={result.EmailVerificationToken}";
             string subject = "Verify your email address";
             string body = $"<p>Hello {dto.FirstName},</p><p>Please verify: <a href='{link}'>Verify</a></p>";
 
