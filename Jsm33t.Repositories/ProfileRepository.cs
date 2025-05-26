@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using Jsm33t.Contracts.Dtos;
 using Jsm33t.Contracts.Dtos.Responses;
 using Jsm33t.Contracts.Interfaces.Repositories;
 using Jsm33t.Infra.Dapper;
@@ -45,6 +46,42 @@ namespace Jsm33t.Repositories
             return parameters.Get<int>("ResultCode");
         }
 
+        public async Task<IEnumerable<LoginDeviceDto>> GetLoginDevicesForUser(int userId)
+        {
+            using var conn = dapperFactory.CreateConnection();
+            var sql = @"
+        SELECT s.Id AS SessionId, s.AccessToken, s.DeviceId, s.IpAddress, s.UserAgent,
+               s.IssuedAt, s.ExpiresAt, s.IsActive, s.LoggedOutAt
+        FROM LoginSessions s
+        INNER JOIN UserLogins ul ON ul.Id = s.UserLoginId
+        WHERE ul.UserId = @UserId
+        ORDER BY s.IssuedAt DESC";
+            return await conn.QueryAsync<LoginDeviceDto>(sql, new { UserId = userId });
+        }
+
+        // Remove all sessions for a user except the current device
+        public async Task<int> RemoveAllDevicesExceptDevice(int userId, Guid deviceId)
+        {
+            using var conn = dapperFactory.CreateConnection();
+            var sql = @"
+            DELETE s
+            FROM LoginSessions s
+            INNER JOIN UserLogins ul ON ul.Id = s.UserLoginId
+            WHERE ul.UserId = @UserId AND (s.DeviceId IS NULL OR s.DeviceId <> @DeviceId)";
+            return await conn.ExecuteAsync(sql, new { UserId = userId, DeviceId = deviceId });
+        }
+
+        // Remove only the current device/session for a user
+        public async Task<int> RemoveDeviceByDeviceId(int userId, Guid deviceId)
+        {
+            using var conn = dapperFactory.CreateConnection();
+            var sql = @"
+            DELETE s
+            FROM LoginSessions s
+            INNER JOIN UserLogins ul ON ul.Id = s.UserLoginId
+            WHERE ul.UserId = @UserId AND s.DeviceId = @DeviceId";
+            return await conn.ExecuteAsync(sql, new { UserId = userId, DeviceId = deviceId });
+        }
 
     }
 }

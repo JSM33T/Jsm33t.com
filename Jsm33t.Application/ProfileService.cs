@@ -1,33 +1,11 @@
-﻿using Jsm33t.Contracts.Dtos.Responses;
+﻿using Jsm33t.Contracts.Dtos;
+using Jsm33t.Contracts.Dtos.Responses;
 using Jsm33t.Contracts.Interfaces.Repositories;
 using Jsm33t.Contracts.Interfaces.Services;
 using Microsoft.AspNetCore.Http;
 
 namespace Jsm33t.Application
 {
-    //public class ProfileService(IProfileRepository profileRepository) : IProfileService
-    //{
-    //    public async Task<UserProfileDetailsDto> GetUserProfileById(int id)
-    //    {
-    //        var profile = await profileRepository.GetUserProfileById(id);
-
-    //        if (!string.IsNullOrEmpty(profile.Avatar))
-    //        {
-    //            // Replace "https://res.cloudinary.com/" with your app's media cache endpoint
-    //            profile.Avatar = profile.Avatar.Replace(
-    //                "https://res.cloudinary.com/",
-    //                "/api/media/"
-    //            );
-    //        }
-
-    //        return profile;
-    //    }
-
-    //    public async Task<int> UpdateUserProfile(EditUserProfileDto userProfileDetails, string AvatarUrl)
-    //    {
-    //        return await profileRepository.UpdateUserProfile(userProfileDetails,AvatarUrl);
-    //    }
-    //}
     public class ProfileService(IProfileRepository profileRepository, IHttpContextAccessor httpContextAccessor) : IProfileService
     {
         public async Task<UserProfileDetailsDto> GetUserProfileById(int id)
@@ -50,5 +28,15 @@ namespace Jsm33t.Application
         {
             return await profileRepository.UpdateUserProfile(userProfileDetails, AvatarUrl);
         }
+
+        public async Task<IEnumerable<LoginDeviceDto>> GetLoginDevices(int userId)
+            => await profileRepository.GetLoginDevicesForUser(userId);
+
+        public async Task<int> RemoveAllDevicesExceptDevice(int userId, Guid deviceId)
+         => await profileRepository.RemoveAllDevicesExceptDevice(userId, deviceId);
+
+        public async Task<int> RemoveDeviceByDeviceId(int userId, Guid deviceId)
+            => await profileRepository.RemoveDeviceByDeviceId(userId, deviceId);
+
     }
 }

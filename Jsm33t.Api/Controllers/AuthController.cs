@@ -58,50 +58,22 @@ public class AuthController(
         }
     }
 
-    //[HttpPost("login")]
-    //public async Task<ActionResult<ApiResponse<LoginResponseDto>>> Login(LoginRequestDto dto)
-    //{
-    //    try {
-    //        var deviceIdCookie = Request.Cookies["DeviceId"];
-    //        if (!Guid.TryParse(deviceIdCookie, out var deviceId))
-    //        {
-    //            deviceId = Guid.NewGuid();
-    //            Response.Cookies.Append("DeviceId", deviceId.ToString(), new CookieOptions { HttpOnly = false, Secure = true, SameSite = SameSiteMode.None, Expires = DateTimeOffset.UtcNow.AddYears(1) });
-    //        }
-    //        dto.DeviceId = deviceId.ToString();
-
-    //        var (res, refreshToken) = await authService.LoginAsync(dto);
-
-    //        Response.Cookies.Append("RefreshToken", refreshToken, new CookieOptions { HttpOnly = true, Secure = true, SameSite = SameSiteMode.None, Expires = res.ExpiresAt });
-
-    //        return RESP_Success(res, "Login successful");
-
-    //    }
-    //    catch (UnauthorizedAccessException ex)
-    //    {
-    //        return RESP_UnauthorizedResponse<LoginRequestDto>(new ApiResponse<string>
-    //        {
-    //            Success = false,
-    //            Message = ex.Message // Will be "Invalid credentials" or "Email not verified"
-    //        });
-    //    }
-
-    //}
     [HttpPost("login")]
     public async Task<ActionResult<ApiResponse<LoginResponseDto>>> Login(LoginRequestDto dto)
     {
         try
         {
+            var cookieExpiry = DateTimeOffset.UtcNow.AddYears(1);
             var deviceIdCookie = Request.Cookies["DeviceId"];
             if (!Guid.TryParse(deviceIdCookie, out var deviceId))
             {
                 deviceId = Guid.NewGuid();
                 Response.Cookies.Append("DeviceId", deviceId.ToString(), new CookieOptions
                 {
-                    HttpOnly = false,
+                    HttpOnly = true,
                     Secure = true,
                     SameSite = SameSiteMode.None,
-                    Expires = DateTimeOffset.UtcNow.AddYears(1)
+                    Expires = cookieExpiry
                 });
             }
 
@@ -114,7 +86,7 @@ public class AuthController(
                 HttpOnly = true,
                 Secure = true,
                 SameSite = SameSiteMode.None,
-                Expires = res.ExpiresAt
+                Expires = cookieExpiry
             });
 
             return RESP_Success(res, "Login successful");

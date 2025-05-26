@@ -21,10 +21,11 @@ public class AuthService(IAuthRepository repo, ITokenService tokenService,IMailS
         return await repo.InsertUserAsync(dto, hash, salt);
     }
 
+
     public async Task<(LoginResponseDto, string)> LoginAsync(LoginRequestDto dto)
     {
-        var login = await repo.GetLoginDataByEmailAsync(dto.Email) ??
-            throw new UnauthorizedAccessException("Invalid credentials");
+        var login = await repo.GetLoginDataByEmailAsync(dto.Email)
+            ?? throw new UnauthorizedAccessException("Invalid credentials");
 
         if (!login.IsVerified)
             throw new UnauthorizedAccessException("Email not verified");
@@ -32,15 +33,18 @@ public class AuthService(IAuthRepository repo, ITokenService tokenService,IMailS
         if (!PasswordHelper.VerifyPassword(dto.Password, login.PasswordHash!, login.Salt!))
             throw new UnauthorizedAccessException("Invalid credentials");
 
-        var tokens = await tokenService.GenerateTokens(login.UserId);
+        // Generate tokens with both expiry times
+        var (accessToken, refreshToken, jwtExpiresAt, refreshTokenExpiresAt, issuedAt) =
+            await tokenService.GenerateTokens(login.UserId);
 
+        // Store session using refresh token expiry for session expiration
         var session = new LoginSession
         {
             UserLoginId = login.Id,
-            AccessToken = tokens.AccessToken,
-            RefreshToken = tokens.RefreshToken,
-            IssuedAt = tokens.IssuedAt,
-            ExpiresAt = tokens.ExpiresAt,
+            AccessToken = accessToken,
+            RefreshToken = refreshToken,
+            IssuedAt = issuedAt,
+            ExpiresAt = refreshTokenExpiresAt,
             DeviceId = Guid.Parse(dto.DeviceId),
             IpAddress = dto.IpAddress,
             UserAgent = dto.UserAgent
@@ -48,32 +52,44 @@ public class AuthService(IAuthRepository repo, ITokenService tokenService,IMailS
 
         var sessionId = await repo.CreateSessionAsync(session);
 
+        // JWT expiry returned to client, refresh expiry managed in session/cookie
         return (new LoginResponseDto
         {
             UserId = login.UserId,
             SessionId = sessionId,
-            AccessToken = tokens.AccessToken,
-            ExpiresAt = tokens.ExpiresAt
-        }, tokens.RefreshToken);
+            AccessToken = accessToken,
+            ExpiresAt = jwtExpiresAt
+        }, refreshToken);
     }
+
+
 
     public async Task<bool> LogoutSessionAsync(int sessionId) =>
         await repo.LogoutSessionAsync(sessionId);
 
     public async Task<(LoginResponseDto, string)> RefreshTokenAsync(string refreshToken, string deviceId)
     {
+        // Validate existing refresh token and get session info
         var (userId, userLoginId, sessionId) = await repo.ValidateRefreshTokenAsync(refreshToken, deviceId);
-        var tokens = await tokenService.GenerateTokens(userId);
-        await repo.StoreNewRefreshTokenAsync(sessionId, tokens.RefreshToken, tokens.ExpiresAt);
 
+        // Generate new tokens and expiries
+        var (accessToken, newRefreshToken, jwtExpiresAt, refreshTokenExpiresAt, issuedAt) =
+            await tokenService.GenerateTokens(userId);
+
+        // Update session with new refresh token and its expiry
+        await repo.StoreNewRefreshTokenAsync(sessionId, newRefreshToken, refreshTokenExpiresAt);
+
+        // Return new JWT and refresh token
         return (new LoginResponseDto
         {
             UserId = userId,
             SessionId = sessionId,
-            AccessToken = tokens.AccessToken,
-            ExpiresAt = tokens.ExpiresAt
-        }, tokens.RefreshToken);
+            AccessToken = accessToken,
+            ExpiresAt = jwtExpiresAt
+        }, newRefreshToken);
     }
+
+
 
     public Task<IEnumerable<SessionDto>> GetUserSessionsAsync(int userId) =>
         repo.GetSessionsByUserIdAsync(userId);
