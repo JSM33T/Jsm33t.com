@@ -30,35 +30,20 @@ export default function RecoveryForm() {
 	const { register, handleSubmit, formState: { errors } } = useForm<FormData>();
 	const [isLoading, setIsLoading] = useState(false);
 
-	const onSubmit = async (data: FormData) => {
+	const onSubmit = async (data: { email: string }) => {
 		setIsLoading(true);
 		try {
-			const response = await apiClient.post<LoginResponse>('/auth/login', data);
+			const response = await apiClient.post('/auth/recover-request', { email: data.email });
 
-			if (response.status === 200 && response.data?.accessToken) {
-				const token = response.data.accessToken;
-				localStorage.setItem('authToken', token);
-				setAuthToken(token);
-
-				const decoded = jwtDecode<JwtPayload>(token);
-				setUser({
-					firstName: decoded.firstName,
-					lastName: decoded.lastName,
-					email: decoded.email,
-					username: decoded.username,
-					avatar: decoded.avatar || '/assets/images/default_user.jpg',
-				});
-
+			if (response.status === 200) {
 				modalRef?.current?.open({
-					title: 'Login Successful',
-					description: 'Redirecting to dashboard...',
+					title: 'Recovery Email Sent',
+					description: 'Check your inbox for further instructions.',
 				});
-
-				setTimeout(() => window.location.replace('/'), 100);
 			} else {
 				modalRef?.current?.open({
-					title: 'Login Failed',
-					description: response?.message || 'Unexpected error occurred. Please try again.',
+					title: 'Request Failed',
+					description: response?.message || 'Could not send recovery email.',
 				});
 			}
 		} catch {
@@ -101,7 +86,7 @@ export default function RecoveryForm() {
 									<small className="text-danger">{errors.email.message}</small>
 								)}
 							</div>
-
+							{/* 
 							<div className="mb-4 position-relative">
 								<i className="ai-lock-closed fs-lg position-absolute top-50 start-0 translate-middle-y ms-3 text-muted"></i>
 								<div className="password-toggle">
@@ -120,7 +105,7 @@ export default function RecoveryForm() {
 								{errors.password && (
 									<small className="text-danger">{errors.password.message}</small>
 								)}
-							</div>
+							</div> */}
 
 							<button className="btn btn-lg btn-primary w-100 mb-4" type="submit" disabled={isLoading}>
 								{isLoading ? 'Loading...' : 'Recover Account'}

@@ -2,7 +2,7 @@ import Link from "next/link";
 
 const services = [
 	{
-		title: 'Login', 
+		title: 'Login',
 		description: 'Login to an existing account.',
 		link: '/account/login'
 	},
@@ -14,10 +14,9 @@ const services = [
 	{
 		title: 'Recover',
 		description: 'Recover your account in case of lost password.',
-		link: '/account/reovery'
+		link: '/account/recovery'
 	}
 ];
-
 
 export default function AccountPage() {
 	return (

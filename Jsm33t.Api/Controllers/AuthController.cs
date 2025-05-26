@@ -1,5 +1,4 @@
 ﻿using Jsm33t.Contracts.Dtos;
-using Jsm33t.Contracts.Dtos.Internal;
 using Jsm33t.Contracts.Dtos.Requests;
 using Jsm33t.Contracts.Dtos.Responses;
 using Jsm33t.Contracts.Interfaces.Services;
@@ -25,13 +24,14 @@ public class AuthController(
     FcConfig config) : FcBaseController
 {
     [HttpPost("signup")]
-    public async Task<ActionResult<ApiResponse<SignupResultDto>>> Signup(SignupUserDto dto)
+    public async Task<ActionResult<ApiResponse<bool>>> Signup(SignupUserDto dto)
     {
         try
         {
             var result = await authService.SignupAsync(dto);
 
             string link = $"{fcConfig.BaseUrls.BaseUiUrl}/landings/verification?token={result.EmailVerificationToken}";
+
             string subject = "Verify your email address";
             string body = $"<p>Hello {dto.FirstName},</p><p>Please verify: <a href='{link}'>Verify</a></p>";
 
@@ -42,14 +42,14 @@ public class AuthController(
             await dispatcher.EnqueueAsync(_ => mailService.SendEmailAsync(dto.Email, subject, body, true),
                 jobName: "VerificationEmail", triggeredBy: nameof(AuthController));
 
-            return RESP_Success(result, "User created successfully");
+            return RESP_Success(true, "User created successfully");
         }
         catch (Exception ex)
         {
             if (ex.Message.Contains("USERNAME_CONFLICT"))
-                return RESP_ConflictResponse<SignupResultDto>("Username already exists.");
+                return RESP_ConflictResponse<bool>("Username already exists.");
             if (ex.Message.Contains("EMAIL_CONFLICT"))
-                return RESP_ConflictResponse<SignupResultDto>("Email already exists.");
+                return RESP_ConflictResponse<bool>("Email already exists.");
 
             //await dispatcher.EnqueueAsync(_ => telegramService.SendToOneAsync(config.TeleConfig?.LogChatId.ToString(CultureInfo.InvariantCulture)!,
             //    $"Signup Failed\n\n{JsonSerializer.Serialize(dto)}"));
@@ -58,23 +58,77 @@ public class AuthController(
         }
     }
 
+    //[HttpPost("login")]
+    //public async Task<ActionResult<ApiResponse<LoginResponseDto>>> Login(LoginRequestDto dto)
+    //{
+    //    try {
+    //        var deviceIdCookie = Request.Cookies["DeviceId"];
+    //        if (!Guid.TryParse(deviceIdCookie, out var deviceId))
+    //        {
+    //            deviceId = Guid.NewGuid();
+    //            Response.Cookies.Append("DeviceId", deviceId.ToString(), new CookieOptions { HttpOnly = false, Secure = true, SameSite = SameSiteMode.None, Expires = DateTimeOffset.UtcNow.AddYears(1) });
+    //        }
+    //        dto.DeviceId = deviceId.ToString();
+
+    //        var (res, refreshToken) = await authService.LoginAsync(dto);
+
+    //        Response.Cookies.Append("RefreshToken", refreshToken, new CookieOptions { HttpOnly = true, Secure = true, SameSite = SameSiteMode.None, Expires = res.ExpiresAt });
+
+    //        return RESP_Success(res, "Login successful");
+
+    //    }
+    //    catch (UnauthorizedAccessException ex)
+    //    {
+    //        return RESP_UnauthorizedResponse<LoginRequestDto>(new ApiResponse<string>
+    //        {
+    //            Success = false,
+    //            Message = ex.Message // Will be "Invalid credentials" or "Email not verified"
+    //        });
+    //    }
+
+    //}
     [HttpPost("login")]
     public async Task<ActionResult<ApiResponse<LoginResponseDto>>> Login(LoginRequestDto dto)
     {
-        var deviceIdCookie = Request.Cookies["DeviceId"];
-        if (!Guid.TryParse(deviceIdCookie, out var deviceId))
+        try
         {
-            deviceId = Guid.NewGuid();
-            Response.Cookies.Append("DeviceId", deviceId.ToString(), new CookieOptions { HttpOnly = false, Secure = true, SameSite = SameSiteMode.None, Expires = DateTimeOffset.UtcNow.AddYears(1) });
+            var deviceIdCookie = Request.Cookies["DeviceId"];
+            if (!Guid.TryParse(deviceIdCookie, out var deviceId))
+            {
+                deviceId = Guid.NewGuid();
+                Response.Cookies.Append("DeviceId", deviceId.ToString(), new CookieOptions
+                {
+                    HttpOnly = false,
+                    Secure = true,
+                    SameSite = SameSiteMode.None,
+                    Expires = DateTimeOffset.UtcNow.AddYears(1)
+                });
+            }
+
+            dto.DeviceId = deviceId.ToString();
+
+            var (res, refreshToken) = await authService.LoginAsync(dto);
+
+            Response.Cookies.Append("RefreshToken", refreshToken, new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = true,
+                SameSite = SameSiteMode.None,
+                Expires = res.ExpiresAt
+            });
+
+            return RESP_Success(res, "Login successful");
         }
-        dto.DeviceId = deviceId.ToString();
-
-        var (res, refreshToken) = await authService.LoginAsync(dto);
-
-        Response.Cookies.Append("RefreshToken", refreshToken, new CookieOptions { HttpOnly = true, Secure = true, SameSite = SameSiteMode.None, Expires = res.ExpiresAt });
-
-        return RESP_Success(res, "Login successful");
+        catch (UnauthorizedAccessException ex)
+        {
+            return RESP_UnauthorizedResponse<LoginResponseDto>(ex.Message);
+        }
+        catch (Exception)
+        {
+            throw;
+        }
     }
+
 
     [HttpPost("logout/{sessionId}")]
     public async Task<ActionResult<ApiResponse<bool>>> Logout(int sessionId)

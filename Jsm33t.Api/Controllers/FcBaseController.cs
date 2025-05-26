@@ -15,7 +15,6 @@ namespace Jsm33t.Api.Controllers
 
             return StatusCode(apiResponse.Status, apiResponse);
         }
-
         protected ActionResult<ApiResponse<T>> RESP_Custom<T>(ApiResponse<T?> apiResponse) =>
             FcResponse(apiResponse);
 

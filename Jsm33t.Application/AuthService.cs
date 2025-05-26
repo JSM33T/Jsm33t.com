@@ -7,11 +7,12 @@ using Jsm33t.Contracts.Interfaces.Services;
 using Jsm33t.Contracts.Models;
 using Jsm33t.Infra.MailService;
 using Jsm33t.Infra.Token;
+using Jsm33t.Shared.ConfigModels;
 using Jsm33t.Shared.Helpers;
 
 namespace Jsm33t.Application;
 
-public class AuthService(IAuthRepository repo, ITokenService tokenService,IMailService mailService) : IAuthService
+public class AuthService(IAuthRepository repo, ITokenService tokenService,IMailService mailService,FcConfig fcConfig) : IAuthService
 {
     public async Task<SignupResultDto> SignupAsync(SignupUserDto dto)
     {
@@ -84,7 +85,7 @@ public class AuthService(IAuthRepository repo, ITokenService tokenService,IMailS
     {
         var token = await repo.CreatePasswordRecoveryTokenAsync(email);
         var subject = "Password Recovery";
-        var link = $"https://jsm33t.com/account/reset?token={token}";
+        var link = $"{fcConfig.BaseUrls.BaseUiUrl}/landings/recovery?token={token.Token}";
         var body = $"<p>Click <a href='{link}'>here</a> to reset your password.</p>";
         await mailService.SendEmailAsync(email, subject, body, isHtml: true);
     }
