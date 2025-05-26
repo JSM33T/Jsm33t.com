@@ -40,10 +40,12 @@ export default function RecoveryForm() {
 					title: 'Recovery Email Sent',
 					description: 'Check your inbox for further instructions.',
 				});
+				setTimeout(() => window.location.replace('/account/login'), 100);
 			} else {
 				modalRef?.current?.open({
 					title: 'Request Failed',
-					description: response?.message || 'Could not send recovery email.',
+					description: response?.message || 'Could not send recovery email. Please try again later.',
+					bodyList: response?.hints || [],
 				});
 			}
 		} catch {

@@ -38,7 +38,8 @@ export default function SignupForm() {
 					bodyList: res.hints,
 				});
 
-				setTimeout(() => router.replace('/login'), 2000);
+				setTimeout(() => router.replace('/account/login'), 2000);
+
 			} else {
 				modalRef?.current?.open({
 					title: 'Signup Failed',
@@ -72,6 +73,9 @@ export default function SignupForm() {
 						<h1>Create your account</h1>
 						<p className="mb-4">
 							Already have an account? <Link href="/account/login">Sign in here</Link>
+						</p>
+						<p className="mb-4">
+							Forgot password? <Link href="/account/recovery">Recover Account</Link>
 						</p>
 
 						<form className="needs-validation" noValidate onSubmit={handleSubmit}>

@@ -2,24 +2,24 @@ import Link from "next/link";
 
 const services = [
 	{
-		title: 'Overview', 
+		title: 'Overview',
 		description: 'Login to an existing account.',
 		link: '/profile/overview'
 	},
 	{
 		title: 'Edit',
 		description: 'Edit Profile Details',
-		link: '/account/edit'
+		link: '/profile/edit'
 	},
 	{
 		title: 'Password',
 		description: 'Recover your account in case of lost password.',
-		link: '/account/password'
+		link: '/profile/password'
 	},
-    	{
+	{
 		title: 'Devices',
 		description: 'Recover your account in case of lost password.',
-		link: '/account/devices'
+		link: '/profile/devices'
 	}
 ];
 

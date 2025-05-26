@@ -42,7 +42,11 @@ const ModalBox = forwardRef<ModalBoxRef, ModalBoxProps>(({ type = '' }, ref) => 
 
 				// 🔐 Dynamic import to avoid document access during SSR
 				const { Modal } = await import('bootstrap');
-				const modal = Modal.getInstance(modalRefLocal.current) || new Modal(modalRefLocal.current);
+				//const modal = Modal.getInstance(modalRefLocal.current) || new Modal(modalRefLocal.current);
+				const modal =
+					Modal.getInstance(modalRefLocal.current) ||
+					new Modal(modalRefLocal.current, { backdrop: 'static', keyboard: false });
+
 				modal.show();
 			},
 		};
