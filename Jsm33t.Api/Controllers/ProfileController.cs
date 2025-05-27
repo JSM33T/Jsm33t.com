@@ -50,7 +50,7 @@ namespace Jsm33t.Api.Controllers
         public async Task<ActionResult<ApiResponse<IEnumerable<LoginDeviceDto>>>> GetDevices()
         {
             var userId = HttpContextHelper.GetUserId(HttpContext!);
-            //var deviceId = HttpContextHelper.GetDeviceId(HttpContext!);
+            var deviceId = HttpContextHelper.GetDeviceId(HttpContext!);
 
             var devices = (await profileService.GetLoginDevices(userId)).ToList();
 
@@ -66,7 +66,7 @@ namespace Jsm33t.Api.Controllers
                 ExpiresAt = d.ExpiresAt,
                 IsActive = d.IsActive,
                 LoggedOutAt = d.LoggedOutAt,
-               // IsCurrent = d.DeviceId == deviceId // << correct comparison!
+                IsCurrent = d.DeviceId == deviceId // << correct comparison!
             });
 
             return RESP_Success(devicesWithCurrentFlag);

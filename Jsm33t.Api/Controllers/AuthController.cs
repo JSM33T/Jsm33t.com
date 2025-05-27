@@ -63,6 +63,9 @@ public class AuthController(
     {
         try
         {
+            dto.IpAddress = HttpContext.Connection.RemoteIpAddress?.ToString();
+            dto.UserAgent = Request.Headers["User-Agent"].ToString();
+
             var cookieExpiry = DateTimeOffset.UtcNow.AddYears(1);
             var deviceIdCookie = Request.Cookies["DeviceId"];
             if (!Guid.TryParse(deviceIdCookie, out var deviceId))

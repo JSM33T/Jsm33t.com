@@ -20,10 +20,10 @@ const UserMenuItems = ({ badgeClass = "ms-auto" }: { badgeClass?: string }) => {
 
 			{isLoggedIn ? (
 				<>
-					<Link className="dropdown-item" href="/profile">
+					<Link className="dropdown-item collapse-trigger" href="/profile">
 						<i className="ai-settings fs-lg opacity-70 me-2"></i>Profile
 					</Link>
-					<div className="dropdown-divider"></div>
+					<div className="dropdown-divider collapse-trigger"></div>
 					<a className="dropdown-item" href="#" onClick={(e) => {
 						e.preventDefault();
 						showBootstrapModal({
@@ -53,31 +53,28 @@ const Navbar = () => {
 
 	const { user } = useUser();
 	useEffect(() => {
-		// Dynamically import Collapse from bootstrap only on client
 		const navbarCollapse = document.getElementById("navbarNav");
+		if (!navbarCollapse) return;
 
-		const handler = async () => {
-			const { Collapse } = await import("bootstrap");
-
-			const links = document.querySelectorAll(".navbar-nav .nav-link");
-			links.forEach((link) => {
-				link.addEventListener("click", () => {
-					if (navbarCollapse?.classList.contains("show")) {
+		const handleNavClick = (e: Event) => {
+			const target = e.target as HTMLElement;
+			// Find if the clicked element or its parent has .collapse-trigger
+			if (target.classList.contains("collapse-trigger") || target.closest(".collapse-trigger")) {
+				if (navbarCollapse.classList.contains("show")) {
+					import("bootstrap").then(({ Collapse }) => {
 						new Collapse(navbarCollapse).hide();
-					}
-				});
-			});
+					});
+				}
+			}
 		};
 
-		handler();
+		navbarCollapse.addEventListener("click", handleNavClick);
 
 		return () => {
-			const links = document.querySelectorAll(".navbar-nav .nav-link");
-			links.forEach((link) => {
-				link.removeEventListener("click", () => { });
-			});
+			navbarCollapse.removeEventListener("click", handleNavClick);
 		};
 	}, []);
+
 	return (
 		<>
 
@@ -138,20 +135,20 @@ const Navbar = () => {
 							}
 						>
 							<li className="nav-item">
-								<Link className="nav-link" href="/">Home</Link>
+								<Link className="nav-link collapse-trigger" href="/">Home</Link>
+							</li>
+							<li className="nav-item disabled">
+								<Link className="nav-link collapse-trigger disabled" href="/blogs">Blogs</Link>
 							</li>
 							<li className="nav-item">
-								<Link className="nav-link" href="/blogs">Blogs</Link>
+								<Link className="nav-link collapse-trigger disabled" href="/music">Music</Link>
 							</li>
 							<li className="nav-item">
-								<Link className="nav-link" href="/music">Music</Link>
-							</li>
-							<li className="nav-item">
-								<Link className="nav-link" href="/about">About</Link>
+								<Link className="nav-link collapse-trigger" href="/about">About</Link>
 							</li>
 							<li className="nav-item dropdown d-sm-none border-top mt-2 pt-2">
 								<a className="nav-link" href="#" data-bs-toggle="dropdown" aria-expanded="false">
-									<img className="border rounded-circle" src={user.avatar} width="48" alt="Isabella Bocouse" />
+									<img className="border rounded-circle" src={user.avatar} width="48" alt={user.firstName + user.lastName} />
 									<div className="ps-2">
 										<div className="fs-xs lh-1 opacity-60">{user.firstName}</div>
 										<div className="fs-sm dropdown-toggle">{user.lastName}</div>
