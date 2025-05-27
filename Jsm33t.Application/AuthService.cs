@@ -21,7 +21,6 @@ public class AuthService(IAuthRepository repo, ITokenService tokenService,IMailS
         return await repo.InsertUserAsync(dto, hash, salt);
     }
 
-
     public async Task<(LoginResponseDto, string)> LoginAsync(LoginRequestDto dto)
     {
         var login = await repo.GetLoginDataByEmailAsync(dto.Email)
@@ -45,7 +44,7 @@ public class AuthService(IAuthRepository repo, ITokenService tokenService,IMailS
             RefreshToken = refreshToken,
             IssuedAt = issuedAt,
             ExpiresAt = refreshTokenExpiresAt,
-            DeviceId = Guid.Parse(dto.DeviceId),
+            DeviceId = Guid.Parse(dto.DeviceId!),
             IpAddress = dto.IpAddress,
             UserAgent = dto.UserAgent
         };
@@ -62,18 +61,16 @@ public class AuthService(IAuthRepository repo, ITokenService tokenService,IMailS
         }, refreshToken);
     }
 
-
-
     public async Task<bool> LogoutSessionAsync(int sessionId) =>
         await repo.LogoutSessionAsync(sessionId);
 
     public async Task<(LoginResponseDto, string)> RefreshTokenAsync(string refreshToken, string deviceId)
     {
         // Validate existing refresh token and get session info
-        var (userId, userLoginId, sessionId) = await repo.ValidateRefreshTokenAsync(refreshToken, deviceId);
+        var (userId, _, sessionId) = await repo.ValidateRefreshTokenAsync(refreshToken, deviceId);
 
-        // Generate new tokens and expiries
-        var (accessToken, newRefreshToken, jwtExpiresAt, refreshTokenExpiresAt, issuedAt) =
+        // Generate new tokens and expires
+        var (accessToken, newRefreshToken, jwtExpiresAt, refreshTokenExpiresAt, _) =
             await tokenService.GenerateTokens(userId);
 
         // Update session with new refresh token and its expiry
@@ -88,9 +85,7 @@ public class AuthService(IAuthRepository repo, ITokenService tokenService,IMailS
             ExpiresAt = jwtExpiresAt
         }, newRefreshToken);
     }
-
-
-
+    
     public Task<IEnumerable<SessionDto>> GetUserSessionsAsync(int userId) =>
         repo.GetSessionsByUserIdAsync(userId);
 
@@ -102,7 +97,10 @@ public class AuthService(IAuthRepository repo, ITokenService tokenService,IMailS
         var token = await repo.CreatePasswordRecoveryTokenAsync(email);
         var subject = "Password Recovery";
         var link = $"{fcConfig.BaseUrls.BaseUiUrl}/landings/recovery?token={token.Token}";
-        var body = $"<p>Click <a href='{link}'>here</a> to reset your password.</p>";
+        //var body = $"<p>Click <a href='{link}'>here</a> to reset your password.</p>";
+        var body = Template.PasswordResetHtml
+            .Replace("{Link}", link)
+            .Replace("{DateTime.Now.Year}", DateTime.Now.Year.ToString());
         await mailService.SendEmailAsync(email, subject, body, isHtml: true);
     }
 

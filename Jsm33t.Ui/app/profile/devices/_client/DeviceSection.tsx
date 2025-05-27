@@ -3,8 +3,7 @@
 import { useEffect, useState } from 'react';
 import { showBootstrapModal } from '@/components/helpers/ShowBootstrapModal';
 import { modalRef } from '@/components/sections/ModalBox';
-import { apiClient } from '@/lib/apiClient'; // Assumes you have a wrapper around fetch/axios
-import { userAgent } from 'next/server';
+import { apiClient } from '@/lib/apiClient';
 
 export interface Device {
 	sessionId: number;
@@ -16,7 +15,7 @@ export interface Device {
 	expiresAt: string;
 	isActive: boolean;
 	loggedOutAt: string | null;
-	isCurrent: boolean; // <-- Add this
+	isCurrent: boolean;
 }
 
 // util

@@ -9,6 +9,7 @@ using Jsm33t.Shared.ConfigModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Globalization;
+using Jsm33t.Shared.Helpers;
 
 namespace Jsm33t.Api.Controllers;
 
@@ -30,10 +31,14 @@ public class AuthController(
         {
             var result = await authService.SignupAsync(dto);
 
-            string link = $"{fcConfig.BaseUrls.BaseUiUrl}/landings/verification?token={result.EmailVerificationToken}";
+            var link = $"{fcConfig.BaseUrls.BaseUiUrl}/landings/verification?token={result.EmailVerificationToken}";
 
-            string subject = "Verify your email address";
-            string body = $"<p>Hello {dto.FirstName},</p><p>Please verify: <a href='{link}'>Verify</a></p>";
+            const string subject = "Verify your email address";
+            //var body = $"<p>Hello {dto.FirstName},</p><p>Please verify: <a href='{link}'>Verify</a></p>";
+            var body = Template.EmailVerificationHtml
+                .Replace("{FirstName}", dto.FirstName)
+                .Replace("{Link}", link)
+                .Replace("{DateTime.Now.Year}", DateTime.Now.Year.ToString());
 
             await dispatcher.EnqueueAsync(_ => telegramService.SendToOneAsync(config.TeleConfig?.LogChatId.ToString(CultureInfo.InvariantCulture)!,
                 $"User Signup\n\n{dto.FirstName} {dto.LastName}\n\nEmail: {dto.Email}"),
