@@ -2,7 +2,7 @@
 import { createContext, useContext, useState } from "react";
 
 type User = {
-    firstName: string;
+	firstName: string;
 	username: string;
 	email: string;
 	lastName: string;
@@ -10,7 +10,7 @@ type User = {
 };
 
 const defaultUser: User = {
-    firstName: "Welcome",
+	firstName: "Welcome",
 	username: "",
 	email: "",
 	lastName: "Guest",
@@ -22,7 +22,7 @@ const UserContext = createContext<{
 	setUser: (u: User) => void;
 }>({
 	user: defaultUser,
-	setUser: () => {},
+	setUser: () => { },
 });
 
 export const UserProvider = ({ children }: { children: React.ReactNode }) => {

@@ -13,7 +13,7 @@ BEGIN
         LS.ExpiresAt,
         LS.LoggedOutAt,
         LS.DeviceId,
-        LS.IPAddress,
+        LS.IpAddress,
         LS.UserAgent
     FROM LoginSessions LS
     INNER JOIN UserLogins UL ON LS.UserLoginId = UL.Id

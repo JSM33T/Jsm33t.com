@@ -49,6 +49,8 @@ export default function LoginForm() {
 					avatar: decoded.avatar || '/assets/images/default_user.jpg',
 				});
 
+				console.log(decoded);
+
 				modalRef?.current?.open({
 					title: 'Login Successful',
 					description: 'Redirecting...',

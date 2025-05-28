@@ -64,26 +64,27 @@
   </ItemGroup>
   <ItemGroup>
     <Build Include="dbo\Tables\ChangeLog.sql" />
-    <Build Include="dbo\Stored Procedures\InsertChangeLog.sql" />
-    <Build Include="dbo\Stored Procedures\DeleteChangeLogsByVersion.sql" />
+    <Build Include="dbo\Stored Procedures\usp_InsertChangeLog.sql" />
+    <Build Include="dbo\Stored Procedures\usp_DeleteChangeLogsByVersion.sql" />
     <Build Include="dbo\Tables\Roles.sql" />
     <Build Include="dbo\Tables\Users.sql" />
     <Build Include="dbo\Tables\LoginProviders.sql" />
     <Build Include="dbo\Tables\UserLogins.sql" />
     <Build Include="dbo\Tables\LoginSessions.sql" />
-    <Build Include="dbo\Stored Procedures\SignupUser.sql" />
-    <Build Include="dbo\Stored Procedures\GetUserSessions.sql" />
-    <Build Include="dbo\Stored Procedures\CreateLoginSession.sql" />
-    <Build Include="dbo\Stored Procedures\GetUserLoginForEmail.sql" />
+    <Build Include="dbo\Stored Procedures\usp_SignupUser.sql" />
+    <Build Include="dbo\Stored Procedures\usp_GetUserSessions.sql" />
+    <Build Include="dbo\Stored Procedures\usp_CreateLoginSession.sql" />
+    <Build Include="dbo\Stored Procedures\usp_GetUserLoginForEmail.sql" />
     <Build Include="dbo\Stored Procedures\VerifyEmail.sql" />
     <None Include="Scripts\Seeds\Role_seed.sql" />
     <Build Include="dbo\Tables\JobHistory.sql" />
-    <Build Include="dbo\Stored Procedures\GetProfileDetailsById.sql" />
-    <Build Include="dbo\Stored Procedures\EditProfileDetailsById.sql" />
+    <Build Include="dbo\Stored Procedures\usp_GetProfileDetailsById.sql" />
+    <Build Include="dbo\Stored Procedures\usp_UpdateUserProfile.sql" />
     <Build Include="dbo\Stored Procedures\usp_ValidateRefreshToken.sql" />
     <Build Include="dbo\Stored Procedures\usp_ResetPassword.sql" />
     <Build Include="dbo\Stored Procedures\usp_ValidateRecoveryToken.sql" />
     <Build Include="dbo\Stored Procedures\usp_CreateRecoveryToken.sql" />
     <Build Include="dbo\Tables\PasswordRecoveries.sql" />
+    <None Include="Scripts\Seeds\LoginProviders_seed.sql" />
   </ItemGroup>
 </Project>

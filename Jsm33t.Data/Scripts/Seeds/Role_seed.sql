@@ -9,3 +9,4 @@ VALUES
 (1, 'User', 'user', 'Standard registered user', GETDATE(), NEWID()),
 (2, 'Moderator', 'moderator', 'Can manage posts and comments', GETDATE(), NEWID()),
 (3, 'Admin', 'admin', 'Administrator with full access', GETDATE(), NEWID())
+

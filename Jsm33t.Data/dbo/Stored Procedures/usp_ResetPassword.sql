@@ -11,6 +11,15 @@ BEGIN
 
     DECLARE @UserLoginId INT;
 
+    
+    DECLARE @UserId INT = NULL;
+
+    IF @Username IS NOT NULL
+    BEGIN
+        SELECT @UserId = Id FROM Users WHERE UserName = @Username;
+    END
+
+
     SELECT TOP 1 @UserLoginId = pr.UserLoginId
     FROM PasswordRecoveries pr
     JOIN UserLogins ul ON pr.UserLoginId = ul.Id
@@ -21,7 +30,8 @@ BEGIN
         (
             pr.Otp = @Otp AND
             pr.OtpExpiresAt > GETUTCDATE() AND
-            [dbo].[UserLogins].[UserName] = @Username AND
+            --[dbo].[UserLogins].[UserName] = @Username AND
+            ul.UserId = @UserId AND
             @Otp IS NOT NULL AND @Username IS NOT NULL
         )
     );

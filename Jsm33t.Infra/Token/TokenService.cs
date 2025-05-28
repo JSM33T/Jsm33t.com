@@ -16,7 +16,7 @@ public class TokenService(FcConfig fcConfig, IProfileRepository profileRepositor
     public async Task<(string AccessToken, string RefreshToken, DateTime JwtExpiresAt, DateTime RefreshTokenExpiresAt, DateTime IssuedAt)> GenerateTokens(int userId)
     {
         var issuedAt = DateTime.UtcNow;
-        var jwtExpiresAt = issuedAt.AddMinutes(20);
+        var jwtExpiresAt = issuedAt.AddMinutes(1);
         var refreshTokenExpiresAt = issuedAt.AddMonths(1);
         UserProfileDetailsDto user = await _profileRepository.GetUserProfileById(userId);
 
@@ -33,7 +33,8 @@ public class TokenService(FcConfig fcConfig, IProfileRepository profileRepositor
         new(ClaimTypes.GivenName, user.FirstName),
         new(ClaimTypes.Surname, user.LastName),
         new(ClaimTypes.Name, user.UserName),
-        new(ClaimTypes.Role, user.Role)
+        new(ClaimTypes.Role, user.Role),
+        new("avatar", user.Avatar)
     };
 
         var token = new JwtSecurityToken(

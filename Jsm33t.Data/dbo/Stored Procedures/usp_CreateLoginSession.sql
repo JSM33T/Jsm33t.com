@@ -5,7 +5,7 @@
     @ExpiresAt DATETIME,
     @IssuedAt DATETIME,
     @DeviceId NVARCHAR(256),
-    @IPAddress NVARCHAR(64),
+    @IpAddress NVARCHAR(64),
     @UserAgent NVARCHAR(512)
 AS
 BEGIN
@@ -22,7 +22,7 @@ BEGIN
             RefreshToken = @RefreshToken,
             IssuedAt = @IssuedAt,
             ExpiresAt = @ExpiresAt,
-            IPAddress = @IPAddress,
+            IPAddress = @IpAddress,
             UserAgent = @UserAgent
         WHERE DeviceId = @DeviceId AND UserLoginId = @UserLoginId;
 

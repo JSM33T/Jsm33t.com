@@ -35,7 +35,7 @@ export default function ClientTokenProvider() {
 						lastName: decoded['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/surname'],
 						email: decoded['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress'],
 						username: decoded['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name'],
-						avatar: '/assets/images/default_user.jpg',
+						avatar: decoded['avatar'],
 					};
 
 					console.log('[JWT USER]', userObj);
