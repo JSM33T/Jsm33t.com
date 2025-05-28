@@ -15,7 +15,7 @@ public class AuthRepository(IDapperFactory factory) : IAuthRepository
     public Task<UserLogin?> GetLoginDataByEmailAsync(string email) =>
         _db.QueryFirstOrDefaultAsync<UserLogin>("EXEC usp_GetUserLogin @Email", new { Email = email });
 
-    public async Task<SignupResultDto> InsertUserAsync(SignupUserDto dto, string passwordHash, string salt)
+    public async Task<SignupResultDto> InsertUserAsync(SignupUserRequestDto dto, string passwordHash, string salt)
     {
         var p = new DynamicParameters();
         p.Add("@FirstName", dto.FirstName);

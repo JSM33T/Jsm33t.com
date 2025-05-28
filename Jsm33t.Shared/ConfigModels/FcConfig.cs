@@ -9,12 +9,12 @@
         public TelegramConfig? TeleConfig { get; set; }
         public CloudinaryConfig? CloudinaryConfig { get; set; }
         public SmtpConfig? SmtpSettings { get; set; }
-        public Urls BaseUrls { get; set; }
+        public Urls? BaseUrls { get; set; }
     }
     public class Urls
     {
-        public string BaseApiUrl{ get; set; }
-        public string BaseUiUrl { get; set; }
+        public string? BaseApiUrl{ get; set; }
+        public string? BaseUiUrl { get; set; }
     }
     public class Toggles
     {

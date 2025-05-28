@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Jsm33t.Contracts.Dtos
 {
-    public class SignupUserDto
+    public class SignupUserRequestDto
     {
         public string FirstName { get; set; } = null!;
         public string? LastName { get; set; }

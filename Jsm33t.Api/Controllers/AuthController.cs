@@ -1,4 +1,5 @@
-﻿using Jsm33t.Contracts.Dtos;
+﻿using FluentValidation;
+using Jsm33t.Contracts.Dtos;
 using Jsm33t.Contracts.Dtos.Requests;
 using Jsm33t.Contracts.Dtos.Responses;
 using Jsm33t.Contracts.Interfaces.Services;
@@ -6,10 +7,10 @@ using Jsm33t.Infra.Background;
 using Jsm33t.Infra.MailService;
 using Jsm33t.Infra.Telegram;
 using Jsm33t.Shared.ConfigModels;
+using Jsm33t.Shared.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Globalization;
-using Jsm33t.Shared.Helpers;
 
 namespace Jsm33t.Api.Controllers;
 
@@ -22,11 +23,21 @@ public class AuthController(
     IDispatcher dispatcher,
     FcConfig fcConfig,
     ITelegramService telegramService,
+    IValidator<SignupUserRequestDto> signupValidator,
     FcConfig config) : FcBaseController
 {
     [HttpPost("signup")]
-    public async Task<ActionResult<ApiResponse<bool>>> Signup(SignupUserDto dto)
+    public async Task<ActionResult<ApiResponse<bool>>> Signup(SignupUserRequestDto dto)
     {
+
+        var validationResult = await signupValidator.ValidateAsync(dto);
+        if (!validationResult.IsValid)
+            return FcResponse(new ApiResponse<bool>(400, "Validation Error", false)
+            {
+                Hints = validationResult.Errors.Select(e => e.ErrorMessage).ToList()
+            });
+
+
         try
         {
             var result = await authService.SignupAsync(dto);
@@ -34,7 +45,7 @@ public class AuthController(
             var link = $"{fcConfig.BaseUrls.BaseUiUrl}/landings/verification?token={result.EmailVerificationToken}";
 
             const string subject = "Verify your email address";
-            //var body = $"<p>Hello {dto.FirstName},</p><p>Please verify: <a href='{link}'>Verify</a></p>";
+
             var body = Template.EmailVerificationHtml
                 .Replace("{FirstName}", dto.FirstName)
                 .Replace("{Link}", link)
@@ -101,14 +112,13 @@ public class AuthController(
         }
         catch (UnauthorizedAccessException ex)
         {
-            return RESP_UnauthorizedResponse<LoginResponseDto>(ex.Message);
+            return RESP_BadRequestResponse<LoginResponseDto>(ex.Message);
         }
         catch (Exception)
         {
             throw;
         }
     }
-
 
     [HttpPost("logout/{sessionId}")]
     public async Task<ActionResult<ApiResponse<bool>>> Logout(int sessionId)

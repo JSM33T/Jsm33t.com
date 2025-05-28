@@ -1,4 +1,5 @@
-﻿using Jsm33t.Application;
+﻿using FluentValidation;
+using Jsm33t.Application;
 using Jsm33t.Contracts.Interfaces.Repositories;
 using Jsm33t.Contracts.Interfaces.Services;
 using Jsm33t.Infra.Background;
@@ -9,6 +10,7 @@ using Jsm33t.Infra.MailService.SmtpMail;
 using Jsm33t.Infra.Telegram;
 using Jsm33t.Infra.Token;
 using Jsm33t.Repositories;
+using System.Reflection;
 
 namespace Jsm33t.Api.Extensions
 {
@@ -16,6 +18,8 @@ namespace Jsm33t.Api.Extensions
     {
         public static IServiceCollection AddInfrastructureServices(this IServiceCollection services)
         {
+            services.AddValidatorsFromAssembly(Assembly.Load("Jsm33t.Validators"));
+
             services.AddScoped<IMailService, SmtpMailService>();
             services.AddSingleton<ICloudinaryService, CloudinaryService>();
             services.AddScoped<IChangeLogRepository, ChangeLogRepository>();

@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jsm33t.Application", "Jsm33
 EndProject
 Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "Jsm33t.Data", "Jsm33t.Data\Jsm33t.Data.sqlproj", "{63B9F8F2-236F-4763-A503-5305B92611EE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jsm33t.Validators", "Jsm33t.Validators\Jsm33t.Validators.csproj", "{A6F9EAEC-460D-4CE5-A85C-23A1FEF49A6C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -53,8 +55,15 @@ Global
 		{63B9F8F2-236F-4763-A503-5305B92611EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{63B9F8F2-236F-4763-A503-5305B92611EE}.Release|Any CPU.Build.0 = Release|Any CPU
 		{63B9F8F2-236F-4763-A503-5305B92611EE}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{A6F9EAEC-460D-4CE5-A85C-23A1FEF49A6C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A6F9EAEC-460D-4CE5-A85C-23A1FEF49A6C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A6F9EAEC-460D-4CE5-A85C-23A1FEF49A6C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A6F9EAEC-460D-4CE5-A85C-23A1FEF49A6C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {6F1EBD6A-ED8B-4455-A4A0-1C896A948F49}
 	EndGlobalSection
 EndGlobal

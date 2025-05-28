@@ -1,4 +1,5 @@
 ﻿using Jsm33t.Contracts.Dtos;
+using Jsm33t.Contracts.Dtos.Requests;
 using Jsm33t.Contracts.Dtos.Responses;
 using Jsm33t.Contracts.Interfaces.Services;
 using Jsm33t.Infra.ImageHost;
@@ -8,10 +9,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Jsm33t.Api.Controllers
 {
-    public class RemoveDeviceRequest {
-        public Guid? DeviceId { get; set; }
-        public bool DeleteAll { get; set; } = false;
-    }
 
     [Route("api/profile")]
     [Authorize] 
@@ -42,7 +39,6 @@ namespace Jsm33t.Api.Controllers
             var updated = await profileService.GetUserProfileById(dto.Id);
             return RESP_Success(updated);
         }
-
 
         [HttpPost("updatepfp")]
         public async Task<ActionResult<ApiResponse<bool>>> EditProfilepFP([FromForm] EditUserProfilePfpDto dto)
@@ -79,7 +75,7 @@ namespace Jsm33t.Api.Controllers
                 ExpiresAt = d.ExpiresAt,
                 IsActive = d.IsActive,
                 LoggedOutAt = d.LoggedOutAt,
-                IsCurrent = d.DeviceId == deviceId // << correct comparison!
+                IsCurrent = d.DeviceId == deviceId
             });
 
             return RESP_Success(devicesWithCurrentFlag);
@@ -87,7 +83,7 @@ namespace Jsm33t.Api.Controllers
 
 
         [HttpPost("devices/remove")]
-        public async Task<ActionResult<ApiResponse<int>>> RemoveDevice([FromBody] RemoveDeviceRequest? request)
+        public async Task<ActionResult<ApiResponse<int>>> RemoveDevice([FromBody] RemoveDeviceRequestDto? request)
         {
             var userId = HttpContextHelper.GetUserId(HttpContext!);
 

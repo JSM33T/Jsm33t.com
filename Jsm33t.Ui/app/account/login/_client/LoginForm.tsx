@@ -29,6 +29,7 @@ export default function LoginForm() {
 	const { setUser } = useUser();
 	const { register, handleSubmit, formState: { errors } } = useForm<FormData>();
 	const [isLoading, setIsLoading] = useState(false);
+	const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
 	const onSubmit = async (data: FormData) => {
 		setIsLoading(true);
@@ -48,8 +49,6 @@ export default function LoginForm() {
 					username: decoded.username,
 					avatar: decoded.avatar || '/assets/images/default_user.jpg',
 				});
-
-				console.log(decoded);
 
 				modalRef?.current?.open({
 					title: 'Login Successful',
@@ -108,11 +107,24 @@ export default function LoginForm() {
 							<div className="mb-4 position-relative">
 								<i className="ai-lock-closed fs-lg position-absolute top-50 start-0 translate-middle-y ms-3 text-muted"></i>
 								<input
-									className="form-control form-control-lg ps-5"
-									type="password"
+									className="form-control form-control-lg ps-5 pe-5"
+									type={isPasswordVisible ? 'text' : 'password'}
 									placeholder="Enter your password"
 									{...register('password', { required: 'Password is required' })}
 								/>
+								<button
+									type="button"
+									className="btn btn-sm btn-link position-absolute top-50 end-0 translate-middle-y me-3"
+									tabIndex={-1}
+									style={{ textDecoration: 'none' }}
+									onClick={() => setIsPasswordVisible((v) => !v)}
+								>
+									{isPasswordVisible ? (
+										<i className="ai-eye-off"></i>
+									) : (
+										<i className="ai-eye"></i>
+									)}
+								</button>
 								{errors.password && (
 									<small className="text-danger">{errors.password.message}</small>
 								)}

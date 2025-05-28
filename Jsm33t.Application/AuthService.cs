@@ -14,7 +14,7 @@ namespace Jsm33t.Application;
 
 public class AuthService(IAuthRepository repo, ITokenService tokenService,IMailService mailService,FcConfig fcConfig) : IAuthService
 {
-    public async Task<SignupResultDto> SignupAsync(SignupUserDto dto)
+    public async Task<SignupResultDto> SignupAsync(SignupUserRequestDto dto)
     {
         var salt = PasswordHelper.GenerateSalt();
         var hash = PasswordHelper.HashPassword(dto.Password, salt);
