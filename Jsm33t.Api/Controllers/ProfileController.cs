@@ -29,16 +29,12 @@ namespace Jsm33t.Api.Controllers
         }
 
         [HttpPost("update")]
-        public async Task<ActionResult<ApiResponse<UserProfileDetailsDto>>> EditProfile([FromForm] EditUserProfileDto dto)
+        public async Task<ActionResult<ApiResponse<UserProfileDetailsDto>>> EditProfile([FromBody] EditUserProfileDto dto)
         {
             dto.Id = HttpContextHelper.GetUserId(HttpContext!);
             var userGuid = await profileService.GetUserProfileById(dto.Id);
-
-            string? avatarUrl = null;
-            if (dto.Avatar != null)
-                avatarUrl = await cloudinaryService.UploadProfilePictureAsync(dto.Avatar, userGuid.UserId);
            
-            var result = await profileService.UpdateUserProfile(dto, avatarUrl);
+            var result = await profileService.UpdateUserProfile(dto);
 
             if (result == 1)
                 return RESP_ConflictResponse<UserProfileDetailsDto>("Username already exists");
@@ -46,6 +42,23 @@ namespace Jsm33t.Api.Controllers
             var updated = await profileService.GetUserProfileById(dto.Id);
             return RESP_Success(updated);
         }
+
+
+        [HttpPost("updatepfp")]
+        public async Task<ActionResult<ApiResponse<bool>>> EditProfilepFP([FromForm] EditUserProfilePfpDto dto)
+        {
+            var Id = HttpContextHelper.GetUserId(HttpContext!);
+            var userGuid = await profileService.GetUserProfileById(Id);
+
+            string? avatarUrl = null;
+            if (dto.Avatar != null)
+                avatarUrl = await cloudinaryService.UploadProfilePictureAsync(dto.Avatar, userGuid.UserId);
+
+            var result = await profileService.UpdateUserProfilePicture(avatarUrl, Id);
+
+            return RESP_Success(true);
+        }
+
         [HttpGet("devices")]
         public async Task<ActionResult<ApiResponse<IEnumerable<LoginDeviceDto>>>> GetDevices()
         {

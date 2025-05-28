@@ -24,9 +24,9 @@ namespace Jsm33t.Application
             return profile;
         }
 
-        public async Task<int> UpdateUserProfile(EditUserProfileDto userProfileDetails, string AvatarUrl)
+        public async Task<int> UpdateUserProfile(EditUserProfileDto userProfileDetails)
         {
-            return await profileRepository.UpdateUserProfile(userProfileDetails, AvatarUrl);
+            return await profileRepository.UpdateUserProfile(userProfileDetails);
         }
 
         public async Task<IEnumerable<LoginDeviceDto>> GetLoginDevices(int userId)
@@ -37,6 +37,9 @@ namespace Jsm33t.Application
 
         public async Task<int> RemoveDeviceByDeviceId(int userId, Guid deviceId)
             => await profileRepository.RemoveDeviceByDeviceId(userId, deviceId);
+
+        public async Task<int> UpdateUserProfilePicture(string avatarUrl,int userId)
+           => await profileRepository.UpdateUserProfilePicture(avatarUrl, userId);
 
     }
 }

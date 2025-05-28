@@ -1,12 +1,9 @@
 ﻿using Dapper;
 using Jsm33t.Contracts.Dtos;
 using Jsm33t.Contracts.Dtos.Internal;
-using Jsm33t.Contracts.Dtos.Responses;
 using Jsm33t.Contracts.Interfaces.Repositories;
 using Jsm33t.Contracts.Models;
 using Jsm33t.Infra.Dapper;
-using Jsm33t.Infra.MailService;
-using Jsm33t.Shared.Helpers;
 using System.Data;
 
 namespace Jsm33t.Repositories;
@@ -16,7 +13,7 @@ public class AuthRepository(IDapperFactory factory) : IAuthRepository
     private readonly IDbConnection _db = factory.CreateConnection();
 
     public Task<UserLogin?> GetLoginDataByEmailAsync(string email) =>
-        _db.QueryFirstOrDefaultAsync<UserLogin>("EXEC usp_GetUserLoginForEmail @Email", new { Email = email });
+        _db.QueryFirstOrDefaultAsync<UserLogin>("EXEC usp_GetUserLogin @Email", new { Email = email });
 
     public async Task<SignupResultDto> InsertUserAsync(SignupUserDto dto, string passwordHash, string salt)
     {
@@ -107,7 +104,6 @@ public class AuthRepository(IDapperFactory factory) : IAuthRepository
 
         return result;
     }
-
 
     public async Task<bool> ValidateRecoveryTokenAsync(string? token, string? otp)
     {

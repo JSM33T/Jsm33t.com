@@ -5,7 +5,6 @@
     @UserName NVARCHAR(128),
     @Gender NVARCHAR(1),
     @Bio NVARCHAR(256),
-    @Avatar NVARCHAR(256),
     @ResultCode INT OUTPUT -- 0 = success, 1 = username conflict
 AS
 BEGIN
@@ -27,7 +26,6 @@ BEGIN
         UserName = @UserName,
         Gender = @Gender,
         Bio = @Bio,
-        Avatar = @Avatar,
         UpdatedAt = GETDATE()
     WHERE Id = @Id;
 

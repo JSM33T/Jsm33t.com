@@ -1,4 +1,4 @@
-﻿CREATE PROCEDURE [dbo].[usp_GetUserLoginForEmail]
+﻿CREATE PROCEDURE [dbo].[usp_GetUserLogin]
     @Email NVARCHAR(256)
 AS
 BEGIN
@@ -17,7 +17,8 @@ BEGIN
     INNER JOIN LoginProviders LP ON UL.ProviderId = LP.Id
     INNER JOIN Users U ON U.Id = UL.UserId
     WHERE LP.[Name] = 'Email'
-      AND UL.Email = @Email
+      --AND UL.Email = @Email
+      AND (UL.Email = @Email OR U.UserName = @Email)
       AND UL.IsPasswordLogin = 1;
 END
 

@@ -24,7 +24,24 @@ namespace Jsm33t.Repositories
                 commandType: CommandType.StoredProcedure);
         }
 
-        public async Task<int> UpdateUserProfile(EditUserProfileDto dto, string AvatarUrl)
+
+        public async Task<int> UpdateUserProfilePicture(string avatarUrl, int userId)
+        {
+            using var conn = dapperFactory.CreateConnection();
+
+            var parameters = new DynamicParameters();
+            parameters.Add("Id", userId);
+            parameters.Add("Avatar", avatarUrl);
+            parameters.Add("ResultCode", dbType: DbType.Int32, direction: ParameterDirection.Output);
+
+            await conn.ExecuteAsync(
+                "usp_UpdateUserProfilePicture",
+                parameters,
+                commandType: CommandType.StoredProcedure);
+
+            return parameters.Get<int>("ResultCode");
+        }
+        public async Task<int> UpdateUserProfile(EditUserProfileDto dto)
         {
             using var conn = dapperFactory.CreateConnection();
 
@@ -34,7 +51,6 @@ namespace Jsm33t.Repositories
             parameters.Add("LastName", dto.LastName);
             parameters.Add("UserName", dto.UserName);
             parameters.Add("Gender", dto.Gender);
-            parameters.Add("Avatar", AvatarUrl);
             parameters.Add("Bio", dto.Bio);
             parameters.Add("ResultCode", dbType: DbType.Int32, direction: ParameterDirection.Output);
 

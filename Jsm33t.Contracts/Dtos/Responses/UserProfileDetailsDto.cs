@@ -25,6 +25,11 @@ namespace Jsm33t.Contracts.Dtos.Responses
         public string? UserName { get; set; }
         public string? Bio { get; set; }
         public string? Gender { get; set; }
+        //public IFormFile? Avatar { get; set; }
+    }
+
+    public class EditUserProfilePfpDto
+    {
         public IFormFile? Avatar { get; set; }
     }
 }

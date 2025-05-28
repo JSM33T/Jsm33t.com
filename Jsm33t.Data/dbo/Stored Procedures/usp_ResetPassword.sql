@@ -1,5 +1,4 @@
-﻿
-CREATE PROCEDURE usp_ResetPassword
+﻿CREATE PROCEDURE usp_ResetPassword
     @Token UNIQUEIDENTIFIER = NULL,
     @Otp NVARCHAR(10) = NULL,
     @Username NVARCHAR(128) = NULL,

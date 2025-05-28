@@ -4,7 +4,7 @@
 -- comment	:	Seed login providers
 
 ---------------------------------------
-INSERT INTO LoginProviders ([Name], [Description], ProviderId)
+INSERT INTO LoginProviders ([Id],[Name], [Description], ProviderId)
 VALUES 
 (1,'Email', 'Email and password login', 'email'),
 (2,'Google', 'Google Login', 'google'),
