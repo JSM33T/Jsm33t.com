@@ -37,12 +37,11 @@ public class AuthController(
                 Hints = validationResult.Errors.Select(e => e.ErrorMessage).ToList()
             });
 
-
         try
         {
             var result = await authService.SignupAsync(dto);
 
-            var link = $"{fcConfig.BaseUrls.BaseUiUrl}/landings/verification?token={result.EmailVerificationToken}";
+            var link = $"{fcConfig?.BaseUrls?.BaseUiUrl}/landings/verification?token={result.EmailVerificationToken}";
 
             const string subject = "Verify your email address";
 

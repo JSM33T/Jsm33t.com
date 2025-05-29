@@ -16,28 +16,38 @@ namespace Jsm33t.Api.Extensions
 {
     public static class ServiceCollectionExtensions
     {
-        public static IServiceCollection AddInfrastructureServices(this IServiceCollection services)
+        public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IWebHostEnvironment env)
         {
             services.AddValidatorsFromAssembly(Assembly.Load("Jsm33t.Validators"));
 
-            services.AddScoped<IMailService, SmtpMailService>();
+            
+
             services.AddSingleton<ICloudinaryService, CloudinaryService>();
             services.AddScoped<IChangeLogRepository, ChangeLogRepository>();
+            services.AddScoped<IChangeLogService, ChangeLogService>();
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IAuthRepository, AuthRepository>();
-            services.AddScoped<IChangeLogService, ChangeLogService>();
-            services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<IDapperFactory, DapperFactory>();
-
-            services.AddSingleton<IDispatcher, Dispatcher>();
+            
             services.AddScoped<IJobHistoryRepository, JobHistoryRepository>();
             services.AddHostedService<JobWorker>();
-
-            services.AddHttpClient<ITelegramService, TelegramService>();
-
             services.AddScoped<IProfileService, ProfileService>();
             services.AddScoped<IProfileRepository, ProfileRepository>();
-            
+
+            if (env.IsDevelopment())
+            {
+                services.AddScoped<IMailService, MockMailService>();
+                services.AddSingleton<ITelegramService, MockTelegramService>();
+                services.AddScoped<ITokenService, MockTokenService>();
+            }
+            else
+            {
+                services.AddScoped<IMailService, SmtpMailService>();
+                services.AddHttpClient<ITelegramService, TelegramService>();
+                services.AddScoped<ITokenService, TokenService>();
+            }
+
+            services.AddSingleton<IDispatcher, Dispatcher>();
 
             return services;
         }

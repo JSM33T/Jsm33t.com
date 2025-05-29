@@ -64,7 +64,8 @@ builder.Services.AddCors(options =>
 });
 
 builder.Services.AddHttpContextAccessor();
-builder.Services.AddInfrastructureServices();
+builder.Services.AddInfrastructureServices(builder.Environment);
+
 
 //builder.WebHost.ConfigureKestrel(serverOptions =>
 //{
