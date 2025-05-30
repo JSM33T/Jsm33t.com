@@ -1,7 +1,7 @@
 ## Cache and custom dirs
 
 Jsm33t.Api/wwwroot/mediacache/
-Jsm33t.Api/Properties/
+Jsm33t.Api/Properties/*
 Jsm33t.Api/wwwroot/style.css
 Jsm33t.Ui/public/style.css
 
