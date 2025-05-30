@@ -11,6 +11,7 @@ using Jsm33t.Shared.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Globalization;
+using System.Text.Json;
 
 namespace Jsm33t.Api.Controllers;
 
@@ -24,6 +25,8 @@ public class AuthController(
     FcConfig fcConfig,
     ITelegramService telegramService,
     IValidator<SignupUserRequestDto> signupValidator,
+    IValidator<LoginRequestDto> loginValidator,
+
     FcConfig config) : FcBaseController
 {
     [HttpPost("signup")]
@@ -66,8 +69,14 @@ public class AuthController(
             if (ex.Message.Contains("EMAIL_CONFLICT"))
                 return RESP_ConflictResponse<bool>("Email already exists.");
 
-            //await dispatcher.EnqueueAsync(_ => telegramService.SendToOneAsync(config.TeleConfig?.LogChatId.ToString(CultureInfo.InvariantCulture)!,
-            //    $"Signup Failed\n\n{JsonSerializer.Serialize(dto)}"));
+            await dispatcher.EnqueueAsync(_ => 
+                telegramService.SendToOneAsync(
+                  config.TeleConfig?.LogChatId.ToString(CultureInfo.InvariantCulture)!,
+                          $"Signup Failed\n\n{JsonSerializer.Serialize(dto)}"
+                      ),
+                      jobName: "SignupFailedNotification",
+                      triggeredBy: nameof(AuthController)
+                  );
 
             throw;
         }
@@ -76,6 +85,14 @@ public class AuthController(
     [HttpPost("login")]
     public async Task<ActionResult<ApiResponse<LoginResponseDto>>> Login(LoginRequestDto dto)
     {
+
+        var validationResult = await loginValidator.ValidateAsync(dto);
+        if (!validationResult.IsValid)
+            return FcResponse(new ApiResponse<LoginResponseDto>(400, "Validation Error", null)
+            {
+                Hints = validationResult.Errors.Select(e => e.ErrorMessage).ToList()
+            });
+
         try
         {
             dto.IpAddress = HttpContext.Connection.RemoteIpAddress?.ToString();

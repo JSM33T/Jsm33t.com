@@ -41,7 +41,7 @@ namespace Jsm33t.Api.Controllers
         }
 
         [HttpPost("updatepfp")]
-        public async Task<ActionResult<ApiResponse<bool>>> EditProfilepFP([FromForm] EditUserProfilePfpDto dto)
+        public async Task<ActionResult<ApiResponse<string>>> EditProfilepFP([FromForm] EditUserProfilePfpDto dto)
         {
             var Id = HttpContextHelper.GetUserId(HttpContext!);
             var userGuid = await profileService.GetUserProfileById(Id);
@@ -52,7 +52,7 @@ namespace Jsm33t.Api.Controllers
 
             var result = await profileService.UpdateUserProfilePicture(avatarUrl, Id);
 
-            return RESP_Success(true);
+            return RESP_Success(avatarUrl);
         }
 
         [HttpGet("devices")]

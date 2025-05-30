@@ -23,6 +23,7 @@ const UserMenuItems = ({ badgeClass = "ms-auto" }: { badgeClass?: string }) => {
 					<Link className="dropdown-item collapse-trigger" href="/profile">
 						<i className="ai-settings fs-lg opacity-70 me-2"></i>Profile
 					</Link>
+
 					<div className="dropdown-divider collapse-trigger"></div>
 					<a className="dropdown-item" href="#" onClick={(e) => {
 						e.preventDefault();
@@ -32,6 +33,7 @@ const UserMenuItems = ({ badgeClass = "ms-auto" }: { badgeClass?: string }) => {
 							confirmText: 'Logout',
 							onConfirm: () => {
 								localStorage.removeItem('authToken');
+								localStorage.removeItem('user');
 								window.location.href = '/';
 							}
 						});
@@ -52,6 +54,12 @@ const UserMenuItems = ({ badgeClass = "ms-auto" }: { badgeClass?: string }) => {
 const Navbar = () => {
 
 	const { user } = useUser();
+	const avatarUrl: string =
+		user?.avatar && typeof user.avatar === "string" && user.avatar.trim()
+			? user.avatar
+			: "/assets/images/default_user.jpg";
+
+	const { setUser } = useUser();
 	useEffect(() => {
 		const navbarCollapse = document.getElementById("navbarNav");
 		if (!navbarCollapse) return;
@@ -74,6 +82,11 @@ const Navbar = () => {
 			navbarCollapse.removeEventListener("click", handleNavClick);
 		};
 	}, []);
+
+	useEffect(() => {
+		const storedUser = localStorage.getItem("user");
+		if (storedUser) setUser(JSON.parse(storedUser));
+	}, [setUser]);
 
 	return (
 		<>
@@ -114,7 +127,8 @@ const Navbar = () => {
 					</button>
 					<div className="dropdown nav d-none d-sm-block order-lg-3">
 						<a className="nav-link d-flex align-items-center p-0" href="#" data-bs-toggle="dropdown" aria-expanded="false">
-							<img className="border rounded-circle" src={user.avatar} width="48" alt="Isabella Bocouse" />
+							<img className="border rounded-circle" src={avatarUrl} width="48" alt={user.firstName} />
+
 							<div className="ps-2">
 								<div className="fs-xs lh-1 opacity-60">{user.firstName},</div>
 								<div className="fs-sm dropdown-toggle">{user.lastName}</div>
@@ -148,7 +162,7 @@ const Navbar = () => {
 							</li>
 							<li className="nav-item dropdown d-sm-none border-top mt-2 pt-2">
 								<a className="nav-link" href="#" data-bs-toggle="dropdown" aria-expanded="false">
-									<img className="border rounded-circle" src={user.avatar} width="48" alt={user.firstName + user.lastName} />
+									<img className="border rounded-circle" src={avatarUrl} width="48" alt={user.firstName + user.lastName} />
 									<div className="ps-2">
 										<div className="fs-xs lh-1 opacity-60">{user.firstName}</div>
 										<div className="fs-sm dropdown-toggle">{user.lastName}</div>

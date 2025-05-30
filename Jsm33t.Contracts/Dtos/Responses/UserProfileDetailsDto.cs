@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using System.Text.Json.Serialization;
 
 namespace Jsm33t.Contracts.Dtos.Responses
 {
@@ -19,6 +20,7 @@ namespace Jsm33t.Contracts.Dtos.Responses
     }
     public class EditUserProfileDto
     {
+        [JsonIgnore]
         public int Id { get; set; }
         public string? FirstName { get; set; }
         public string? LastName { get; set; }

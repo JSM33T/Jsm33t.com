@@ -1,12 +1,12 @@
 
-import { modalRef  } from '@/components/sections/ModalBox'; 
+import { modalRef } from '@/components/sections/ModalBox';
 
 export interface ApiResponse<T> {
-  status: number;
-  message: string;
-  data: T;
-  hints?: any[];
-  responseTimeMs?: number;
+	status: number;
+	message: string;
+	data: T;
+	hints?: any[];
+	responseTimeMs?: number;
 }
 
 let authToken: string | null = null;
@@ -15,6 +15,38 @@ export function setAuthToken(token: string) {
 	authToken = token;
 }
 
+// async function request<T>(
+// 	method: "GET" | "POST" | "PUT" | "DELETE",
+// 	url: string,
+// 	body?: any,
+// 	retry = true
+// ): Promise<ApiResponse<T>> {
+// 	try {
+// 		const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}${url}`, {
+// 			method,
+// 			headers: {
+// 				"Content-Type": "application/json",
+// 				...(authToken ? { Authorization: `Bearer ${authToken}` } : {}),
+// 			},
+// 			body: body ? JSON.stringify(body) : undefined,
+// 			credentials: "include",
+// 		});
+
+// 		if (res.status === 401 && retry) {
+// 			const newToken = await refreshToken();
+// 			if (newToken) {
+// 				// Retry request with new token
+// 				return await request<T>(method, url, body, false);
+// 			}
+// 		}
+
+// 		const json: ApiResponse<T> = await res.json();
+// 		return json;
+// 	} catch (error) {
+// 		return { status: 500, data: null as any, message: `Something went wrong : ${error}` };
+// 	}
+// }
+
 async function request<T>(
 	method: "GET" | "POST" | "PUT" | "DELETE",
 	url: string,
@@ -22,13 +54,23 @@ async function request<T>(
 	retry = true
 ): Promise<ApiResponse<T>> {
 	try {
+		let headers: Record<string, string> = {
+			...(authToken ? { Authorization: `Bearer ${authToken}` } : {}),
+		};
+		let requestBody: BodyInit | undefined;
+
+		if (body instanceof FormData) {
+			// Let browser set correct headers for multipart/form-data
+			requestBody = body;
+		} else if (body !== undefined) {
+			headers["Content-Type"] = "application/json";
+			requestBody = JSON.stringify(body);
+		}
+
 		const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}${url}`, {
 			method,
-			headers: {
-				"Content-Type": "application/json",
-				...(authToken ? { Authorization: `Bearer ${authToken}` } : {}),
-			},
-			body: body ? JSON.stringify(body) : undefined,
+			headers,
+			body: requestBody,
 			credentials: "include",
 		});
 
@@ -46,6 +88,7 @@ async function request<T>(
 		return { status: 500, data: null as any, message: `Something went wrong : ${error}` };
 	}
 }
+
 
 export function isLoggedIn(): boolean {
 	if (typeof window === 'undefined') return false;

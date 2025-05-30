@@ -6,10 +6,13 @@ import { jwtDecode } from 'jwt-decode';
 import Link from 'next/link';
 import { useForm } from 'react-hook-form';
 import { modalRef } from '@/components/sections/ModalBox';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 interface LoginResponse {
 	accessToken: string;
+}
+interface JwtPayload {
+	[key: string]: any;
 }
 
 interface JwtPayload {
@@ -31,6 +34,11 @@ export default function LoginForm() {
 	const [isLoading, setIsLoading] = useState(false);
 	const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
+	useEffect(() => {
+		const storedUser = localStorage.getItem("user");
+		if (storedUser) setUser(JSON.parse(storedUser));
+	}, []);
+
 	const onSubmit = async (data: FormData) => {
 		setIsLoading(true);
 		try {
@@ -42,19 +50,22 @@ export default function LoginForm() {
 				setAuthToken(token);
 
 				const decoded = jwtDecode<JwtPayload>(token);
-				setUser({
-					firstName: decoded.firstName,
-					lastName: decoded.lastName,
-					email: decoded.email,
-					username: decoded.username,
-					avatar: decoded.avatar || '/assets/images/default_user.jpg',
-				});
+
+				const user = {
+					firstName: decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname"],
+					lastName: decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/surname"],
+					email: decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress"],
+					username: decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"],
+					avatar: decoded.avatar && decoded.avatar.trim() ? decoded.avatar : '/assets/images/default_user.jpg',
+				};
+
+				setUser(user);
+				localStorage.setItem("user", JSON.stringify(user)); // <-- this keeps all fields in localStorage
 
 				modalRef?.current?.open({
 					title: 'Login Successful',
 					description: 'Redirecting...',
 				});
-
 				setTimeout(() => window.location.replace('/'), 100);
 			} else {
 				modalRef?.current?.open({
@@ -62,6 +73,7 @@ export default function LoginForm() {
 					description: response?.message || 'Something went wrong. Please try again.',
 				});
 			}
+
 		} catch {
 			modalRef?.current?.open({
 				title: 'Network Error',
@@ -71,6 +83,7 @@ export default function LoginForm() {
 			setIsLoading(false);
 		}
 	};
+
 
 	return (
 		<section className="container-fluid min-vh-100 d-flex p-0">
