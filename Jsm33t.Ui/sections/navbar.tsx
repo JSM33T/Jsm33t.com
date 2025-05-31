@@ -60,6 +60,7 @@ const Navbar = () => {
 			: "/assets/images/default_user.jpg";
 
 	const { setUser } = useUser();
+
 	useEffect(() => {
 		const navbarCollapse = document.getElementById("navbarNav");
 		if (!navbarCollapse) return;
@@ -75,6 +76,16 @@ const Navbar = () => {
 				}
 			}
 		};
+
+		if (typeof window !== "undefined") {
+			const user = localStorage.getItem("user");
+			const authToken = localStorage.getItem("authToken");
+			if (!user || !authToken) {
+				localStorage.removeItem("user");
+				localStorage.removeItem("authToken");
+			}
+		}
+
 
 		navbarCollapse.addEventListener("click", handleNavClick);
 

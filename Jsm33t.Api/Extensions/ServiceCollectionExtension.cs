@@ -20,7 +20,9 @@ namespace Jsm33t.Api.Extensions
         {
             services.AddValidatorsFromAssembly(Assembly.Load("Jsm33t.Validators"));
 
-            
+            //services.AddHttpClient();
+            services.AddHttpClient<ITelegramService, TelegramService>();
+
 
             services.AddSingleton<ICloudinaryService, CloudinaryService>();
             services.AddScoped<IChangeLogRepository, ChangeLogRepository>();
@@ -37,13 +39,13 @@ namespace Jsm33t.Api.Extensions
             if (env.IsDevelopment())
             {
                 services.AddScoped<IMailService, MockMailService>();
-                services.AddSingleton<ITelegramService, MockTelegramService>();
+                //services.AddSingleton<ITelegramService, MockTelegramService>();
                 services.AddScoped<ITokenService, MockTokenService>();
             }
             else
             {
                 services.AddScoped<IMailService, SmtpMailService>();
-                services.AddHttpClient<ITelegramService, TelegramService>();
+               //services.AddHttpClient<ITelegramService, TelegramService>();
                 services.AddScoped<ITokenService, TokenService>();
             }
 

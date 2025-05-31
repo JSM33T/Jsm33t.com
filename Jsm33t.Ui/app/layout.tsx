@@ -14,6 +14,7 @@ import PreloaderRemover from '@/components/helpers/PreloaderRemover';
 import { PlayerProvider } from '@/context/PlayerContext';
 import ChatOffcanvas from '@/sections/ChatOffcanvas';
 import ThemeLoader from '@/components/helpers/ThemeLoader';
+import { GoogleOAuthProvider } from '@react-oauth/google';
 
 
 export const metadata = {
@@ -69,7 +70,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 				/>
 				<style id="theme_custom_theme"></style>
 			</head>
-			<body>
+			<body className=''>
 				<div className="page-loading active">
 					<div className="page-loading-inner">
 						<div className="page-spinner"></div>
@@ -81,10 +82,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 				<Providers>
 					<ThemeLoader />
 					<PlayerProvider>
-						<SidePanel />
-						<ClientTokenProvider />
-						<main><NavbarWrapper />{children}</main>
-						<ModalRenderer />
+						<GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!}>
+							<SidePanel />
+							<ClientTokenProvider />
+							<main className=''><NavbarWrapper />{children}</main>
+							<ModalRenderer />
+						</GoogleOAuthProvider>
 					</PlayerProvider>
 				</Providers>
 				<RouteProgress />

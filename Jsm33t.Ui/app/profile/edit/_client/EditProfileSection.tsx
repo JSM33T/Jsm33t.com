@@ -140,8 +140,9 @@ export default function ProfileEditPanel() {
 	};
 
 	return (
+		// EditProfile.jsx
 		<section className='container pb-lg-2 pb-xl-4 py-xxl-5 my-5'>
-			{/* Profile Picture Panel */}
+			{/* Profile Picture */}
 			<div className="card border-0 p-4 mb-4">
 				<h3 className="h5 mb-3">Profile Picture</h3>
 				<div className="mb-3 d-flex align-items-center">
@@ -176,8 +177,7 @@ export default function ProfileEditPanel() {
 					{savingAvatar ? "Saving..." : "Save Image"}
 				</button>
 			</div>
-
-			{/* Profile Text Fields Panel */}
+			{/* Profile Fields */}
 			<div className="card border-0 p-4">
 				<h3 className="h5 mb-3">Edit Profile Info</h3>
 				<div className="mb-3">
@@ -224,5 +224,90 @@ export default function ProfileEditPanel() {
 				</div>
 			</div>
 		</section>
+
+		// <section className='container pb-lg-2 pb-xl-4 py-xxl-5 my-5'>
+		// 	{/* Profile Picture Panel */}
+		// 	<div className="card border-0 p-4 mb-4">
+		// 		<h3 className="h5 mb-3">Profile Picture</h3>
+		// 		<div className="mb-3 d-flex align-items-center">
+		// 			<label
+		// 				htmlFor="avatar-upload"
+		// 				className="rounded-circle bg-size-cover bg-position-center flex-shrink-0"
+		// 				style={{
+		// 					width: 80,
+		// 					height: 80,
+		// 					backgroundImage: `url(${form.avatar || DEFAULT_AVATAR})`,
+		// 					cursor: 'pointer'
+		// 				}}
+		// 				aria-label="Upload picture"
+		// 			>
+		// 				<span className="d-block text-light text-center lh-1 pb-1" style={{ backgroundColor: 'rgba(0,0,0,.5)' }}>
+		// 					<i className="ai-camera"></i>
+		// 				</span>
+		// 			</label>
+		// 			<input
+		// 				type="file"
+		// 				id="avatar-upload"
+		// 				accept="image/*"
+		// 				onChange={handleAvatar}
+		// 				style={{ display: 'none' }}
+		// 			/>
+		// 			<div className="ps-3">
+		// 				<h3 className="h6 mb-1">Change Photo</h3>
+		// 				<p className="fs-sm text-body-secondary mb-0">PNG/JPG up to 1000px.</p>
+		// 			</div>
+		// 		</div>
+		// 		<button className="btn btn-primary" type="button" onClick={handleSaveAvatar} disabled={savingAvatar}>
+		// 			{savingAvatar ? "Saving..." : "Save Image"}
+		// 		</button>
+		// 	</div>
+
+		// 	{/* Profile Text Fields Panel */}
+		// 	<div className="card border-0 p-4">
+		// 		<h3 className="h5 mb-3">Edit Profile Info</h3>
+		// 		<div className="mb-3">
+		// 			<label className="form-label" htmlFor="firstName">First name</label>
+		// 			<input className="form-control" type="text" name="firstName" value={form.firstName} id="firstName" onChange={handleChange} />
+		// 		</div>
+		// 		<div className="mb-3">
+		// 			<label className="form-label" htmlFor="lastName">Last name</label>
+		// 			<input className="form-control" type="text" name="lastName" value={form.lastName} id="lastName" onChange={handleChange} />
+		// 		</div>
+		// 		<div className="mb-3">
+		// 			<label className="form-label" htmlFor="userName">Username</label>
+		// 			<input className="form-control" type="text" name="userName" value={form.userName} id="userName" onChange={handleChange} />
+		// 		</div>
+		// 		<div className="mb-3">
+		// 			<label className="form-label me-3">Gender:</label>
+		// 			{[
+		// 				{ value: "m", label: "Male" },
+		// 				{ value: "f", label: "Female" },
+		// 				{ value: "o", label: "Other" }
+		// 			].map((g) => (
+		// 				<div className="form-check form-check-inline" key={g.value}>
+		// 					<input
+		// 						className="form-check-input"
+		// 						type="radio"
+		// 						name="gender"
+		// 						value={g.value}
+		// 						id={`gender-${g.value}`}
+		// 						checked={form.gender === g.value}
+		// 						onChange={handleChange}
+		// 					/>
+		// 					<label className="form-check-label" htmlFor={`gender-${g.value}`}>{g.label}</label>
+		// 				</div>
+		// 			))}
+		// 		</div>
+		// 		<div className="mb-3">
+		// 			<label className="form-label" htmlFor="bio">Bio</label>
+		// 			<textarea className="form-control" name="bio" rows={3} value={form.bio} id="bio" onChange={handleChange}></textarea>
+		// 		</div>
+		// 		<div className="d-flex justify-content-end">
+		// 			<button className="btn btn-primary" type="button" onClick={handleSave} disabled={saving}>
+		// 				{saving ? "Saving..." : "Save Changes"}
+		// 			</button>
+		// 		</div>
+		// 	</div>
+		// </section>
 	);
 }

@@ -15,11 +15,11 @@ const breadcrumbs = [
 
 export default function ProfilePage() {
 	return (
-		<section className="container pt-5 pb-lg-2 pb-xl-4 py-xxl-5 my-5">
+		<section className=" container pt-5 pb-lg-2 pb-xl-4 py-xxl-5 my-5">
 			<Breadcrumbs items={breadcrumbs} />
 
 			<div className="row pb-1 pb-sm-3 pb-lg-4">
-				
+
 
 				<ProfileSection />
 

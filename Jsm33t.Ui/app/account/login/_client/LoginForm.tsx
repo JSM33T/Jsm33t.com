@@ -2,20 +2,39 @@
 
 import { useUser } from '@/context/UserContext';
 import { apiClient, setAuthToken } from '@/lib/apiClient';
-import { jwtDecode } from 'jwt-decode';
 import Link from 'next/link';
 import { useForm } from 'react-hook-form';
 import { modalRef } from '@/components/sections/ModalBox';
 import { useEffect, useState } from 'react';
+import { GoogleOAuthProvider } from '@react-oauth/google';
+import GoogleLoginComponent from '@/components/sections/GoogleLoginComponent';
+import { jwtDecode, JwtPayload } from 'jwt-decode';
+
+// --- Types ---
 
 interface LoginResponse {
 	accessToken: string;
 }
-interface JwtPayload {
-	[key: string]: any;
+interface GoogleProfile {
+	email: string;
+	name: string;
+	sub: string; // Google user id
+	picture: string;
+	[key: string]: unknown;
 }
-
-interface JwtPayload {
+interface AppJwtPayload extends JwtPayload {
+	firstName?: string;
+	lastName?: string;
+	email?: string;
+	username?: string;
+	avatar?: string;
+	[claim: string]: unknown;
+}
+interface FormData {
+	email: string;
+	password: string;
+}
+interface UserType {
 	firstName: string;
 	lastName: string;
 	email: string;
@@ -23,10 +42,7 @@ interface JwtPayload {
 	avatar: string;
 }
 
-interface FormData {
-	email: string;
-	password: string;
-}
+// --- Main Component ---
 
 export default function LoginForm() {
 	const { setUser } = useUser();
@@ -36,45 +52,61 @@ export default function LoginForm() {
 
 	useEffect(() => {
 		const storedUser = localStorage.getItem("user");
-		if (storedUser) setUser(JSON.parse(storedUser));
-	}, []);
+		if (storedUser) {
+			try {
+				const parsed: UserType = JSON.parse(storedUser);
+				setUser(parsed);
+			} catch {
+				// Invalid user in storage, ignore
+			}
+		}
+	}, [setUser]);
 
-	const onSubmit = async (data: FormData) => {
+	// --- Google login handler ---
+	const handleGoogleLogin = async (profile: GoogleProfile): Promise<void> => {
 		setIsLoading(true);
 		try {
-			const response = await apiClient.post<LoginResponse>('/auth/login', data);
-
+			const response = await apiClient.post<LoginResponse>('/auth/google', {
+				email: profile.email,
+				name: profile.name,
+				googleId: profile.sub,
+				avatar: profile.picture,
+			});
 			if (response.status === 200 && response.data?.accessToken) {
 				const token = response.data.accessToken;
 				localStorage.setItem('authToken', token);
 				setAuthToken(token);
 
-				const decoded = jwtDecode<JwtPayload>(token);
+				const decoded = jwtDecode<AppJwtPayload>(token);
 
-				const user = {
-					firstName: decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname"],
-					lastName: decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/surname"],
-					email: decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress"],
-					username: decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"],
-					avatar: decoded.avatar && decoded.avatar.trim() ? decoded.avatar : '/assets/images/default_user.jpg',
+				const user: UserType = {
+					firstName: (decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname"] as string)
+						|| decoded.firstName
+						|| "",
+					lastName: (decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/surname"] as string)
+						|| decoded.lastName
+						|| "",
+					email: (decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress"] as string)
+						|| decoded.email
+						|| "",
+					username: (decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"] as string)
+						|| decoded.username
+						|| "",
+					avatar: (typeof decoded.avatar === "string" && decoded.avatar.trim())
+						? decoded.avatar
+						: '/assets/images/default_user.jpg',
 				};
-
 				setUser(user);
-				localStorage.setItem("user", JSON.stringify(user)); // <-- this keeps all fields in localStorage
-
-				modalRef?.current?.open({
-					title: 'Login Successful',
-					description: 'Redirecting...',
-				});
+				localStorage.setItem("user", JSON.stringify(user));
+				modalRef?.current?.open({ title: 'Login Successful', description: 'Redirecting...' });
 				setTimeout(() => window.location.replace('/'), 100);
 			} else {
 				modalRef?.current?.open({
 					title: 'Login Failed',
-					description: response?.message || 'Something went wrong. Please try again.',
+					description: (response as any)?.message || 'Something went wrong. Please try again.',
 				});
 			}
-
-		} catch {
+		} catch (err: unknown) {
 			modalRef?.current?.open({
 				title: 'Network Error',
 				description: 'Check your internet connection and try again.',
@@ -84,6 +116,60 @@ export default function LoginForm() {
 		}
 	};
 
+	// --- Email/password handler ---
+	const onSubmit = async (data: FormData): Promise<void> => {
+		setIsLoading(true);
+		try {
+			const response = await apiClient.post<LoginResponse>('/auth/login', data);
+
+			if (response.status === 200 && response.data?.accessToken) {
+				const token = response.data.accessToken;
+				localStorage.setItem('authToken', token);
+				setAuthToken(token);
+
+				const decoded = jwtDecode<AppJwtPayload>(token);
+
+				const user: UserType = {
+					firstName: (decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname"] as string)
+						|| decoded.firstName
+						|| "",
+					lastName: (decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/surname"] as string)
+						|| decoded.lastName
+						|| "",
+					email: (decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress"] as string)
+						|| decoded.email
+						|| "",
+					username: (decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"] as string)
+						|| decoded.username
+						|| "",
+					avatar: (typeof decoded.avatar === "string" && decoded.avatar.trim())
+						? decoded.avatar
+						: '/assets/images/default_user.jpg',
+				};
+
+				setUser(user);
+				localStorage.setItem("user", JSON.stringify(user));
+
+				modalRef?.current?.open({
+					title: 'Login Successful',
+					description: 'Redirecting...',
+				});
+				setTimeout(() => window.location.replace('/'), 100);
+			} else {
+				modalRef?.current?.open({
+					title: 'Login Failed',
+					description: (response as any)?.message || 'Something went wrong. Please try again.',
+				});
+			}
+		} catch (err: unknown) {
+			modalRef?.current?.open({
+				title: 'Network Error',
+				description: 'Check your internet connection and try again.',
+			});
+		} finally {
+			setIsLoading(false);
+		}
+	};
 
 	return (
 		<section className="container-fluid min-vh-100 d-flex p-0">
@@ -111,6 +197,7 @@ export default function LoginForm() {
 									type="email"
 									placeholder="Email address"
 									{...register('email', { required: 'Email is required' })}
+									autoComplete="email"
 								/>
 								{errors.email && (
 									<small className="text-danger">{errors.email.message}</small>
@@ -124,6 +211,7 @@ export default function LoginForm() {
 									type={isPasswordVisible ? 'text' : 'password'}
 									placeholder="Enter your password"
 									{...register('password', { required: 'Password is required' })}
+									autoComplete="current-password"
 								/>
 								<button
 									type="button"
@@ -147,9 +235,17 @@ export default function LoginForm() {
 								{isLoading ? 'Loading...' : 'Sign in'}
 							</button>
 						</form>
+						{/* Google login section */}
+						<div className="text-center mt-3">
+							<span className="text-muted">or</span>
+							<GoogleOAuthProvider clientId="YOUR_GOOGLE_CLIENT_ID">
+								<div className="mt-3 d-flex justify-content-center">
+									<GoogleLoginComponent onLogin={handleGoogleLogin} />
+								</div>
+							</GoogleOAuthProvider>
+						</div>
 					</div>
 				</div>
-
 				<div
 					className="col-lg-6 d-none d-lg-block bg-size-cover bg-position-center"
 					style={{ backgroundImage: 'url(/assets/images/accountcover.jpg)' }}
