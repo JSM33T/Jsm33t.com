@@ -68,8 +68,8 @@ namespace Jsm33t.Repositories
             var sql = @"
         SELECT s.Id AS SessionId, s.AccessToken, s.DeviceId, s.IpAddress, s.UserAgent,
                s.IssuedAt, s.ExpiresAt, s.IsActive, s.LoggedOutAt
-        FROM LoginSessions s
-        INNER JOIN UserLogins ul ON ul.Id = s.UserLoginId
+        FROM LoginSession s
+        INNER JOIN UserLogin ul ON ul.Id = s.UserLoginId
         WHERE ul.UserId = @UserId
         ORDER BY s.IssuedAt DESC";
             return await conn.QueryAsync<LoginDeviceDto>(sql, new { UserId = userId });
@@ -81,8 +81,8 @@ namespace Jsm33t.Repositories
             using var conn = dapperFactory.CreateConnection();
             var sql = @"
             DELETE s
-            FROM LoginSessions s
-            INNER JOIN UserLogins ul ON ul.Id = s.UserLoginId
+            FROM LoginSession s
+            INNER JOIN UserLogin ul ON ul.Id = s.UserLoginId
             WHERE ul.UserId = @UserId AND (s.DeviceId IS NULL OR s.DeviceId <> @DeviceId)";
             return await conn.ExecuteAsync(sql, new { UserId = userId, DeviceId = deviceId });
         }
@@ -93,8 +93,8 @@ namespace Jsm33t.Repositories
             using var conn = dapperFactory.CreateConnection();
             var sql = @"
             DELETE s
-            FROM LoginSessions s
-            INNER JOIN UserLogins ul ON ul.Id = s.UserLoginId
+            FROM LoginSession s
+            INNER JOIN UserLogin ul ON ul.Id = s.UserLoginId
             WHERE ul.UserId = @UserId AND s.DeviceId = @DeviceId";
             return await conn.ExecuteAsync(sql, new { UserId = userId, DeviceId = deviceId });
         }

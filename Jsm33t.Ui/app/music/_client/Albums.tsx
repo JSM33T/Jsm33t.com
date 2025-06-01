@@ -5,7 +5,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/pagination';
-import 'bootstrap/dist/css/bootstrap.min.css';
+//import 'bootstrap/dist/css/bootstrap.min.css';
 import Image from 'next/image';
 
 const categoryData = [
@@ -52,7 +52,7 @@ export default function AlbumFeatures() {
 				<div className="d-lg-none" style={{ height: '400px' }}></div>
 				<div className="d-flex position-absolute bottom-0 start-0 w-100 overflow-hidden mb-n1" style={{ color: 'var(--ar-body-bg)' }}>
 					<div className="position-relative start-50 translate-middle-x flex-shrink-0" style={{ width: '3774px' }}>
-						<svg width="3774" height="201" viewBox="0 0 3774 201" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M0 200.003C0 200.003 1137.52 0.188224 1873.5 0.000134392C2614.84 -0.189325 3774 200.003 3774 200.003H0Z" fill="currentColor"/></svg>
+						<svg width="3774" height="201" viewBox="0 0 3774 201" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M0 200.003C0 200.003 1137.52 0.188224 1873.5 0.000134392C2614.84 -0.189325 3774 200.003 3774 200.003H0Z" fill="currentColor" /></svg>
 					</div>
 				</div>
 			</section>

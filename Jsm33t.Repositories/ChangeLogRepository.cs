@@ -53,7 +53,7 @@ namespace Jsm33t.Repositories
             using var conn = _dbFactory.CreateConnection();
 
             var flatLogs = await conn.QueryAsync<ChangeLogResponseDto>(
-                "SELECT * FROM ChangeLogs ORDER BY Version DESC"
+                "SELECT * FROM ChangeLog ORDER BY Version DESC"
             );
 
             var grouped = flatLogs

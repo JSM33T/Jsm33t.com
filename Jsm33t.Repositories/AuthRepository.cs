@@ -43,7 +43,7 @@ public class AuthRepository(IDapperFactory factory) : IAuthRepository
 
     public async Task<bool> LogoutSessionAsync(int sessionId)
     {
-        const string sql = "UPDATE LoginSessions SET IsActive = 0, LoggedOutAt = GETUTCDATE() WHERE Id = @SessionId";
+        const string sql = "UPDATE LoginSession SET IsActive = 0, LoggedOutAt = GETUTCDATE() WHERE Id = @SessionId";
         var result = await _db.ExecuteAsync(sql, new { SessionId = sessionId });
         return result > 0;
     }
@@ -61,7 +61,7 @@ public class AuthRepository(IDapperFactory factory) : IAuthRepository
     }
 
     public Task StoreNewRefreshTokenAsync(int sessionId, string token, DateTime expires) =>
-        _db.ExecuteAsync("UPDATE LoginSessions SET RefreshToken = @token, ExpiresAt = @expires WHERE Id = @sessionId",
+        _db.ExecuteAsync("UPDATE LoginSession SET RefreshToken = @token, ExpiresAt = @expires WHERE Id = @sessionId",
             new { sessionId, token, expires });
 
     public Task<IEnumerable<SessionDto>> GetSessionsByUserIdAsync(int userId) =>

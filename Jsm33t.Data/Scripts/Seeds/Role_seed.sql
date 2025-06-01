@@ -3,7 +3,7 @@
 -- date		:	2025/03/28
 -- comment	:	Seed roles
 ---------------------------------------
-INSERT INTO [dbo].[Roles] ([Id], [Name], [Slug], [Description], [CreatedAt], [RowId])
+INSERT INTO [Role] ([Id], [Name], [Slug], [Description], [CreatedAt], [RowId])
 VALUES 
 
 (1, 'User', 'user', 'Standard registered user', GETDATE(), NEWID()),

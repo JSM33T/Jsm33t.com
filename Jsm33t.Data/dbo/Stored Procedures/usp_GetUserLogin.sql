@@ -1,4 +1,4 @@
-﻿CREATE PROCEDURE [dbo].[usp_GetUserLogin]
+﻿CREATE PROCEDURE [usp_GetUserLogin]
     @Email NVARCHAR(256)
 AS
 BEGIN
@@ -13,9 +13,9 @@ BEGIN
         U.LastName,
         U.UserName,
         U.IsEmailVerified  AS IsVerified
-    FROM UserLogins UL
-    INNER JOIN LoginProviders LP ON UL.ProviderId = LP.Id
-    INNER JOIN Users U ON U.Id = UL.UserId
+    FROM UserLogin UL
+    INNER JOIN LoginProvider LP ON UL.ProviderId = LP.Id
+    INNER JOIN [User] U ON U.Id = UL.UserId
     WHERE LP.[Name] = 'Email'
       --AND UL.Email = @Email
       AND (UL.Email = @Email OR U.UserName = @Email)

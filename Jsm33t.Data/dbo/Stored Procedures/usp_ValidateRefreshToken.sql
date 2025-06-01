@@ -1,4 +1,4 @@
-﻿CREATE PROCEDURE [dbo].[usp_ValidateRefreshToken]
+﻿CREATE PROCEDURE [usp_ValidateRefreshToken]
     @RefreshToken NVARCHAR(512),
     @DeviceId NVARCHAR(256)
 AS
@@ -9,8 +9,8 @@ BEGIN
         UL.UserId,
         UL.Id AS UserLoginId,
         LS.Id AS SessionId
-    FROM LoginSessions LS
-    INNER JOIN UserLogins UL ON LS.UserLoginId = UL.Id
+    FROM LoginSession LS
+    INNER JOIN UserLogin UL ON LS.UserLoginId = UL.Id
     WHERE 
         LS.RefreshToken = @RefreshToken AND
         LS.DeviceId = @DeviceId AND

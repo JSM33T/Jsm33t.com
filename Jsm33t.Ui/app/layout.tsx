@@ -1,4 +1,4 @@
-import 'bootstrap/dist/css/bootstrap.min.css';
+//import 'bootstrap/dist/css/bootstrap.min.css';
 import '../public/style.css';
 import './globals.css';
 import '../icons/around-icons.min.css';
@@ -82,7 +82,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 				<Providers>
 					<ThemeLoader />
 					<PlayerProvider>
-						<GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!}>
+						<GoogleOAuthProvider clientId={"881148390473-oekqgd28chj1m97n7cd967r2ittmsffe.apps.googleusercontent.com"}>
 							<SidePanel />
 							<ClientTokenProvider />
 							<main className=''><NavbarWrapper />{children}</main>

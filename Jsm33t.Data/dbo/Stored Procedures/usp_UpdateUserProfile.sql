@@ -1,4 +1,4 @@
-﻿CREATE PROCEDURE [dbo].[usp_UpdateUserProfile]
+﻿CREATE PROCEDURE [usp_UpdateUserProfile]
     @Id INT,
     @FirstName NVARCHAR(128),
     @LastName NVARCHAR(128),
@@ -11,7 +11,7 @@ BEGIN
     SET NOCOUNT ON;
 
     IF EXISTS (
-        SELECT 1 FROM Users
+        SELECT 1 FROM [User]
         WHERE UserName = @UserName AND Id <> @Id
     )
     BEGIN
@@ -19,7 +19,7 @@ BEGIN
         RETURN;
     END
 
-    UPDATE Users
+    UPDATE [User]
     SET
         FirstName = @FirstName,
         LastName = @LastName,

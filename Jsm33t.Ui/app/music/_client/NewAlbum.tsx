@@ -5,7 +5,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/pagination';
-import 'bootstrap/dist/css/bootstrap.min.css';
+//import 'bootstrap/dist/css/bootstrap.min.css';
 import Image from 'next/image';
 import { usePlayer } from '@/context/PlayerContext';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -119,7 +119,7 @@ export default function NewAlbum() {
 								className={`btn btn-sm rounded-pill px-4 py-2 fw-semibold shadow-sm ${activeCategory === key
 									? "btn-primary"
 									: "btn-outline-secondary"
-								}`}
+									}`}
 								onClick={() => setActiveCategory(key)}
 							>
 								{key.charAt(0).toUpperCase() + key.slice(1)}

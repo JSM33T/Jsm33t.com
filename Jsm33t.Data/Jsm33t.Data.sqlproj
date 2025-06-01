@@ -67,10 +67,10 @@
     <Build Include="dbo\Stored Procedures\usp_InsertChangeLog.sql" />
     <Build Include="dbo\Stored Procedures\usp_DeleteChangeLogsByVersion.sql" />
     <Build Include="dbo\Tables\Roles.sql" />
-    <Build Include="dbo\Tables\Users.sql" />
-    <Build Include="dbo\Tables\LoginProviders.sql" />
-    <Build Include="dbo\Tables\UserLogins.sql" />
-    <Build Include="dbo\Tables\LoginSessions.sql" />
+    <Build Include="dbo\Tables\User.sql" />
+    <Build Include="dbo\Tables\LoginProvider.sql" />
+    <Build Include="dbo\Tables\UserLogin.sql" />
+    <Build Include="dbo\Tables\LoginSession.sql" />
     <Build Include="dbo\Stored Procedures\usp_SignupUser.sql" />
     <Build Include="dbo\Stored Procedures\usp_GetUserSessions.sql" />
     <Build Include="dbo\Stored Procedures\usp_CreateLoginSession.sql" />
@@ -84,8 +84,12 @@
     <Build Include="dbo\Stored Procedures\usp_ResetPassword.sql" />
     <Build Include="dbo\Stored Procedures\usp_ValidateRecoveryToken.sql" />
     <Build Include="dbo\Stored Procedures\usp_CreateRecoveryToken.sql" />
-    <Build Include="dbo\Tables\PasswordRecoveries.sql" />
+    <Build Include="dbo\Tables\PasswordRecovery.sql" />
     <None Include="Scripts\Seeds\LoginProviders_seed.sql" />
     <Build Include="dbo\Stored Procedures\usp_UpdateUserProfilePicture.sql" />
+    <Build Include="dbo\Tables\Blog.sql" />
+    <Build Include="dbo\Tables\BlogAuthor.sql" />
+    <Build Include="dbo\Tables\BlogCategory.sql" />
+    <Build Include="dbo\Tables\BlogSeries.sql" />
   </ItemGroup>
 </Project>

@@ -2,7 +2,7 @@
 'use client';
 
 import Image from 'next/image';
-import 'bootstrap/dist/css/bootstrap.min.css';
+//import 'bootstrap/dist/css/bootstrap.min.css';
 
 export default function MapSection() {
 	return (
@@ -11,14 +11,14 @@ export default function MapSection() {
 				<div className="row pt-md-2 pt-lg-3 pt-xl-4 pb-lg-2 pb-xl-3">
 					<div className="col-md-6">
 						<h2 className="h1 pe-xxl-5 me-xl-4 mb-md-0">
-              Our <span className="text-warning">data centers</span> spread all over the world. Get access to the API from anywhere
+							Our <span className="text-warning">data centers</span> spread all over the world. Get access to the API from anywhere
 						</h2>
 					</div>
 					<div className="col-md-6 col-xl-5 offset-xl-1">
 						<p className="text-body fs-xl mb-0">
-              Our data centers are a key component of our global infrastructure, providing reliable and scalable computing
-              resources to customers around the world. We offer a highly distributed and resilient platform that can support
-              the most demanding workloads.
+							Our data centers are a key component of our global infrastructure, providing reliable and scalable computing
+							resources to customers around the world. We offer a highly distributed and resilient platform that can support
+							the most demanding workloads.
 						</p>
 					</div>
 				</div>
@@ -33,6 +33,6 @@ export default function MapSection() {
 				</div>
 			</div>
 		</section>
-    
+
 	);
 }

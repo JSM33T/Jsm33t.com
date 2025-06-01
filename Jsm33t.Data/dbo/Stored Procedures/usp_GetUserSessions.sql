@@ -1,4 +1,4 @@
-﻿CREATE PROCEDURE [dbo].[usp_GetUserSessions]
+﻿CREATE PROCEDURE [usp_GetUserSession]
     @UserId INT
 AS
 BEGIN
@@ -15,8 +15,8 @@ BEGIN
         LS.DeviceId,
         LS.IpAddress,
         LS.UserAgent
-    FROM LoginSessions LS
-    INNER JOIN UserLogins UL ON LS.UserLoginId = UL.Id
+    FROM LoginSession LS
+    INNER JOIN UserLogin UL ON LS.UserLoginId = UL.Id
     WHERE UL.UserId = @UserId
     ORDER BY LS.IssuedAt DESC;
 END

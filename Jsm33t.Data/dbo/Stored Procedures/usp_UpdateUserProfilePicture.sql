@@ -1,4 +1,4 @@
-﻿CREATE PROCEDURE [dbo].[usp_UpdateUserProfilePicture]
+﻿CREATE PROCEDURE [usp_UpdateUserProfilePicture]
     @Id INT,
     @Avatar NVARCHAR(256),
     @ResultCode INT OUTPUT -- 0 = success
@@ -6,7 +6,7 @@ AS
 BEGIN
     SET NOCOUNT ON;
 
-    UPDATE Users
+    UPDATE [User]
     SET
         Avatar = @Avatar,
         UpdatedAt = GETDATE()

@@ -1,4 +1,4 @@
-﻿CREATE PROCEDURE [dbo].[usp_InsertChangeLog]
+﻿CREATE PROCEDURE [usp_InsertChangeLog]
     @Version       NVARCHAR(50),
     @Title         NVARCHAR(255),
     @Description   NVARCHAR(MAX),
@@ -8,7 +8,7 @@ AS
 BEGIN
     SET NOCOUNT ON;
 
-    INSERT INTO ChangeLogs (
+    INSERT INTO ChangeLog (
         Version,
         Title,
         Description,

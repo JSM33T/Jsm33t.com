@@ -15,13 +15,13 @@ BEGIN
 
     IF @Username IS NOT NULL
     BEGIN
-        SELECT @UserId = Id FROM Users WHERE UserName = @Username;
+        SELECT @UserId = Id FROM [User] WHERE UserName = @Username;
     END
 
 
     SELECT TOP 1 @UserLoginId = pr.UserLoginId
-    FROM PasswordRecoveries pr
-    JOIN UserLogins ul ON pr.UserLoginId = ul.Id
+    FROM PasswordRecovery pr
+    JOIN UserLogin ul ON pr.UserLoginId = ul.Id
     WHERE pr.IsUsed = 0 AND
     (
         (pr.Token = @Token AND @Token IS NOT NULL)
@@ -29,7 +29,7 @@ BEGIN
         (
             pr.Otp = @Otp AND
             pr.OtpExpiresAt > GETUTCDATE() AND
-            --[dbo].[UserLogins].[UserName] = @Username AND
+            --[UserLogin].[UserName] = @Username AND
             ul.UserId = @UserId AND
             @Otp IS NOT NULL AND @Username IS NOT NULL
         )
@@ -41,12 +41,12 @@ BEGIN
         RETURN;
     END
 
-    UPDATE UserLogins
+    UPDATE UserLogin
     SET PasswordHash = @PasswordHash,
         Salt = @Salt
     WHERE Id = @UserLoginId;
 
-    UPDATE PasswordRecoveries
+    UPDATE PasswordRecovery
     SET IsUsed = 1,
         UsedAt = GETUTCDATE()
     WHERE UserLoginId = @UserLoginId AND IsUsed = 0;

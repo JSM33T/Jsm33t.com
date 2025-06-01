@@ -1,8 +1,8 @@
-﻿CREATE PROCEDURE [dbo].[usp_VerifyEmail]
+﻿CREATE PROCEDURE [usp_VerifyEmail]
     @Token UNIQUEIDENTIFIER
 AS
 BEGIN
-    UPDATE Users
+    UPDATE [User]
     SET IsEmailVerified = 1,
         EmailVerificationToken = NULL
     WHERE EmailVerificationToken = @Token;
