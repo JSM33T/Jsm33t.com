@@ -1,15 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Jsm33t.Contracts.Dtos;
 
 namespace Jsm33t.Contracts.Interfaces.Services
 {
     public interface IBlogService
     {
-        //Task<BlogPostDto?> GetBlogBySlugAsync(string slug);
-        //Task<PaginatedResult<BlogPostDto>> BrowseBlogsAsync(BlogSearchFilter filter, int page, int pageSize);
+        Task<IEnumerable<BlogListDto>> GetBlogListAsync(
+         int pageNumber, int pageSize,
+         int? categoryId = null,
+         int? seriesId = null,
+         bool? isPublished = null,
+         string? search = null);
+
+        Task<BlogDetailDto?> GetBlogBySlugAsync(string slug);
     }
 
 }

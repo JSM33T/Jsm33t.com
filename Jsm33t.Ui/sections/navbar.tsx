@@ -163,7 +163,7 @@ const Navbar = () => {
 								<Link className="nav-link collapse-trigger" href="/">Home</Link>
 							</li>
 							<li className="nav-item disabled">
-								<Link className="nav-link collapse-trigger disabled" href="/blogs">Blogs</Link>
+								<Link className="nav-link collapse-trigger" href="/blogs">Blogs</Link>
 							</li>
 							<li className="nav-item">
 								<Link className="nav-link collapse-trigger disabled" href="/music">Music</Link>

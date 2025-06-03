@@ -27,6 +27,10 @@ namespace Jsm33t.Api.Extensions
             services.AddSingleton<ICloudinaryService, CloudinaryService>();
             services.AddScoped<IChangeLogRepository, ChangeLogRepository>();
             services.AddScoped<IChangeLogService, ChangeLogService>();
+
+            services.AddScoped<IBlogService, BlogService>();
+            services.AddScoped<IBlogRepository, BlogRepository>();
+
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IAuthRepository, AuthRepository>();
             services.AddScoped<IDapperFactory, DapperFactory>();

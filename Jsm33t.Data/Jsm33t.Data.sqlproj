@@ -85,11 +85,13 @@
     <Build Include="dbo\Stored Procedures\usp_ValidateRecoveryToken.sql" />
     <Build Include="dbo\Stored Procedures\usp_CreateRecoveryToken.sql" />
     <Build Include="dbo\Tables\PasswordRecovery.sql" />
-    <None Include="Scripts\Seeds\LoginProviders_seed.sql" />
+    <None Include="Scripts\Seeds\LoginProvider_seed.sql" />
     <Build Include="dbo\Stored Procedures\usp_UpdateUserProfilePicture.sql" />
     <Build Include="dbo\Tables\Blog.sql" />
     <Build Include="dbo\Tables\BlogAuthor.sql" />
     <Build Include="dbo\Tables\BlogCategory.sql" />
     <Build Include="dbo\Tables\BlogSeries.sql" />
+    <None Include="Scripts\Seeds\BlogCategory_seed.sql" />
+    <Build Include="dbo\Stored Procedures\usp_GetBlogList.sql" />
   </ItemGroup>
 </Project>
