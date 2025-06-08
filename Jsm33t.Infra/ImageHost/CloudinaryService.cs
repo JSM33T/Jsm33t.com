@@ -2,7 +2,6 @@
 using CloudinaryDotNet.Actions;
 using Jsm33t.Shared.ConfigModels;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Configuration;
 
 namespace Jsm33t.Infra.ImageHost
 {
@@ -29,7 +28,7 @@ namespace Jsm33t.Infra.ImageHost
             {
                 File = new FileDescription(file.FileName, stream),
                 Folder = "pfp",
-                PublicId = $"user_{userGuid}", // Use GUID here
+                PublicId = $"user_{userGuid}",
                 Overwrite = true
             };
 

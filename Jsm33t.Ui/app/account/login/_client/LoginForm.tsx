@@ -6,8 +6,6 @@ import Link from 'next/link';
 import { useForm } from 'react-hook-form';
 import { modalRef } from '@/components/ui/ModalBox';
 import { useEffect, useState } from 'react';
-import { GoogleOAuthProvider } from '@react-oauth/google';
-import GoogleLoginComponent from '@/components/ui/GoogleLoginComponent';
 import { jwtDecode, JwtPayload } from 'jwt-decode';
 
 // --- Types ---
@@ -235,15 +233,6 @@ export default function LoginForm() {
 								{isLoading ? 'Loading...' : 'Sign in'}
 							</button>
 						</form>
-						{/* Google login section */}
-						<div className="text-center mt-3">
-							<span className="text-muted">or</span>
-							<GoogleOAuthProvider clientId="YOUR_GOOGLE_CLIENT_ID">
-								<div className="mt-3 d-flex justify-content-center">
-									<GoogleLoginComponent onLogin={handleGoogleLogin} />
-								</div>
-							</GoogleOAuthProvider>
-						</div>
 					</div>
 				</div>
 				<div

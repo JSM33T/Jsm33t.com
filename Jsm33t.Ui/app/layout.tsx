@@ -14,7 +14,6 @@ import PreloaderRemover from '@/components/helpers/PreloaderRemover';
 import { PlayerProvider } from '@/context/PlayerContext';
 import ChatOffcanvas from '@/components/sections/ChatOffcanvas';
 import ThemeLoader from '@/components/helpers/ThemeLoader';
-import { GoogleOAuthProvider } from '@react-oauth/google';
 
 
 export const metadata = {
@@ -82,12 +81,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 				<Providers>
 					<ThemeLoader />
 					<PlayerProvider>
-						<GoogleOAuthProvider clientId={"881148390473-oekqgd28chj1m97n7cd967r2ittmsffe.apps.googleusercontent.com"}>
-							<SidePanel />
-							<ClientTokenProvider />
-							<main className=''><NavbarWrapper />{children}</main>
-							<ModalRenderer />
-						</GoogleOAuthProvider>
+						<SidePanel />
+						<ClientTokenProvider />
+						<main className=''><NavbarWrapper />{children}</main>
+						<ModalRenderer />
 					</PlayerProvider>
 				</Providers>
 				<RouteProgress />

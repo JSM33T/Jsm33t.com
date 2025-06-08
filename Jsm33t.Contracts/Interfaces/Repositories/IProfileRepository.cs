@@ -13,7 +13,7 @@ namespace Jsm33t.Contracts.Interfaces.Repositories
         /// </summary>
         /// <param name="Id">The unique identifier of the user.</param>
         /// <returns>The user's profile details.</returns>
-        Task<UserProfileDetailsDto> GetUserProfileById(int Id);
+        Task<UserProfileDetailsDto?> GetUserProfileById(int Id);
 
         /// <summary>
         /// Updates the user's profile details asynchronously.
@@ -53,6 +53,6 @@ namespace Jsm33t.Contracts.Interfaces.Repositories
         /// <returns>The number of records updated.</returns>
         Task<int> UpdateUserProfilePicture(string avatarUrl, int userId);
         Task DeductPointsAsync(string userId, int pointsToDeduct);
-
+        Task<UserProfileDetailsDto> EditProfile(UserProfileDetailsDto userProfileDetails);
     }
 }

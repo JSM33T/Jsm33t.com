@@ -11,28 +11,29 @@ namespace Jsm33t.Repositories
     {
         public async Task<UserProfileDetailsDto> EditProfile(UserProfileDetailsDto userProfileDetails)
         {
+            await Task.Delay(10);
             throw new NotImplementedException();
         }
 
         public async Task DeductPointsAsync(string userId, int pointsToDeduct)
         {
             using var connection = dapperFactory.CreateConnection();
-            string query = "UPDATE [User] SET Points = Points - @Points WHERE Id = @UserId and Points >= 0";
+            string query = @"
+                    UPDATE [User] SET Points = Points - @Points WHERE Id = @UserId and Points >= 0"
+                    ;
             await connection.ExecuteAsync(query, new { Points = pointsToDeduct, UserId = userId });
         }
 
 
-        public async Task<UserProfileDetailsDto?> GetUserProfileById(int id)
+        public async Task<UserProfileDetailsDto?> GetUserProfileById(int Id)
         {
             using var conn = dapperFactory.CreateConnection();
 
             return await conn.QuerySingleOrDefaultAsync<UserProfileDetailsDto>(
                 "usp_GetProfileDetailsById",
-                new { Id = id },
+                new { Id = Id },
                 commandType: CommandType.StoredProcedure);
         }
-
-
         public async Task<int> UpdateUserProfilePicture(string avatarUrl, int userId)
         {
             using var conn = dapperFactory.CreateConnection();
@@ -69,17 +70,16 @@ namespace Jsm33t.Repositories
 
             return parameters.Get<int>("ResultCode");
         }
-
         public async Task<IEnumerable<LoginDeviceDto>> GetLoginDevicesForUser(int userId)
         {
             using var conn = dapperFactory.CreateConnection();
             var sql = @"
-        SELECT s.Id AS SessionId, s.AccessToken, s.DeviceId, s.IpAddress, s.UserAgent,
-               s.IssuedAt, s.ExpiresAt, s.IsActive, s.LoggedOutAt
-        FROM LoginSession s
-        INNER JOIN UserLogin ul ON ul.Id = s.UserLoginId
-        WHERE ul.UserId = @UserId
-        ORDER BY s.IssuedAt DESC";
+            SELECT s.Id AS SessionId, s.AccessToken, s.DeviceId, s.IpAddress, s.UserAgent,
+                   s.IssuedAt, s.ExpiresAt, s.IsActive, s.LoggedOutAt
+            FROM LoginSession s
+            INNER JOIN UserLogin ul ON ul.Id = s.UserLoginId
+            WHERE ul.UserId = @UserId
+            ORDER BY s.IssuedAt DESC";
             return await conn.QueryAsync<LoginDeviceDto>(sql, new { UserId = userId });
         }
 

@@ -20,7 +20,6 @@
     [MetaTitle]        NVARCHAR(150)     NULL,
     [MetaDescription]  NVARCHAR(300)     NULL,
     [IsFeatured]       BIT               NOT NULL DEFAULT 0,
-    [Status]           NVARCHAR(50)      NOT NULL DEFAULT 'Draft',
     CONSTRAINT [UQ_Blog_RowId] UNIQUE ([RowId]),
     CONSTRAINT [FK_Blog_BlogCategory] FOREIGN KEY ([CategoryId]) REFERENCES [BlogCategory]([Id]),
     CONSTRAINT [FK_Blog_BlogSeries] FOREIGN KEY ([SeriesId]) REFERENCES [BlogSeries]([Id]),
