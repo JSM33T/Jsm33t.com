@@ -4,11 +4,11 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Jsm33t.Api.Controllers
 {
-    [Route("api/blog")]
+    [Route("api")]
     [ApiController]
     public class BlogController(IBlogService blogService) : FcBaseController
     {
-        [HttpGet("list")]
+        [HttpGet("blog/list")]
         public async Task<ActionResult<ApiResponse<IEnumerable<BlogListDto>>>> GetBlogList(
             [FromQuery] int pageNumber = 1,
             [FromQuery] int pageSize = 10,
@@ -21,13 +21,28 @@ namespace Jsm33t.Api.Controllers
             return RESP_Success(blogs);
         }
 
-        [HttpGet("{slug}")]
+        [HttpGet("blog/{slug}")]
         public async Task<ActionResult<ApiResponse<BlogDetailDto>>> GetBlogBySlug(string slug)
         {
             var blog = await blogService.GetBlogBySlugAsync(slug);
             if (blog == null)
                 return RESP_NotFoundResponse<BlogDetailDto>($"Blog not found for slug: {slug}");
             return RESP_Success(blog);
+        }
+        
+        
+        [HttpGet("blogs/categories")]
+        public async Task<ActionResult<ApiResponse<List<BlogCategory>>>> GetBlogByCategories()
+        {
+            var blogCategories = new List<BlogCategory>();
+           var blogCategory = new BlogCategory
+           {
+               Title = "Something",
+               Slug = "something",
+               IsActive = true
+           };
+           blogCategories.Add(blogCategory);
+            return RESP_Success(blogCategories);
         }
     }
 }

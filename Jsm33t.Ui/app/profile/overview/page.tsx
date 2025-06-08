@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import Breadcrumbs from '@/components/sections/Breadcrumbs';
+import Breadcrumbs from '@/components/ui/Breadcrumbs';
 import ProfileSection from './_client/ProfileSection';
 
 export const metadata: Metadata = {

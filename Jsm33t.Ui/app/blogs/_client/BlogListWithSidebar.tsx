@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { apiClient } from '@/lib/apiClient';
+import CategorySection from './CategorySection';
 
 
 const pageSize = 10;
@@ -26,9 +27,10 @@ export default function BlogListWithSidebar() {
 		slug: string;
 		summary: string;
 		coverImageUrl: string;
+		blogYear: number;
 		category: string;
 		series: string;
-		publishedAt: string | null;
+		createdAt: string | null;
 		viewCount: number;
 		likeCount: number;
 		isFeatured: boolean;
@@ -80,7 +82,7 @@ export default function BlogListWithSidebar() {
 					<article key={blog.id} className="row g-0 border-0 mb-4">
 						<Link
 							className="col-sm-5 bg-repeat-0 bg-size-cover bg-position-center rounded-5"
-							href={`/blog/${blog.slug}`}
+							href={`/blogs/${blog.blogYear}/${blog.slug}`}
 							style={{
 								backgroundImage: `url(${blog.coverImageUrl})`,
 								minHeight: '14rem',
@@ -91,12 +93,12 @@ export default function BlogListWithSidebar() {
 						<div className="col-sm-7">
 							<div className="pt-4 pb-sm-4 ps-sm-4 pe-lg-4">
 								<h3>
-									<Link href={`/blog/${blog.slug}`}>{blog.title}</Link>
+									<Link href={`/blogs/${blog.blogYear}/${blog.slug}`}>{blog.title}</Link>
 								</h3>
 								<p className="d-sm-none d-md-block">{blog.summary}</p>
 								<div className="d-flex flex-wrap align-items-center mt-n2">
 									<span className="fs-sm text-body-secondary mt-2">
-										{blog.publishedAt?.substring(0, 10) || "Draft"}
+										{blog.createdAt?.substring(0, 10) || "Draft"}
 									</span>
 									<span className="fs-xs opacity-20 mt-2 mx-3">|</span>
 									{blog.category && (
@@ -132,6 +134,7 @@ export default function BlogListWithSidebar() {
 							onChange={e => setInput(e.target.value)}
 						/>
 					</div>
+					<CategorySection />
 					{/* Add sidebar widgets here if needed */}
 				</div>
 			</aside>

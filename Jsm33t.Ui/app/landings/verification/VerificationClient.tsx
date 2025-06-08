@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { apiClient } from '@/lib/apiClient';
-import { modalRef } from '@/components/sections/ModalBox';
+import { modalRef } from '@/components/ui/ModalBox';
 
 export default function VerifyEmailPage() {
 	const [status, setStatus] = useState<'loading' | 'success' | 'error'>('loading');

@@ -14,6 +14,14 @@ namespace Jsm33t.Repositories
             throw new NotImplementedException();
         }
 
+        public async Task DeductPointsAsync(string userId, int pointsToDeduct)
+        {
+            using var connection = dapperFactory.CreateConnection();
+            string query = "UPDATE [User] SET Points = Points - @Points WHERE Id = @UserId and Points >= 0";
+            await connection.ExecuteAsync(query, new { Points = pointsToDeduct, UserId = userId });
+        }
+
+
         public async Task<UserProfileDetailsDto?> GetUserProfileById(int id)
         {
             using var conn = dapperFactory.CreateConnection();

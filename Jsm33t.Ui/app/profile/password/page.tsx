@@ -1,7 +1,6 @@
 import type { Metadata } from 'next';
-import Breadcrumbs from '@/components/sections/Breadcrumbs';
+import Breadcrumbs from '@/components/ui/Breadcrumbs';
 import PasswordEditSection from './_client/PasswordClient';
-
 
 export const metadata: Metadata = {
 	title: 'My Profile',

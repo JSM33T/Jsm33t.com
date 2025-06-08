@@ -1,5 +1,5 @@
-import Accordion from '@/components/sections/Accordion';
-import Breadcrumbs from '@/components/sections/Breadcrumbs';
+import Accordion from '@/components/ui/Accordion';
+import Breadcrumbs from '@/components/ui/Breadcrumbs';
 import { Crumb } from '@/types/common';
 import type { Metadata } from 'next';
 

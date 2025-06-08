@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { showBootstrapModal } from '@/components/helpers/ShowBootstrapModal';
-import { modalRef } from '@/components/sections/ModalBox';
+import { modalRef } from '@/components/ui/ModalBox';
 import { apiClient } from '@/lib/apiClient';
 
 export interface Device {

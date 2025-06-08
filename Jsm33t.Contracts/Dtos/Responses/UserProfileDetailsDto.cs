@@ -11,6 +11,7 @@ namespace Jsm33t.Contracts.Dtos.Responses
         public string? LastName { get; set; }
         public string? Email { get; set; }
         public string? UserName { get; set; }
+        public int? Points { get; set; }
         public string Bio { get; set; } = string.Empty;
         public DateTime? CreatedAt { get; set; }
         public string Gender { get; set; } = string.Empty;

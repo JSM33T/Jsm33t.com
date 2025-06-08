@@ -4,6 +4,6 @@ AS
 BEGIN
     SET NOCOUNT ON;
 
-    SELECT RowId as UserId, FirstName,LastName,UserName,CreatedAt,Avatar,Gender,Email,RoleId,Bio 
+    SELECT RowId as UserId, FirstName,LastName,UserName,CreatedAt,Avatar,Gender,Email,RoleId,Bio ,Points
     FROM [User] WHERE Id = @Id;
 END

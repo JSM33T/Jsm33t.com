@@ -5,7 +5,7 @@ import { apiClient, setAuthToken } from '@/lib/apiClient';
 import { jwtDecode } from 'jwt-decode';
 import Link from 'next/link';
 import { useForm } from 'react-hook-form';
-import { modalRef } from '@/components/sections/ModalBox';
+import { modalRef } from '@/components/ui/ModalBox';
 import { useState } from 'react';
 
 interface LoginResponse {

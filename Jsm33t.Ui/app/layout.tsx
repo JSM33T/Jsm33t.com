@@ -5,14 +5,14 @@ import '../icons/around-icons.min.css';
 
 import BootstrapClient from '@/components/helpers/BootstrapClient';
 import RouteProgress from '@/components/helpers/RouteProgress';
-import SidePanel from '@/sections/SidePanel';
+import SidePanel from '@/components/sections/SidePanel';
 import Providers from './providers';
-import NavbarWrapper from '@/components/sections/NavBarWrapper';
+import NavbarWrapper from '@/components/ui/NavBarWrapper';
 import ClientTokenProvider from '@/components/helpers/ClientTokenProvider';
 import ModalRenderer from '@/components/helpers/ModalRenderer';
 import PreloaderRemover from '@/components/helpers/PreloaderRemover';
 import { PlayerProvider } from '@/context/PlayerContext';
-import ChatOffcanvas from '@/sections/ChatOffcanvas';
+import ChatOffcanvas from '@/components/sections/ChatOffcanvas';
 import ThemeLoader from '@/components/helpers/ThemeLoader';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 

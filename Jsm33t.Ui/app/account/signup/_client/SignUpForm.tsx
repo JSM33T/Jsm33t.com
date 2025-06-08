@@ -3,7 +3,7 @@ import { useState, ChangeEvent, FormEvent } from 'react';
 import { apiClient } from '@/lib/apiClient';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { modalRef } from '@/components/sections/ModalBox';
+import { modalRef } from '@/components/ui/ModalBox';
 
 export default function SignupForm() {
 	const router = useRouter();

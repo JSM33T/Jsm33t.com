@@ -1,5 +1,7 @@
 'use client';
 
+import { HTML_UTIL_setBodyBg } from '@/lib/htmlUtils';
+import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 
 type FormData = {
@@ -9,6 +11,11 @@ type FormData = {
 };
 
 export default function PasswordEditSection() {
+
+	useEffect(() => {
+		HTML_UTIL_setBodyBg('bg-secondary');
+	}, [])
+
 	const {
 		register,
 		handleSubmit,
@@ -17,7 +24,6 @@ export default function PasswordEditSection() {
 	} = useForm<FormData>();
 
 	const onSubmit = async (data: FormData) => {
-		// call API to update password
 		console.log(data);
 	};
 

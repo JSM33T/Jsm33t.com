@@ -52,5 +52,7 @@ namespace Jsm33t.Contracts.Interfaces.Repositories
         /// <param name="userId">The unique identifier of the user.</param>
         /// <returns>The number of records updated.</returns>
         Task<int> UpdateUserProfilePicture(string avatarUrl, int userId);
+        Task DeductPointsAsync(string userId, int pointsToDeduct);
+
     }
 }

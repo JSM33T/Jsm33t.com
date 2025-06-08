@@ -2,7 +2,7 @@
 
 import { useEffect, useState, ChangeEvent } from 'react';
 import { apiClient } from '@/lib/apiClient';
-import { modalRef } from '@/components/sections/ModalBox';
+import { modalRef } from '@/components/ui/ModalBox';
 import { useUser } from '@/context/UserContext';
 
 type ProfileForm = {
@@ -143,7 +143,7 @@ export default function ProfileEditPanel() {
 		// EditProfile.jsx
 		<section className='container pb-lg-2 pb-xl-4 py-xxl-5 my-5'>
 			{/* Profile Picture */}
-			<div className="card border-0 p-4 mb-4">
+			<div className="card border-0 p-4 mb-4 shadow-sm bg-body">
 				<h3 className="h5 mb-3">Profile Picture</h3>
 				<div className="mb-3 d-flex align-items-center">
 					<label
@@ -170,7 +170,7 @@ export default function ProfileEditPanel() {
 					/>
 					<div className="ps-3">
 						<h3 className="h6 mb-1">Change Photo</h3>
-						<p className="fs-sm text-body-secondary mb-0">PNG/JPG up to 1000px.</p>
+						<p className="fs-sm text-muted mb-0">PNG/JPG up to 1000px.</p>
 					</div>
 				</div>
 				<button className="btn btn-primary" type="button" onClick={handleSaveAvatar} disabled={savingAvatar}>

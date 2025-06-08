@@ -1,4 +1,7 @@
+'use client'
+import { HTML_UTIL_setBodyBg } from "@/lib/htmlUtils";
 import Link from "next/link";
+import { useEffect } from "react";
 
 const services = [
 	{
@@ -25,9 +28,12 @@ const services = [
 
 
 export default function ProfilePage() {
+	useEffect(() => {
+		HTML_UTIL_setBodyBg('bg-dark')
+	}, [])
 	return (
 		<section className="container pt-5 pb-xxl-3 mt-5">
-			<div className="row">
+			<div className="row pt-4">
 				<div className="col-lg-4 pb-3 mb-3">
 					<h2 className="h1">Profile</h2>
 					<p className="pe-5 mb-0">Your profile overview, update, security, devices </p>

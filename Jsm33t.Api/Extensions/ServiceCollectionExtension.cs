@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using Jsm33t.Api.Filters;
 using Jsm33t.Application;
 using Jsm33t.Contracts.Interfaces.Repositories;
 using Jsm33t.Contracts.Interfaces.Services;

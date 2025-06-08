@@ -1,11 +1,12 @@
 ﻿using Jsm33t.Api.Extensions;
+using Jsm33t.Api.Filters;
 using Jsm33t.Api.Middlewares;
 using Jsm33t.Shared.ConfigModels;
-using System.Text.Json.Serialization;
-using System.Text.Json;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Serilog;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,12 +17,17 @@ Log.Logger = new LoggerConfiguration()
     .WriteTo.File("Logs/errors-.log", rollingInterval: RollingInterval.Day, retainedFileCountLimit: 10)
     .CreateLogger();
 builder.Host.UseSerilog();
-builder.Services.AddControllers()
-    .AddJsonOptions(options =>
-    {
-        options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.Never;
-        options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
-    });
+
+builder.Services.AddControllers(options =>
+{
+    options.Filters.Add<DeductPointsFilter>();
+})
+.AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.Never;
+    options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+});
+
 
 var fcConfig = builder.Configuration
     .GetSection("FcConfig")
@@ -62,6 +68,7 @@ builder.Services.AddCors(options =>
             .AllowCredentials();
     });
 });
+
 
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddInfrastructureServices(builder.Environment);

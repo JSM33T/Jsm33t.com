@@ -14,7 +14,7 @@ BEGIN
         b.Id, b.RowId, b.Title, b.Slug, b.Summary, b.CoverImageUrl,
         c.Title AS Category,
         s.Title AS Series,
-        b.PublishedAt, b.ViewCount, b.LikeCount, b.IsFeatured, b.Status
+        b.CreatedAt, b.ViewCount, b.LikeCount, b.IsFeatured, b.Status
     FROM Blog b
     LEFT JOIN BlogCategory c ON b.CategoryId = c.Id
     LEFT JOIN BlogSeries s ON b.SeriesId = s.Id

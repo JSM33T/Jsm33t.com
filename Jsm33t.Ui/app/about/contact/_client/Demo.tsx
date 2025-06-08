@@ -1,6 +1,6 @@
 'use client';
 
-import ModalBox, { ModalBoxRef } from '@/components/sections/ModalBox';
+import ModalBox, { ModalBoxRef } from '@/components/ui/ModalBox';
 import { useRef } from 'react';
 
 

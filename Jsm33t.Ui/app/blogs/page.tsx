@@ -1,7 +1,7 @@
+import { Suspense } from 'react';
 import type { Metadata } from 'next';
-import Breadcrumbs from '@/components/sections/Breadcrumbs';
+import Breadcrumbs from '@/components/ui/Breadcrumbs';
 import BlogListWithSidebar from './_client/BlogListWithSidebar';
-
 
 export const metadata: Metadata = {
 	title: 'Blog',
@@ -15,15 +15,15 @@ const breadcrumbs = [
 
 export default function BlogPage() {
 	return (
-		<>
-			<div className="container my-5 pt-5">
-				<Breadcrumbs items={breadcrumbs} />
+		<div className="container my-5 pt-5">
+			<Breadcrumbs items={breadcrumbs} />
+			<Suspense fallback={<div>Loading...</div>}>
 				<BlogListWithSidebar />
-				<button className="d-lg-none btn btn-sm fs-sm btn-primary w-100 rounded-0 fixed-bottom" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarBlog">
-					<i className="ai-layout-column me-2"></i>
-					Sidebar
-				</button>
-			</div>
-		</>
+			</Suspense>
+			<button className="d-lg-none btn btn-sm fs-sm btn-primary w-100 rounded-0 fixed-bottom" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarBlog">
+				<i className="ai-layout-column me-2"></i>
+				Sidebar
+			</button>
+		</div>
 	);
 }

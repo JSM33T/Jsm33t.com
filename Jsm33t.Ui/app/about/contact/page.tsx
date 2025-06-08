@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import ContactForm from './_client/ContactForm';
-import Breadcrumbs from '@/components/sections/Breadcrumbs';
+import Breadcrumbs from '@/components/ui/Breadcrumbs';
 import { Crumb } from '@/types/common';
 
 const breadcrumbs: Crumb[] = [
@@ -28,7 +28,7 @@ export default function AboutPage() {
 						<div className="col-lg-8 col-xl-7 offset-xl-1">
 							<ContactForm />
 						</div>
-					
+
 					</div>
 
 				</div>

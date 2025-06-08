@@ -5,40 +5,38 @@ using Jsm33t.Contracts.Interfaces.Services;
 
 namespace Jsm33t.Application
 {
-    public class ChangeLogService : IChangeLogService
-    {
-        private readonly IChangeLogRepository _repository;
+	public class ChangeLogService(IChangeLogRepository repository) : IChangeLogService
+	{
+		private readonly IChangeLogRepository _repository = repository;
 
-        public ChangeLogService(IChangeLogRepository repository) => _repository = repository;
+		public async Task<int> AddBulkChangeLogsAsync(ChangeLogBulkRequestDto bulkDto)
+		{
+			int insertedCount = 0;
 
-        public async Task<int> AddBulkChangeLogsAsync(ChangeLogBulkRequestDto bulkDto)
-        {
-            int insertedCount = 0;
+			await _repository.DeleteByVersionAsync(bulkDto.Version);
 
-            await _repository.DeleteByVersionAsync(bulkDto.Version);
+			foreach (var change in bulkDto.Changes)
+			{
+				var dto = new ChangeLogRequestDto
+				{
+					Version = bulkDto.Version,
+					Title = change.Title,
+					Description = change.Description,
+					ChangeType = change.ChangeType,
+					Contributors = change.Contributors
+				};
 
-            foreach (var change in bulkDto.Changes)
-            {
-                var dto = new ChangeLogRequestDto
-                {
-                    Version = bulkDto.Version,
-                    Title = change.Title,
-                    Description = change.Description,
-                    ChangeType = change.ChangeType,
-                    Contributors = change.Contributors
-                };
+				await _repository.InsertChangeLogAsync(dto);
+				insertedCount++;
+			}
 
-                await _repository.InsertChangeLogAsync(dto);
-                insertedCount++;
-            }
+			return insertedCount;
+		}
 
-            return insertedCount;
-        }
+		public async Task<IEnumerable<VersionGroupedChangeLogDto>> GetGroupedByVersionAsync()
+		{
+			return await _repository.GetGroupedByVersionAsync();
+		}
 
-        public async Task<IEnumerable<VersionGroupedChangeLogDto>> GetGroupedByVersionAsync()
-        {
-            return await _repository.GetGroupedByVersionAsync();
-        }
-
-    }
+	}
 }

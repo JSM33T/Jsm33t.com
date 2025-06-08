@@ -11,11 +11,11 @@
         public string CoverImageUrl { get; set; }
         public string Category { get; set; }
         public string Series { get; set; }
-        public DateTime? PublishedAt { get; set; }
+        public DateTime? CreatedAt { get; set; }
+        public int BlogYear => CreatedAt?.Year ?? 0;
         public int ViewCount { get; set; }
         public int LikeCount { get; set; }
         public bool IsFeatured { get; set; }
         public int Status { get; set; }
     }
-
 }

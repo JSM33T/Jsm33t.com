@@ -14,6 +14,7 @@
     [CreatedAt]                DATETIME2          NOT NULL DEFAULT GETDATE(),
     [UpdatedAt]                DATETIME2          NOT NULL DEFAULT GETDATE(),
     [RowId]                    UNIQUEIDENTIFIER   NOT NULL DEFAULT NEWID(),
+    [Points]                   INT                NOT NULL DEFAULT(100) 
     CONSTRAINT [UQ_User_UserName] UNIQUE ([UserName]),
     CONSTRAINT [UQ_User_Email] UNIQUE ([Email]),
     CONSTRAINT [UQ_User_RowId] UNIQUE ([RowId]),

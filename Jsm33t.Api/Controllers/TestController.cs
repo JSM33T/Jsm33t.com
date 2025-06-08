@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Jsm33t.Api.Filters;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Jsm33t.Api.Controllers
 {
@@ -6,6 +8,7 @@ namespace Jsm33t.Api.Controllers
     [ApiController]
     public class TestController(ILogger<TestController> logger) : FcBaseController
     {
+
         [HttpGet("status")]
         public IActionResult GetJsonStatus()
         {

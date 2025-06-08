@@ -1,6 +1,6 @@
 'use client';
 
-import ToastBox, { ToastBoxRef } from '@/components/sections/ToastBox';
+import ToastBox, { ToastBoxRef } from '@/components/ui/ToastBox';
 import { useRef } from 'react';
 
 
