@@ -69,16 +69,8 @@ builder.Services.AddCors(options =>
     });
 });
 
-
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddInfrastructureServices(builder.Environment);
-
-
-//builder.WebHost.ConfigureKestrel(serverOptions =>
-//{
-//    serverOptions.ListenAnyIP(8080);
-//    //serverOptions.ListenAnyIP(8081, listenOptions => listenOptions.UseHttps());
-//});
 
 var app = builder.Build();
 app.UseDeveloperExceptionPage();

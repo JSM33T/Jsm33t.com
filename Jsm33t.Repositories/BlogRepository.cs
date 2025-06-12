@@ -16,29 +16,47 @@ namespace Jsm33t.Repositories
 
         private readonly IDbConnection _db = factory.CreateConnection();
 
-        public async Task<IEnumerable<BlogListDto>> GetBlogListAsync(int pageNumber, int pageSize, int? categoryId = null, int? seriesId = null, bool? isPublished = null, string? search = null)
+        public async Task<BlogListResponse> GetBlogListAsync(
+            int pageNumber,
+            int pageSize,
+            string? categorySlug = null,
+            int? categoryId = null,
+            int? seriesId = null,
+            bool? isPublished = null,
+            string? search = null)
         {
             var p = new DynamicParameters();
             p.Add("@PageNumber", pageNumber);
             p.Add("@PageSize", pageSize);
+            p.Add("@CategorySlug", categorySlug);
             p.Add("@CategoryId", categoryId);
             p.Add("@SeriesId", seriesId);
             p.Add("@IsPublished", isPublished);
-            p.Add("@Search", search); // Add this only if you update the SP for search
+            p.Add("@Search", search);
 
-            return await _db.QueryAsync<BlogListDto>(
+            using var multi = await _db.QueryMultipleAsync(
                 "usp_GetBlogList",
                 p,
                 commandType: CommandType.StoredProcedure
             );
+
+            var items = await multi.ReadAsync<BlogListDto>();
+            var total = await multi.ReadFirstAsync<int>();
+
+            return new BlogListResponse
+            {
+                Items = items,
+                TotalCount = total
+            };
         }
+
 
         public async Task<BlogDetailDto?> GetBlogBySlugAsync(string slug)
         {
             var result = await _db.QueryFirstOrDefaultAsync<BlogDetailDto>(
                 "SELECT b.Id, b.RowId, b.Title, b.Slug, b.Summary, b.Content, b.CoverImageUrl, " +
                 "c.Title AS Category, s.Title AS Series, b.PublishedAt, b.ViewCount, b.LikeCount, " +
-                "b.IsFeatured, b.Status " +
+                "b.IsFeatured " +
                 "FROM Blog b " +
                 "LEFT JOIN BlogCategory c ON b.CategoryId = c.Id " +
                 "LEFT JOIN BlogSeries s ON b.SeriesId = s.Id " +

@@ -96,7 +96,7 @@ public class AuthService(IAuthRepository repo, ITokenService tokenService,IMailS
     {
         var token = await repo.CreatePasswordRecoveryTokenAsync(email);
         var subject = "Password Recovery";
-        var link = $"{fcConfig.BaseUrls.BaseUiUrl}/landings/recovery?token={token.Token}";
+        var link = $"{fcConfig.BaseUrls?.BaseUiUrl!}/landings/recovery?token={token.Token}";
         //var body = $"<p>Click <a href='{link}'>here</a> to reset your password.</p>";
         var body = Template.PasswordResetHtml
             .Replace("{Link}", link)

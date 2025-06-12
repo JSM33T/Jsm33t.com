@@ -18,4 +18,10 @@
         public int Status { get; set; }
     }
 
+    public class BlogListResponse
+    {
+        public IEnumerable<BlogListDto> Items { get; set; } = [];
+        public int TotalCount { get; set; }
+    }
+
 }

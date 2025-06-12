@@ -9,10 +9,14 @@ namespace Jsm33t.Contracts.Interfaces.Repositories
 {
     public interface IBlogRepository
     {
-        //Task<BlogPost?> GetBySlugAsync(string slug);
         Task<BlogDetailDto?> GetBlogBySlugAsync(string slug);
-        Task<IEnumerable<BlogListDto>> GetBlogListAsync(int pageNumber, int pageSize, int? categoryId = null, int? seriesId = null, bool? isPublished = null, string? search = null);
+        Task<BlogListResponse> GetBlogListAsync(
+            int pageNumber,
+            int pageSize,
+            string? categorySlug = null,
+            int? categoryId = null,
+            int? seriesId = null,
+            bool? isPublished = null,
+            string? search = null);
     }
-
-
 }

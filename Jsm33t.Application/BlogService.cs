@@ -13,13 +13,25 @@ namespace Jsm33t.Application
         public Task<BlogDetailDto?> GetBlogBySlugAsync(string slug) =>
          _repo.GetBlogBySlugAsync(slug);
 
-        public Task<IEnumerable<BlogListDto>> GetBlogListAsync(
-               int pageNumber, int pageSize,
-               int? categoryId = null,
-               int? seriesId = null,
-               bool? isPublished = null,
-               string? search = null
-           ) =>
-               _repo.GetBlogListAsync(pageNumber, pageSize, categoryId, seriesId, isPublished, search);
+        public async Task<BlogListResponse> GetBlogListAsync(
+           int pageNumber,
+           int pageSize,
+           string? categorySlug = null,
+           int? seriesId = null,
+           bool? isPublished = null,
+           string? search = null)
+        {
+            // Pass null for categoryId since you're only using slug
+            return await _repo.GetBlogListAsync(
+                pageNumber: pageNumber,
+                pageSize: pageSize,
+                categorySlug: categorySlug,
+                categoryId: null,
+                seriesId: seriesId,
+                isPublished: isPublished,
+                search: search
+            );
+        }
+
     }
 }

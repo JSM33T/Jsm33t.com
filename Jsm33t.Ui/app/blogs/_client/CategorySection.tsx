@@ -27,8 +27,8 @@ export default function CategorySection() {
 
 	const handleClick = (slug?: string) => {
 		const params = new URLSearchParams(window.location.search);
-		if (!slug) params.delete('category');
-		else params.set('category', slug);
+		if (!slug) params.delete('categoryslug');
+		else params.set('categoryslug', slug);
 		params.set('page', '1');
 		router.replace(`?${params.toString()}`);
 	};

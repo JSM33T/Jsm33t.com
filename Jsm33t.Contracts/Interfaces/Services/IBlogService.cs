@@ -4,12 +4,13 @@ namespace Jsm33t.Contracts.Interfaces.Services
 {
     public interface IBlogService
     {
-        Task<IEnumerable<BlogListDto>> GetBlogListAsync(
-         int pageNumber, int pageSize,
-         int? categoryId = null,
-         int? seriesId = null,
-         bool? isPublished = null,
-         string? search = null);
+        Task<BlogListResponse> GetBlogListAsync(
+          int pageNumber,
+          int pageSize,
+          string? categorySlug = null,
+          int? seriesId = null,
+          bool? isPublished = null,
+          string? search = null);
 
         Task<BlogDetailDto?> GetBlogBySlugAsync(string slug);
     }
