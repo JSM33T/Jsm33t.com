@@ -1,7 +1,7 @@
 'use client';
 
 import { useSearchParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { apiClient } from '@/lib/apiClient';
 import { modalRef } from '@/components/ui/ModalBox';

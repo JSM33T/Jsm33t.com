@@ -5,6 +5,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/pagination';
+import Image from 'next/image';
 //import 'bootstrap/dist/css/bootstrap.min.css';
 
 const testimonials = [
@@ -53,7 +54,12 @@ export default function Testimonials() {
 					<SwiperSlide key={idx} className="h-auto">
 						<div className={`card border-0 bg-${item.bg} bg-opacity-10 h-100 text-center`}>
 							<div className={`polygon-avatar bg-${item.bg} mx-auto translate-middle-y`}>
-								<img src={item.image} alt={item.name} />
+								<Image
+									src={item.image}
+									alt={item.name}
+									width={100}
+									height={100}
+								/>
 							</div>
 							<div className="card-body pt-0 mt-n4">
 								<p className="card-text fs-xl">{item.text}</p>

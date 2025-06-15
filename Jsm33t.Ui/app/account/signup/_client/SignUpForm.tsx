@@ -176,9 +176,9 @@ export default function SignupForm() {
 							</button>
 
 							<p className="nav w-100 fs-sm pt-5 mt-auto mb-0">
-								<span className="text-body-secondary">&copy; All rights reserved. Made by</span>
+								<span className="text-body-secondary">&copy; All rights reserved. Made with love by</span>
 								<a className="nav-link d-inline-block p-0 ms-1" href="https://createx.studio/" target="_blank" rel="noopener">
-									Createx Studio
+									JSM33T
 								</a>
 							</p>
 						</form>

@@ -119,7 +119,7 @@ export default function NewAlbum() {
 								className={`btn btn-sm rounded-pill px-4 py-2 fw-semibold shadow-sm ${activeCategory === key
 									? "btn-primary"
 									: "btn-outline-secondary"
-									}`}
+								}`}
 								onClick={() => setActiveCategory(key)}
 							>
 								{key.charAt(0).toUpperCase() + key.slice(1)}

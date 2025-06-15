@@ -1,4 +1,4 @@
-﻿using Jsm33t.Api.Filters;
+﻿//using Jsm33t.Api.Filters;
 using Jsm33t.Contracts.Dtos;
 using Jsm33t.Contracts.Dtos.Requests;
 using Jsm33t.Contracts.Dtos.Responses;
@@ -16,7 +16,7 @@ namespace Jsm33t.Api.Controllers
     [ApiController]
     public class ProfileController(IProfileService profileService,ICloudinaryService cloudinaryService) : FcBaseController
     {
-        [DeductPoints(10)]
+        //[DeductPoints(10)]
         [HttpGet("get")]
         public async Task<ActionResult<ApiResponse<UserProfileDetailsDto>>> GetProfile()
         {

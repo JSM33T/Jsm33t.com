@@ -6,45 +6,15 @@ import Link from 'next/link';
 import { useForm } from 'react-hook-form';
 import { modalRef } from '@/components/ui/ModalBox';
 import { useEffect, useState } from 'react';
-import { jwtDecode, JwtPayload } from 'jwt-decode';
-
-// --- Types ---
-
-interface LoginResponse {
-	accessToken: string;
-}
-interface GoogleProfile {
-	email: string;
-	name: string;
-	sub: string; // Google user id
-	picture: string;
-	[key: string]: unknown;
-}
-interface AppJwtPayload extends JwtPayload {
-	firstName?: string;
-	lastName?: string;
-	email?: string;
-	username?: string;
-	avatar?: string;
-	[claim: string]: unknown;
-}
-interface FormData {
-	email: string;
-	password: string;
-}
-interface UserType {
-	firstName: string;
-	lastName: string;
-	email: string;
-	username: string;
-	avatar: string;
-}
+import { jwtDecode } from 'jwt-decode';
+import { AppJwtPayload, LoginFormData, LoginResponse, User } from '../types';
 
 // --- Main Component ---
 
 export default function LoginForm() {
+	
 	const { setUser } = useUser();
-	const { register, handleSubmit, formState: { errors } } = useForm<FormData>();
+	const { register, handleSubmit, formState: { errors } } = useForm<LoginFormData>();
 	const [isLoading, setIsLoading] = useState(false);
 	const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
@@ -52,7 +22,7 @@ export default function LoginForm() {
 		const storedUser = localStorage.getItem("user");
 		if (storedUser) {
 			try {
-				const parsed: UserType = JSON.parse(storedUser);
+				const parsed: User = JSON.parse(storedUser);
 				setUser(parsed);
 			} catch {
 				// Invalid user in storage, ignore
@@ -61,61 +31,62 @@ export default function LoginForm() {
 	}, [setUser]);
 
 	// --- Google login handler ---
-	const handleGoogleLogin = async (profile: GoogleProfile): Promise<void> => {
-		setIsLoading(true);
-		try {
-			const response = await apiClient.post<LoginResponse>('/auth/google', {
-				email: profile.email,
-				name: profile.name,
-				googleId: profile.sub,
-				avatar: profile.picture,
-			});
-			if (response.status === 200 && response.data?.accessToken) {
-				const token = response.data.accessToken;
-				localStorage.setItem('authToken', token);
-				setAuthToken(token);
+	// const handleGoogleLogin = async (profile: GoogleProfile): Promise<void> => {
+	// 	setIsLoading(true);
+	// 	try {
+	// 		const response = await apiClient.post<LoginResponse>('/auth/google', {
+	// 			email: profile.email,
+	// 			name: profile.name,
+	// 			googleId: profile.sub,
+	// 			avatar: profile.picture,
+	// 		});
+	// 		if (response.status === 200 && response.data?.accessToken) {
+	// 			const token = response.data.accessToken;
+	// 			localStorage.setItem('authToken', token);
+	// 			setAuthToken(token);
 
-				const decoded = jwtDecode<AppJwtPayload>(token);
+	// 			const decoded = jwtDecode<AppJwtPayload>(token);
 
-				const user: UserType = {
-					firstName: (decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname"] as string)
-						|| decoded.firstName
-						|| "",
-					lastName: (decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/surname"] as string)
-						|| decoded.lastName
-						|| "",
-					email: (decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress"] as string)
-						|| decoded.email
-						|| "",
-					username: (decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"] as string)
-						|| decoded.username
-						|| "",
-					avatar: (typeof decoded.avatar === "string" && decoded.avatar.trim())
-						? decoded.avatar
-						: '/assets/images/default_user.jpg',
-				};
-				setUser(user);
-				localStorage.setItem("user", JSON.stringify(user));
-				modalRef?.current?.open({ title: 'Login Successful', description: 'Redirecting...' });
-				setTimeout(() => window.location.replace('/'), 100);
-			} else {
-				modalRef?.current?.open({
-					title: 'Login Failed',
-					description: (response as any)?.message || 'Something went wrong. Please try again.',
-				});
-			}
-		} catch (err: unknown) {
-			modalRef?.current?.open({
-				title: 'Network Error',
-				description: 'Check your internet connection and try again.',
-			});
-		} finally {
-			setIsLoading(false);
-		}
-	};
+	// 			const user: User = {
+	// 				firstName: (decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname"] as string)
+	// 					|| decoded.firstName
+	// 					|| "",
+	// 				lastName: (decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/surname"] as string)
+	// 					|| decoded.lastName
+	// 					|| "",
+	// 				email: (decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress"] as string)
+	// 					|| decoded.email
+	// 					|| "",
+	// 				username: (decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"] as string)
+	// 					|| decoded.username
+	// 					|| "",
+	// 				avatar: (typeof decoded.avatar === "string" && decoded.avatar.trim())
+	// 					? decoded.avatar
+	// 					: '/assets/images/default_user.jpg',
+	// 			};
+	// 			setUser(user);
+	// 			localStorage.setItem("user", JSON.stringify(user));
+	// 			modalRef?.current?.open({ title: 'Login Successful', description: 'Redirecting...' });
+	// 			setTimeout(() => window.location.replace('/'), 100);
+	// 		} else {
+	// 			modalRef?.current?.open({
+	// 				title: 'Login Failed',
+	// 				description: (response as any)?.message || 'Something went wrong. Please try again.',
+	// 			});
+	// 		}
+	// 	} catch (err: unknown) {
+	// 		modalRef?.current?.open({
+	// 			title: 'Network Error',
+	// 			description: 'Check your internet connection and try again.',
+	// 		});
+	// 	} finally {
+	// 		setIsLoading(false);
+	// 	}
+	// };
 
 	// --- Email/password handler ---
-	const onSubmit = async (data: FormData): Promise<void> => {
+	
+	const onSubmit = async (data: LoginFormData): Promise<void> => {
 		setIsLoading(true);
 		try {
 			const response = await apiClient.post<LoginResponse>('/auth/login', data);
@@ -127,7 +98,7 @@ export default function LoginForm() {
 
 				const decoded = jwtDecode<AppJwtPayload>(token);
 
-				const user: UserType = {
+				const user: User = {
 					firstName: (decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname"] as string)
 						|| decoded.firstName
 						|| "",
@@ -164,6 +135,7 @@ export default function LoginForm() {
 				title: 'Network Error',
 				description: 'Check your internet connection and try again.',
 			});
+			console.error(err);
 		} finally {
 			setIsLoading(false);
 		}

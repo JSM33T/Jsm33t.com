@@ -5,12 +5,13 @@ import ThemeSwitcher from "@/components/helpers/ThemeSwitcher";
 import Jsm33tLogo from "@/components/svg/Jsm33tLogo";
 import { useUser } from "@/context/UserContext";
 import { showBootstrapModal } from "@/components/helpers/ShowBootstrapModal";
+import Image from 'next/image';
 
 import Link from "next/link";
 import { useEffect } from "react";
 
 
-const UserMenuItems = ({ badgeClass = "ms-auto" }: { badgeClass?: string }) => {
+const UserMenuItems = ({ }: { badgeClass?: string }) => {
 	const { user } = useUser();
 	const isLoggedIn = !!user?.email;
 
@@ -138,7 +139,13 @@ const Navbar = () => {
 					</button>
 					<div className="dropdown nav d-none d-sm-block order-lg-3">
 						<a className="nav-link d-flex align-items-center p-0" href="#" data-bs-toggle="dropdown" aria-expanded="false">
-							<img className="border rounded-circle" src={avatarUrl} width="48" alt={user.firstName} />
+							<Image
+								src={avatarUrl}
+								alt={user.firstName}
+								width={48}
+								height={48}
+								className="border rounded-circle"
+							/>
 
 							<div className="ps-2">
 								<div className="fs-xs lh-1 opacity-60">{user.firstName},</div>
@@ -173,7 +180,13 @@ const Navbar = () => {
 							</li>
 							<li className="nav-item dropdown d-sm-none border-top mt-2 pt-2">
 								<a className="nav-link" href="#" data-bs-toggle="dropdown" aria-expanded="false">
-									<img className="border rounded-circle" src={avatarUrl} width="48" alt={user.firstName + user.lastName} />
+									<Image
+										src={avatarUrl}
+										alt={`${user.firstName} ${user.lastName}`}
+										width={48}
+										height={48}
+										className="border rounded-circle"
+									/>
 									<div className="ps-2">
 										<div className="fs-xs lh-1 opacity-60">{user.firstName}</div>
 										<div className="fs-sm dropdown-toggle">{user.lastName}</div>

@@ -1,0 +1,129 @@
+:root {
+    --ar-body-font-family: 'Antonio', sans-serif;
+    --ar-primary: #8B5A2B;
+    --ar-primary-rgb: 139, 90, 43;
+    --ar-link-color: #8B5A2B;
+    --ar-link-hover-color: #724112;
+    --ar-warning: #c4ab4f;
+    --ar-warning-rgb: 196, 171, 79;
+    --ar-info: #405a77;
+    --ar-info-rgb: 64, 90, 119;
+    --ar-success: #8B5A2B;
+    --ar-success-rgb: 139, 90, 43;
+    --ar-danger: #833f3f;
+    --ar-danger-rgb: 131, 63, 63;
+}
+
+.btn-primary {
+    --ar-btn-bg: #8B5A2B;
+    --ar-btn-border-color: #8B5A2B;
+    --ar-btn-hover-bg: #724112;
+    --ar-btn-hover-border-color: #724112;
+    --ar-btn-active-bg: #724112;
+    --ar-btn-active-border-color: #724112;
+    --ar-btn-disabled-bg: #8B5A2B;
+    --ar-btn-disabled-border-color: #8B5A2B;
+}
+
+.btn-warning {
+    --ar-btn-bg: #c4ab4f;
+    --ar-btn-border-color: #c4ab4f;
+    --ar-btn-hover-bg: #ab9236;
+    --ar-btn-hover-border-color: #ab9236;
+    --ar-btn-active-bg: #ab9236;
+    --ar-btn-active-border-color: #ab9236;
+    --ar-btn-disabled-bg: #c4ab4f;
+    --ar-btn-disabled-border-color: #c4ab4f;
+}
+
+.btn-info {
+    --ar-btn-bg: #405a77;
+    --ar-btn-border-color: #405a77;
+    --ar-btn-hover-bg: #27415e;
+    --ar-btn-hover-border-color: #27415e;
+    --ar-btn-active-bg: #27415e;
+    --ar-btn-active-border-color: #27415e;
+    --ar-btn-disabled-bg: #405a77;
+    --ar-btn-disabled-border-color: #405a77;
+}
+
+.btn-success {
+    --ar-btn-bg: #8B5A2B;
+    --ar-btn-border-color: #8B5A2B;
+    --ar-btn-hover-bg: #724112;
+    --ar-btn-hover-border-color: #724112;
+    --ar-btn-active-bg: #724112;
+    --ar-btn-active-border-color: #724112;
+    --ar-btn-disabled-bg: #8B5A2B;
+    --ar-btn-disabled-border-color: #8B5A2B;
+}
+
+.btn-danger {
+    --ar-btn-bg: #833f3f;
+    --ar-btn-border-color: #833f3f;
+    --ar-btn-hover-bg: #6a2626;
+    --ar-btn-hover-border-color: #6a2626;
+    --ar-btn-active-bg: #6a2626;
+    --ar-btn-active-border-color: #6a2626;
+    --ar-btn-disabled-bg: #833f3f;
+    --ar-btn-disabled-border-color: #833f3f;
+}
+
+.btn-outline-primary {
+    --ar-btn-color: #8B5A2B;
+    --ar-btn-border-color: #8B5A2B;
+    --ar-btn-hover-bg: #8B5A2B;
+    --ar-btn-hover-border-color: #8B5A2B;
+    --ar-btn-active-bg: #8B5A2B;
+    --ar-btn-active-border-color: #8B5A2B;
+    --ar-btn-disabled-color: #8B5A2B;
+    --ar-btn-disabled-border-color: #8B5A2B;
+}
+
+.btn-outline-warning {
+    --ar-btn-color: #c4ab4f;
+    --ar-btn-border-color: #c4ab4f;
+    --ar-btn-hover-bg: #c4ab4f;
+    --ar-btn-hover-border-color: #c4ab4f;
+    --ar-btn-active-bg: #c4ab4f;
+    --ar-btn-active-border-color: #c4ab4f;
+    --ar-btn-disabled-color: #c4ab4f;
+    --ar-btn-disabled-border-color: #c4ab4f;
+}
+
+.btn-outline-info {
+    --ar-btn-color: #405a77;
+    --ar-btn-border-color: #405a77;
+    --ar-btn-hover-bg: #405a77;
+    --ar-btn-hover-border-color: #405a77;
+    --ar-btn-active-bg: #405a77;
+    --ar-btn-active-border-color: #405a77;
+    --ar-btn-disabled-color: #405a77;
+    --ar-btn-disabled-border-color: #405a77;
+}
+
+.btn-outline-success {
+    --ar-btn-color: #8B5A2B;
+    --ar-btn-border-color: #8B5A2B;
+    --ar-btn-hover-bg: #8B5A2B;
+    --ar-btn-hover-border-color: #8B5A2B;
+    --ar-btn-active-bg: #8B5A2B;
+    --ar-btn-active-border-color: #8B5A2B;
+    --ar-btn-disabled-color: #8B5A2B;
+    --ar-btn-disabled-border-color: #8B5A2B;
+}
+
+.btn-outline-danger {
+    --ar-btn-color: #833f3f;
+    --ar-btn-border-color: #833f3f;
+    --ar-btn-hover-bg: #833f3f;
+    --ar-btn-hover-border-color: #833f3f;
+    --ar-btn-active-bg: #833f3f;
+    --ar-btn-active-border-color: #833f3f;
+    --ar-btn-disabled-color: #833f3f;
+    --ar-btn-disabled-border-color: #833f3f;
+}
+
+.accordion-button:not(.collapsed)::after {
+    --ar-accordion-btn-active-icon: url("data:image/svg+xml,%3csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='%238B5A2B'%3e%3cpath%20d='M.5%206.3c.6-.6%201.6-.6%202.3%200l9.3%209.3%209.3-9.3c.6-.6%201.6-.6%202.3%200%20.6.6.6%201.6%200%202.3L13.3%2018.8c-.6.6-1.6.6-2.3%200L.8%208.5c-.9-.8-.9-1.6-.3-2.2z'/%3e%3c/svg%3e");
+}

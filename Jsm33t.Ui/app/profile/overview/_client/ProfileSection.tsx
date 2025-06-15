@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { apiClient } from '@/lib/apiClient';
 import { HTML_UTIL_setBodyBg } from '@/lib/htmlUtils';
+import Image from 'next/image';
 
 type ProfileData = {
 	id: number;
@@ -127,7 +128,13 @@ export default function ProfileSection() {
 					</div>
 					<div className="col-md-6 d-md-flex justify-content-end">
 						<div className="w-100 border rounded-3 p-4 bg-light bg-opacity-10 text-body" style={{ maxWidth: 212 }}>
-							<img className="d-block mb-2" src="/icons/gift-icon.svg" width="24" alt="Gift icon" />
+							<Image
+								src="/icons/gift-icon.svg"
+								alt="Gift icon"
+								width={24}
+								height={24}
+								className="d-block mb-2"
+							/>
 							<h4 className="h5 lh-base mb-0">123 bonuses</h4>
 							<p className="fs-sm text-muted mb-0">1 bonus = $1</p>
 						</div>

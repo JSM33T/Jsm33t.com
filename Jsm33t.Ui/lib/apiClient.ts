@@ -149,7 +149,7 @@ async function request<T>(
 	token?: string
 ): Promise<ApiResponse<T>> {
 	try {
-		let headers: Record<string, string> = {
+		const headers: Record<string, string> = {
 			...(token
 				? { Authorization: `Bearer ${token}` }
 				: authToken

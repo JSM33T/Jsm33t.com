@@ -2,8 +2,6 @@
 import React from 'react';
 import { notFound } from 'next/navigation';
 import Breadcrumbs from '@/components/ui/Breadcrumbs';
-import ReactMarkdown from 'react-markdown';
-import Sidebar from './_client/SideBar';
 import { ClientBlogView } from './_client/ClientBlogView';
 
 interface BlogDetailDto {
@@ -16,14 +14,9 @@ interface BlogDetailDto {
 	createdAt?: string;
 }
 
-interface BlogViewPageProps {
-	params: {
-		slug: string;
-		year: string;
-	};
-}
+export default async function Page(props: any) {
+	const { params }: { params: { slug: string; year: string } } = props;
 
-export default async function BlogViewPage({ params }: BlogViewPageProps) {
 	const apiUrl = `http://localhost:5035/api/blog/${params.slug}`;
 	const res = await fetch(apiUrl, { cache: 'no-store' });
 
@@ -47,8 +40,6 @@ export default async function BlogViewPage({ params }: BlogViewPageProps) {
 		{ label: 'Blogs', href: '/blogs' },
 		{ label: blogPost.title },
 	];
-
-	// client-side state must be lifted to a client component like Sidebar
 
 	return (
 		<div className="container my-5 pt-5">

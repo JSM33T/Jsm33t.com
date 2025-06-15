@@ -1,43 +1,16 @@
 'use client';
 
-import React from 'react';
+import React, { useMemo } from 'react';
+import { SidebarProps } from '../types';
 
-interface SidebarProps {
-	content: string;
-	query: string;
-	onQueryChange: (q: string) => void;
-}
-
-const Sidebar = ({ content, query, onQueryChange }: SidebarProps) => {
-	const handleClick = (id: string) => {
-		const el = document.getElementById(id);
-		if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-	};
-
-	const highlightMatches = (text: string, keyword: string) => {
-		if (!keyword) return text;
-
-		const regex = new RegExp(`(${keyword})`, 'gi');
-		let matchIndex = 0;
-
-		return text.split(regex).map((part, i) => {
-			if (regex.test(part)) {
-				const id = `highlight-${matchIndex++}`;
-				return (
-					<mark
-						key={i}
-						style={{ cursor: 'pointer' }}
-						onClick={() => handleClick(id)}
-					>
-						{part}
-					</mark>
-				);
-			}
-			return part;
-		});
-	};
-
+const Sidebar = ({ content, query, onQueryChange, onMatchClick }: SidebarProps) => {
 	const previewText = content.slice(0, 1000);
+
+	const matchIndexes = useMemo(() => {
+		if (!query) return [];
+		const regex = new RegExp(query, 'gi');
+		return [...previewText.matchAll(regex)].map((m, i) => ({ index: i, text: m[0] }));
+	}, [previewText, query]);
 
 	return (
 		<aside className="col-lg-3 offset-xl-1">
@@ -65,14 +38,22 @@ const Sidebar = ({ content, query, onQueryChange }: SidebarProps) => {
 						/>
 					</div>
 
-					{/* Preview with highlight links */}
-					{query && (
+					{/* Match list with scroll triggers */}
+					{query && matchIndexes.length > 0 && (
 						<div className="mb-4">
-							<p className="small text-muted mb-2">Preview:</p>
-							<div className="small">
-								{highlightMatches(previewText, query)}
-								{previewText.length < content.length && '...'}
-							</div>
+							<p className="small text-muted mb-2">Matches:</p>
+							<ul className="list-unstyled small">
+								{matchIndexes.map((match, i) => (
+									<li key={i}>
+										<button
+											className="btn btn-link text-start p-0"
+											onClick={() => onMatchClick(i)}
+										>
+											#{i + 1}: {match.text}
+										</button>
+									</li>
+								))}
+							</ul>
 						</div>
 					)}
 				</div>

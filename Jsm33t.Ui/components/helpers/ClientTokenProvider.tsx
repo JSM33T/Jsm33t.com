@@ -38,7 +38,8 @@ export default function ClientTokenProvider() {
 				console.log("invalid token")
 			}
 		}
-	}, []);
+	}, [setUser]);
+	//added setUser
 
 	return null;
 }

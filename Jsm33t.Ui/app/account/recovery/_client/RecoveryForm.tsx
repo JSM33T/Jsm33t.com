@@ -1,33 +1,14 @@
 'use client';
 
-import { useUser } from '@/context/UserContext';
-import { apiClient, setAuthToken } from '@/lib/apiClient';
-import { jwtDecode } from 'jwt-decode';
+import { apiClient } from '@/lib/apiClient';
 import Link from 'next/link';
 import { useForm } from 'react-hook-form';
 import { modalRef } from '@/components/ui/ModalBox';
 import { useState } from 'react';
-
-interface LoginResponse {
-	accessToken: string;
-}
-
-interface JwtPayload {
-	firstName: string;
-	lastName: string;
-	email: string;
-	username: string;
-	avatar: string;
-}
-
-interface FormData {
-	email: string;
-	password: string;
-}
+import { RecoveryFormData } from '../types';
 
 export default function RecoveryForm() {
-	const { setUser } = useUser();
-	const { register, handleSubmit, formState: { errors } } = useForm<FormData>();
+	const { register, handleSubmit, formState: { errors } } = useForm<RecoveryFormData>();
 	const [isLoading, setIsLoading] = useState(false);
 
 	const onSubmit = async (data: { email: string }) => {
@@ -88,26 +69,6 @@ export default function RecoveryForm() {
 									<small className="text-danger">{errors.email.message}</small>
 								)}
 							</div>
-							{/* 
-							<div className="mb-4 position-relative">
-								<i className="ai-lock-closed fs-lg position-absolute top-50 start-0 translate-middle-y ms-3 text-muted"></i>
-								<div className="password-toggle">
-									<input
-										className="form-control form-control-lg ps-5"
-										type="password"
-										{...register('password', { required: 'Password is required' })}
-										placeholder="Enter your password"
-										aria-label="Password"
-									/>
-									<label className="password-toggle-btn">
-										<input className="password-toggle-check" type="checkbox" />
-										<span className="password-toggle-indicator"></span>
-									</label>
-								</div>
-								{errors.password && (
-									<small className="text-danger">{errors.password.message}</small>
-								)}
-							</div> */}
 
 							<button className="btn btn-lg btn-primary w-100 mb-4" type="submit" disabled={isLoading}>
 								{isLoading ? 'Loading...' : 'Recover Account'}

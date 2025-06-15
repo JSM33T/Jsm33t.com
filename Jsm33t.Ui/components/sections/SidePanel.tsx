@@ -5,6 +5,7 @@ import { PlayerUI, usePlayer } from '@/context/PlayerContext';
 import { useRef } from 'react';
 import ChatOffcanvas, { ChatOffcanvasRef } from './ChatOffcanvas';
 import { themes } from '@/lib/themes';
+import Image from 'next/image';
 
 
 const applyTheme = async (themeName: string) => {
@@ -93,12 +94,12 @@ const SidePanel = () => {
 								onClick={() => applyTheme(theme.name)}
 								style={{ cursor: 'pointer' }}
 							>
-								<img
+								<Image
 									src={theme.image}
-									className="figure-img rounded-5"
 									alt={`${theme.name} thumbnail`}
 									width={200}
 									height={200}
+									className="rounded-5"
 								/>
 								<figcaption className="figure-caption text-start">{theme.name}</figcaption>
 							</figure>
