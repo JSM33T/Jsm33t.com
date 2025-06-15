@@ -17,7 +17,7 @@ interface BlogDetailDto {
 export default async function Page(props: any) {
 	const { params }: { params: { slug: string; year: string } } = props;
 
-	const apiUrl = `http://localhost:5035/api/blog/${params.slug}`;
+	const apiUrl = `https://api.jsm33t.com/api/blog/${params.slug}`;
 	const res = await fetch(apiUrl, { cache: 'no-store' });
 
 	if (!res.ok) return notFound();

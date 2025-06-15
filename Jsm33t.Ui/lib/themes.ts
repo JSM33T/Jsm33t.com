@@ -1,6 +1,6 @@
 export const themes = [
 	{
-		name: 'La Lavande',
+		name: 'LaLavande',
 		css: '/themes/lalavande/style.css',
 		fontLink: 'https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap',
 		fontFamily: "'Roboto', sans-serif",
@@ -8,7 +8,7 @@ export const themes = [
 	},
 	{
 		name: 'Slate',
-		css: '/themes/Slate/style.css',
+		css: '/themes/slate/style.css',
 		fontLink:
 			'https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap',
 		fontFamily: "'Montserrat', sans-serif",
