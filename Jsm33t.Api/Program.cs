@@ -34,6 +34,7 @@ var fcConfig = builder.Configuration
     .Get<FcConfig>()!;
 builder.Services.AddSingleton(fcConfig);
 
+
 builder.Services.AddOpenApi();
 
 builder.Services
@@ -70,6 +71,8 @@ builder.Services.AddCors(options =>
 });
 
 builder.Services.AddHttpContextAccessor();
+builder.Configuration.AddUserSecrets<Program>();
+
 builder.Services.AddInfrastructureServices(builder.Environment);
 
 var app = builder.Build();
