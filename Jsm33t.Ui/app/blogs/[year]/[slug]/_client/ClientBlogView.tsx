@@ -28,7 +28,7 @@ export function ClientBlogView({ blogPost }: { blogPost: BlogDetailDto }) {
 			let matchIndex = 0;
 			const highlighted = rawHtml.replace(
 				new RegExp(`(${searchQuery})`, 'gi'),
-				() => `<mark id="highlight-${matchIndex++}">$1</mark>`
+				(match) => `<mark id="highlight-${matchIndex++}">${match}</mark>`
 			);
 
 			setHtmlContent(DOMPurify.sanitize(highlighted));
