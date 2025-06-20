@@ -1,20 +1,20 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { motion, Variants } from 'framer-motion';
 import { useRef } from 'react';
 import Link from 'next/link';
 
-const pathVariants = {
-	hidden: { pathLength: 0, opacity: 0 },
-	visible: (i = 0) => ({
-		pathLength: 1,
-		opacity: 1,
-		transition: {
-			duration: 1.5,
-			delay: i * 0.3,
-			ease: 'easeInOut',
-		},
-	}),
+const pathVariants: Variants = {
+  hidden: { pathLength: 0, opacity: 0 },
+  visible: (i: number = 0): any => ({
+    pathLength: 1,
+    opacity: 1,
+    transition: {
+      duration: 1.5,
+      delay: i * 0.3,
+      ease: [0.42, 0, 0.58, 1], // Use cubic bezier instead of string
+    },
+  }),
 };
 
 export default function HomeTopSection() {
