@@ -10,6 +10,7 @@
         public CloudinaryConfig? CloudinaryConfig { get; set; }
         public SmtpConfig? SmtpSettings { get; set; }
         public Urls? BaseUrls { get; set; }
+        public AppsApi appsApi { get; set; }
     }
     public class Urls
     {
@@ -55,5 +56,10 @@
         public string Password { get; set; } = string.Empty;
         public string From { get; set; } = string.Empty;
         public bool EnableSsl { get; set; } = true;
+    }
+    public class AppsApi
+    {
+        public required string Key { get; set; }
+        public  required string Url{ get; set; }
     }
 }

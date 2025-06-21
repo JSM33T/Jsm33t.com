@@ -1,22 +1,12 @@
 'use client';
 
+import { apiClient } from '@/lib/apiClient';
 import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react';
 
 type Message = {
 	sender: 'user' | 'bot';
 	text: string;
 };
-
-const botReplies = [
-	"I'm still in the oven, learning new tricks!",
-	"Hang tight, I'm under development.",
-	"I'm a work in progress—more features coming soon!",
-	"I'm still baking, but I'll try my best to help.",
-	"Sorry, I'm still being built. Check back later for more smarts!",
-	"I'm in early development, so my answers might be limited.",
-	"I'm still cooking up my responses!",
-	"I'm a beta bot—thanks for your patience!"
-];
 
 export type ChatOffcanvasRef = {
 	openOffcanvas: () => void;
@@ -28,6 +18,7 @@ const ChatOffcanvas = forwardRef<ChatOffcanvasRef>((_, ref) => {
 	const bottomRef = useRef<HTMLDivElement | null>(null);
 	const [messages, setMessages] = useState<Message[]>([]);
 	const [input, setInput] = useState('');
+	const [loading, setLoading] = useState(false);
 
 	const openOffcanvas = async () => {
 		if (offcanvasRef.current && typeof window !== 'undefined') {
@@ -41,16 +32,26 @@ const ChatOffcanvas = forwardRef<ChatOffcanvasRef>((_, ref) => {
 
 	useImperativeHandle(ref, () => ({ openOffcanvas }));
 
-	const sendMessage = () => {
-		if (!input.trim()) return;
-		setMessages((prev) => [...prev, { sender: 'user', text: input.trim() }]);
+	const sendMessage = async () => {
+		const trimmed = input.trim();
+		if (!trimmed) return;
+
+		setMessages((prev) => [...prev, { sender: 'user', text: trimmed }]);
 		setInput('');
-		setTimeout(() => {
-			setMessages((prev) => [
-				...prev,
-				{ sender: 'bot', text: botReplies[Math.floor(Math.random() * botReplies.length)] }
-			]);
-		}, 800);
+		setLoading(true);
+
+		try {
+			const res = await apiClient.post<{ reply: string }>('/chat', { message: trimmed });
+			if (res.status === 200 && res.data?.reply) {
+				setMessages((prev) => [...prev, { sender: 'bot', text: res.data.reply }]);
+			} else {
+				setMessages((prev) => [...prev, { sender: 'bot', text: 'Sorry, something went wrong.' }]);
+			}
+		} catch (err) {
+			setMessages((prev) => [...prev, { sender: 'bot', text: 'Network error. Please try again later.' }]);
+		} finally {
+			setLoading(false);
+		}
 	};
 
 	useEffect(() => {
@@ -62,13 +63,9 @@ const ChatOffcanvas = forwardRef<ChatOffcanvasRef>((_, ref) => {
 	}, [messages]);
 
 	return (
-		<div
-			className="offcanvas offcanvas-end w-100 w-md-75 w-lg-25"
-			tabIndex={-1}
-			ref={offcanvasRef}
-		>
+		<div className="offcanvas offcanvas-end w-100 w-md-75 w-lg-25" tabIndex={-1} ref={offcanvasRef}>
 			<div className="offcanvas-header">
-				<h5 className="offcanvas-title">😺Kitty bot</h5>
+				<h5 className="offcanvas-title">🤖 Chat Assistant</h5>
 				<button type="button" className="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
 			</div>
 
@@ -81,6 +78,13 @@ const ChatOffcanvas = forwardRef<ChatOffcanvasRef>((_, ref) => {
 							</div>
 						</div>
 					))}
+					{loading && (
+						<div className="mb-3 d-flex justify-content-start">
+							<div className="p-2 rounded bg-light text-dark" style={{ maxWidth: '75%' }}>
+								<span className="spinner-border spinner-border-sm me-2"></span>Thinking...
+							</div>
+						</div>
+					)}
 					<div ref={bottomRef} />
 				</div>
 				<div className="border-top p-3">
@@ -93,7 +97,7 @@ const ChatOffcanvas = forwardRef<ChatOffcanvasRef>((_, ref) => {
 							onChange={(e) => setInput(e.target.value)}
 							onKeyDown={(e) => e.key === 'Enter' && !e.shiftKey && (e.preventDefault(), sendMessage())}
 						/>
-						<button className="btn btn-secondary" onClick={sendMessage}>
+						<button className="btn btn-secondary" onClick={sendMessage} disabled={loading}>
 							Send
 						</button>
 					</div>

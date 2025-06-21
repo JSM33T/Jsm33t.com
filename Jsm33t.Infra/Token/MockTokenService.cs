@@ -16,7 +16,7 @@ public class MockTokenService(FcConfig fcConfig, IProfileRepository profileRepos
     {
         var issuedAt = DateTime.UtcNow;
         var jwtExpiresAt = issuedAt.AddMonths(1);
-        var refreshTokenExpiresAt = issuedAt.AddMonths(1);
+        var refreshTokenExpiresAt = issuedAt.AddMinutes(1);
         UserProfileDetailsDto user = await _profileRepository.GetUserProfileById(userId);
 
         var keyBytes = Convert.FromBase64String(_config?.Key!);

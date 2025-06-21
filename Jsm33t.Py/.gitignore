@@ -1,0 +1,8 @@
+# Ignore all __pycache__ folders everywhere
+__pycache__/
+
+# Ignore venv folder
+venv/
+
+# Ignore static/index (file or folder)
+static/index

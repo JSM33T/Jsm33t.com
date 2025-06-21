@@ -15,7 +15,6 @@ namespace Jsm33t.Api.Filters
             _userRepository = userRepository;
             this.contextAccessor = contextAccessor;
         }
-
         public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
             var resultContext = await next();
