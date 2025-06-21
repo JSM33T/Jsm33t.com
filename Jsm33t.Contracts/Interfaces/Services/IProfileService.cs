@@ -12,5 +12,6 @@ namespace Jsm33t.Contracts.Interfaces.Services
         Task<int> RemoveAllDevicesExceptDevice(int userId, Guid deviceId);
         Task<int> RemoveDeviceByDeviceId(int userId, Guid deviceId);
         Task<int> UpdateUserProfilePicture(string avatarUrl, int userId);
+        Task<bool> ChangePasswordAsync(int userId, string currentPassword, string newPassword);
     }
 }

@@ -6,7 +6,7 @@ const nextConfig: NextConfig = {
 		API_BASE_URL: "https://jsm33t.com/api"
 	},
 	images: {
-		domains: ['around.createx.studio']
+		domains: ['around.createx.studio', 'api.jsm33t.com','localhost','res.cloudinary.com']
 	},
 	eslint: {
 		ignoreDuringBuilds: true

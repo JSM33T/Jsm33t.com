@@ -1,5 +1,6 @@
 ﻿using Jsm33t.Contracts.Dtos;
 using Jsm33t.Contracts.Dtos.Responses;
+using Jsm33t.Contracts.Models;
 
 namespace Jsm33t.Contracts.Interfaces.Repositories
 {
@@ -54,5 +55,8 @@ namespace Jsm33t.Contracts.Interfaces.Repositories
         Task<int> UpdateUserProfilePicture(string avatarUrl, int userId);
         Task DeductPointsAsync(string userId, int pointsToDeduct);
         Task<UserProfileDetailsDto> EditProfile(UserProfileDetailsDto userProfileDetails);
+        Task<UserLogin?> GetLoginDataByUserIdAsync(int userId);
+        Task<bool> UpdatePasswordAsync(int userId, string hash, string salt);
+
     }
 }

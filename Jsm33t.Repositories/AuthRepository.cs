@@ -84,12 +84,6 @@ public class AuthRepository(IDapperFactory factory) : IAuthRepository
             commandType: CommandType.StoredProcedure
         );
     }
-    //public async Task<Guid> CreatePasswordRecoveryTokenAsync(string email)
-    //{
-    //    var p = new DynamicParameters();
-    //    p.Add("@Email", email);
-    //    return await _db.ExecuteScalarAsync<Guid>("usp_CreateRecoveryToken", p, commandType: CommandType.StoredProcedure);
-    //}
 
     public async Task<(Guid Token, string Otp)> CreatePasswordRecoveryTokenAsync(string email)
     {
@@ -106,13 +100,7 @@ public class AuthRepository(IDapperFactory factory) : IAuthRepository
     }
 
     public async Task<bool> ValidateRecoveryTokenAsync(string? token, string? otp)
-    {
-        return await _db.ExecuteScalarAsync<bool>(
-            "usp_ValidateRecoveryToken",
-            new { Token = token, Otp = otp },
-            commandType: CommandType.StoredProcedure
-        );
-    }
+        => await _db.ExecuteScalarAsync<bool>("usp_ValidateRecoveryToken", new { Token = token, Otp = otp }, commandType: CommandType.StoredProcedure);
 
     public async Task<bool> UpdatePasswordByRecoveryTokenAsync(string? token, string? otp, string hash, string salt)
     {

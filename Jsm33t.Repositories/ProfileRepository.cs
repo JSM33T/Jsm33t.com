@@ -2,6 +2,7 @@
 using Jsm33t.Contracts.Dtos;
 using Jsm33t.Contracts.Dtos.Responses;
 using Jsm33t.Contracts.Interfaces.Repositories;
+using Jsm33t.Contracts.Models;
 using Jsm33t.Infra.Dapper;
 using System.Data;
 
@@ -106,6 +107,20 @@ namespace Jsm33t.Repositories
             WHERE ul.UserId = @UserId AND s.DeviceId = @DeviceId";
             return await conn.ExecuteAsync(sql, new { UserId = userId, DeviceId = deviceId });
         }
+
+        public Task<UserLogin?> GetLoginDataByUserIdAsync(int userId) =>
+            dapperFactory.CreateConnection()
+             .QueryFirstOrDefaultAsync<UserLogin>(
+            "usp_GetUserLoginByUserId", new { UserId = userId });
+
+        public async Task<bool> UpdatePasswordAsync(int userId, string hash, string salt)
+        {
+            var sql = @"UPDATE UserLogin SET PasswordHash = @Hash, Salt = @Salt WHERE UserId = @UserId";
+            var result = await dapperFactory.CreateConnection()
+                .ExecuteAsync(sql, new { UserId = userId, Hash = hash, Salt = salt });
+            return result > 0;
+        }
+
 
     }
 }

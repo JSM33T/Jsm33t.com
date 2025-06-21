@@ -2,6 +2,7 @@
 using Jsm33t.Contracts.Dtos.Responses;
 using Jsm33t.Contracts.Interfaces.Repositories;
 using Jsm33t.Contracts.Interfaces.Services;
+using Jsm33t.Shared.Helpers;
 using Microsoft.AspNetCore.Http;
 
 namespace Jsm33t.Application
@@ -40,6 +41,18 @@ namespace Jsm33t.Application
 
         public async Task<int> UpdateUserProfilePicture(string avatarUrl,int userId)
            => await profileRepository.UpdateUserProfilePicture(avatarUrl, userId);
+
+        public async Task<bool> ChangePasswordAsync(int userId, string currentPassword, string newPassword)
+        {
+            var login = await profileRepository.GetLoginDataByUserIdAsync(userId);
+            if (login == null || !PasswordHelper.VerifyPassword(currentPassword, login.PasswordHash, login.Salt))
+                return false;
+
+            var salt = PasswordHelper.GenerateSalt();
+            var hash = PasswordHelper.HashPassword(newPassword, salt);
+            return await profileRepository.UpdatePasswordAsync(userId, hash, salt);
+        }
+
 
     }
 }

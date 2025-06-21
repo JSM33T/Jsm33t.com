@@ -114,6 +114,15 @@ namespace Jsm33t.Api.Controllers
             }
         }
 
+        [HttpPost("change-password")]
+        public async Task<ActionResult<ApiResponse<string>>> ChangePassword([FromBody] ChangePasswordRequestDto dto)
+        {
+            var userId = HttpContextHelper.GetUserId(HttpContext!);
+            var result = await profileService.ChangePasswordAsync(userId, dto.CurrentPassword, dto.NewPassword);
+            return result
+                ? RESP_Success("Password updated successfully")
+                : RESP_BadRequestResponse<string>("Current password is incorrect");
+        }
 
     }
 }

@@ -4,6 +4,7 @@ import { useEffect, useState, ChangeEvent } from 'react';
 import { apiClient } from '@/lib/apiClient';
 import { modalRef } from '@/components/ui/ModalBox';
 import { useUser } from '@/context/UserContext';
+import { HTML_UTIL_setBodyBg } from '@/lib/htmlUtils';
 
 type ProfileForm = {
 	firstName: string;
@@ -59,6 +60,7 @@ export default function ProfileEditPanel() {
 				});
 			}
 		});
+		HTML_UTIL_setBodyBg('bg-secondary');
 	}, []);
 
 	// Generic change handler
@@ -141,7 +143,7 @@ export default function ProfileEditPanel() {
 
 	return (
 		// EditProfile.jsx
-		<section className='container pb-lg-2 pb-xl-4 py-xxl-5 my-5'>
+		<section className='container pb-lg-2 pb-xl-4'>
 			{/* Profile Picture */}
 			<div className="card border-0 p-4 mb-4 shadow-sm bg-body">
 				<h3 className="h5 mb-3">Profile Picture</h3>

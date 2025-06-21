@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { apiClient } from '@/lib/apiClient';
 import { HTML_UTIL_setBodyBg } from '@/lib/htmlUtils';
 import Image from 'next/image';
+import Link from 'next/link';
 
 type ProfileData = {
 	id: number;
@@ -47,9 +48,9 @@ export default function ProfileSection() {
 				<div className="d-flex align-items-center mt-sm-n1 pb-4 mb-0 mb-lg-1 mb-xl-3">
 					<i className="ai-user text-primary lead pe-1 me-2"></i>
 					<h2 className="h4 mb-0">Basic Info</h2>
-					<a className="btn btn-sm btn-outline-secondary ms-auto" href="/account-settings">
+					<Link className="btn btn-sm btn-outline-secondary ms-auto" href="/profile/edit">
 						<i className="ai-edit ms-n1 me-2"></i>Edit Info
-					</a>
+					</Link>
 				</div>
 
 				{/* User Info */}

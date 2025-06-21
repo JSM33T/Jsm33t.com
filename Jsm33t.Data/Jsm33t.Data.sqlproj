@@ -93,5 +93,9 @@
     <Build Include="dbo\Tables\BlogSeries.sql" />
     <None Include="Scripts\Seeds\BlogCategory_seed.sql" />
     <Build Include="dbo\Stored Procedures\usp_GetBlogList.sql" />
+    <Build Include="dbo\Stored Procedures\usp_GetUserLoginByUserId.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <PostDeploy Include="dbo\Stored Procedures\Script.PostDeployment1.sql" />
   </ItemGroup>
 </Project>

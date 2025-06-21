@@ -28,7 +28,6 @@ namespace Jsm33t.Api.Filters
 
                 if (attr != null)
                 {
-                    
                     var userId = (HttpContextHelper.GetUserId(this.contextAccessor.HttpContext!)).ToString();
                     if (!string.IsNullOrEmpty(userId))
                         await _userRepository.DeductPointsAsync(userId, attr.Points);
